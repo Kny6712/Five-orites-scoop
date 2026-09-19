@@ -1,0 +1,45 @@
+// src/app/admin/analytics/analytics.page.scss
+
+:host { display: block; }
+
+.analytics-body { padding: 16px 16px 40px; display: flex; flex-direction: column; gap: 12px; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+.kpi-tile {
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.kpi-revenue { background: linear-gradient(135deg, #2E7D32, #43a047); }
+.kpi-orders { background: linear-gradient(135deg, var(--color-brand-primary), #9b6ed4); }
+.kpi-delivered { background: linear-gradient(135deg, #00838f, #00acc1); }
+.kpi-avg { background: linear-gradient(135deg, #E65100, #fb8c00); }
+
+.kpi-icon { font-size: 22px; color: rgba(255,255,255,0.7); }
+.kpi-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); margin: 0; }
+.kpi-val { font-size: 22px; font-weight: 800; color: #fff; margin: 0; }
+
+.section-title { font-size: 18px; font-weight: 700; margin: 4px 0 8px; color: var(--ion-color-dark); }
+.no-data { font-size: 14px; color: var(--ion-color-medium); }
+
+.flavor-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ion-color-light-shade);
+}
+
+.flavor-rank { font-size: 14px; font-weight: 800; color: var(--ion-color-medium); min-width: 28px; }
+.flavor-info { flex: 1; min-width: 0; }
+.flavor-name { font-size: 14px; font-weight: 600; color: var(--ion-color-dark); display: block; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.flavor-bar-wrap { height: 6px; background: var(--ion-color-light-shade); border-radius: 3px; overflow: hidden; }
+.flavor-bar { height: 100%; background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent)); border-radius: 3px; transition: width 0.3s ease; }
+
+.flavor-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+.flavor-units { font-size: 12px; color: var(--ion-color-medium); }
+.flavor-revenue { font-size: 13px; font-weight: 700; color: var(--color-brand-primary); }

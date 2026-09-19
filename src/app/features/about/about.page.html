@@ -1,0 +1,110 @@
+<!-- src/app/features/about/about.page.html -->
+<!-- Five-orites Scoop — About Page -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>About</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <!-- Hero Section -->
+  <div class="about-hero">
+    <div class="hero-logo-wrap">
+      <img src="" alt="Five-orites Scoop logo — ice cream bowl with three colorful scoops" class="hero-logo" />
+    </div>
+    <h1 class="hero-title">Five-orites Scoop</h1>
+    <p class="hero-tagline">"Premium ice cream, scooped to your door"</p>
+    <ion-button [routerLink]="'/products'" class="hero-cta" size="default">
+      Explore Flavors
+      <ion-icon name="ice-cream-outline" slot="end"></ion-icon>
+    </ion-button>
+  </div>
+
+  <div class="about-body">
+
+    <!-- Vision Statement -->
+    <section class="vision-section">
+      <h2 class="section-heading">Our Vision</h2>
+      <p class="vision-text">
+        Five-orites Scoop was built to make premium ice cream effortlessly accessible.
+        We believe your favourite scoop should find you — wherever you are — with real-time
+        inventory transparency and zero guesswork. From browse to doorstep, every step is
+        live, reliable, and delicious.
+      </p>
+    </section>
+
+    <!-- Customer Features -->
+    <section class="features-section">
+      <h2 class="section-heading">For Ice Cream Lovers</h2>
+      <div class="features-grid">
+        @for (feature of customerFeatures; track feature.title) {
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <ion-icon [name]="feature.icon" class="feature-icon"></ion-icon>
+            </div>
+            <h3 class="feature-title">{{ feature.title }}</h3>
+            <p class="feature-desc">{{ feature.description }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Admin Features -->
+    <section class="features-section">
+      <h2 class="section-heading">For Our Team</h2>
+      <div class="features-grid">
+        @for (feature of adminFeatures; track feature.title) {
+          <div class="feature-card">
+            <div class="feature-icon-wrap admin-icon-wrap">
+              <ion-icon [name]="feature.icon" class="feature-icon"></ion-icon>
+            </div>
+            <h3 class="feature-title">{{ feature.title }}</h3>
+            <p class="feature-desc">{{ feature.description }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-section">
+      <h2 class="section-heading">How It Works</h2>
+      <div class="steps-list">
+        @for (step of howItWorks; track step.number) {
+          <div class="step-card">
+            <span class="step-number">{{ step.number }}</span>
+            <div class="step-content">
+              <h3 class="step-title">{{ step.title }}</h3>
+              <p class="step-desc">{{ step.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="tech-section">
+      <h2 class="section-heading">Built With</h2>
+      <div class="tech-chips">
+        @for (tech of techStack; track tech) {
+          <ion-chip color="primary" outline>
+            <ion-label>{{ tech }}</ion-label>
+          </ion-chip>
+        }
+      </div>
+    </section>
+
+    <!-- Meet the Team CTA -->
+    <div class="team-cta">
+      <p class="team-cta-text">Curious who built this?</p>
+      <ion-button [routerLink]="'/developers'" fill="outline" class="team-cta-btn">
+        Meet the Team
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>

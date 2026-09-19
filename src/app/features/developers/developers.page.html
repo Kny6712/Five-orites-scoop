@@ -1,0 +1,63 @@
+<!-- src/app/features/developers/developers.page.html -->
+<!-- Five-orites Scoop — Team Credits Page -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>The Team</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <!-- Header -->
+  <div class="dev-hero">
+    <ion-icon name="people-outline" class="dev-hero-icon"></ion-icon>
+    <h1 class="dev-hero-title">Meet the Developers</h1>
+    <p class="dev-hero-sub">The team behind Five-orites Scoop</p>
+  </div>
+
+  <!-- Developer Grid -->
+  <ion-grid class="dev-grid">
+    <ion-row>
+      @for (dev of developers; track dev.name) {
+        <ion-col size="12" size-md="6" size-lg="4">
+          <ion-card class="dev-card">
+            <ion-card-content class="dev-card-content">
+
+              <ion-avatar class="dev-avatar" [style.background]="dev.accent">
+                <div class="dev-initials">{{ dev.initials }}</div>
+              </ion-avatar>
+
+              <div class="dev-info">
+                <h2 class="dev-name">{{ dev.name }}</h2>
+                <div class="dev-roles">
+                  @for (role of dev.roles; track role) {
+                    <ion-chip
+                      [color]="getRoleColor(role)"
+                      class="role-chip"
+                      [outline]="getRoleColor(role) === 'medium'"
+                    >
+                      <ion-label>{{ role }}</ion-label>
+                    </ion-chip>
+                  }
+                </div>
+              </div>
+
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
+
+  <!-- Footer Credit -->
+  <div class="dev-footer">
+    <ion-icon name="code-slash-outline" class="footer-icon"></ion-icon>
+    <p class="footer-text">Built with Ionic · Angular · Firebase</p>
+    <p class="footer-sub">Five-orites Scoop © {{ currentYear }}</p>
+  </div>
+
+</ion-content>

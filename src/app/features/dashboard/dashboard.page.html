@@ -1,0 +1,225 @@
+<!-- src/app/features/dashboard/dashboard.page.html -->
+<!-- Five-orites Scoop — Role-Aware Dashboard -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+    @if (!isAdmin()) {
+      <ion-buttons slot="end">
+        <ion-button [routerLink]="'/cart'" aria-label="View cart">
+          <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+          @if (cartItemCount() > 0) {
+            <ion-badge color="danger" class="cart-badge-header">{{ cartItemCount() }}</ion-badge>
+          }
+        </ion-button>
+      </ion-buttons>
+    }
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ═══════════════════════════════════════
+       CUSTOMER DASHBOARD
+  ═══════════════════════════════════════ -->
+  @if (!isAdmin()) {
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <h2 class="welcome-title">Hello, {{ (currentUser()?.displayName || 'Scooper').split(' ')[0] }}! 🍦</h2>
+        <p class="welcome-sub">What flavor are you craving today?</p>
+      </div>
+      <div class="welcome-image-wrap">
+        <img src="" alt="Colorful ice cream scoop illustration" class="welcome-image" />
+      </div>
+    </div>
+
+    <!-- Push Notification Prompt -->
+    <div class="promo-banner" (click)="requestNotifications()">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <span>Enable notifications to track your orders live!</span>
+    </div>
+
+    <!-- Featured Flavors -->
+    <div class="section-header">
+      <h3 class="section-title">Featured Flavors</h3>
+      <ion-button fill="clear" size="small" [routerLink]="'/products'" class="see-all-btn">
+        See All
+      </ion-button>
+    </div>
+
+    @if (isLoading()) {
+      <ion-grid>
+        <ion-row>
+          @for (s of [1,2,3,4]; track s) {
+            <ion-col size="6">
+              <ion-card class="skeleton-card">
+                <ion-skeleton-text animated style="height:120px;"></ion-skeleton-text>
+                <ion-card-content>
+                  <ion-skeleton-text animated style="height:14px; margin-bottom:8px;"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="height:36px;"></ion-skeleton-text>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          }
+        </ion-row>
+      </ion-grid>
+    } @else {
+      <ion-grid>
+        <ion-row>
+          @for (product of featuredProducts(); track trackProduct($index, product)) {
+            <ion-col size="6" size-md="3">
+              <app-product-card [product]="product"></app-product-card>
+            </ion-col>
+          }
+        </ion-row>
+      </ion-grid>
+    }
+
+    <!-- Recent Orders -->
+    @if (recentOrders().length > 0) {
+      <div class="section-header">
+        <h3 class="section-title">Recent Orders</h3>
+        <ion-button fill="clear" size="small" [routerLink]="'/orders'" class="see-all-btn">
+          View All
+        </ion-button>
+      </div>
+      <div class="recent-orders">
+        @for (order of recentOrders(); track trackOrder($index, order)) {
+          <div class="recent-order-card" [routerLink]="['/orders', order.id]">
+            <div class="recent-order-info">
+              <span class="recent-order-id">#{{ order.id.slice(-6).toUpperCase() }}</span>
+              <span class="recent-order-date">{{ formatDate(order.createdAt) }}</span>
+            </div>
+            <app-order-status-badge [status]="order.status"></app-order-status-badge>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  <!-- ═══════════════════════════════════════
+       ADMIN DASHBOARD
+  ═══════════════════════════════════════ -->
+  @if (isAdmin()) {
+
+    <div class="admin-welcome">
+      <h2 class="admin-title">Admin Dashboard</h2>
+      <p class="admin-sub">{{ formatDate(null) || 'Today' }}</p>
+    </div>
+
+    <!-- KPI Cards -->
+    @if (isLoading()) {
+      <ion-grid>
+        <ion-row>
+          @for (s of [1,2,3,4]; track s) {
+            <ion-col size="6">
+              <ion-card class="kpi-skeleton"><ion-skeleton-text animated style="height:80px;"></ion-skeleton-text></ion-card>
+            </ion-col>
+          }
+        </ion-row>
+      </ion-grid>
+    } @else {
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <div class="kpi-card kpi-revenue">
+              <ion-icon name="cash-outline" class="kpi-icon"></ion-icon>
+              <p class="kpi-label">Today's Revenue</p>
+              <p class="kpi-value">{{ todayRevenue() | peso }}</p>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="kpi-card kpi-pending">
+              <ion-icon name="time-outline" class="kpi-icon"></ion-icon>
+              <p class="kpi-label">Pending Orders</p>
+              <p class="kpi-value">{{ pendingOrderCount() }}</p>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="kpi-card kpi-lowstock">
+              <ion-icon name="alert-circle-outline" class="kpi-icon"></ion-icon>
+              <p class="kpi-label">Low Stock Alerts</p>
+              <p class="kpi-value">{{ lowStockCount() }}</p>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="kpi-card kpi-total">
+              <ion-icon name="receipt-outline" class="kpi-icon"></ion-icon>
+              <p class="kpi-label">Total Orders</p>
+              <p class="kpi-value">{{ totalOrderCount() }}</p>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    }
+
+    <!-- Quick Links -->
+    <div class="quick-links">
+      <ion-button expand="block" [routerLink]="'/admin/inventory'" class="quick-link-btn">
+        <ion-icon name="layers-outline" slot="start"></ion-icon>
+        Manage Inventory
+      </ion-button>
+      <ion-button expand="block" fill="outline" [routerLink]="'/admin/orders'" class="quick-link-btn">
+        <ion-icon name="clipboard-outline" slot="start"></ion-icon>
+        Order Fulfillment
+      </ion-button>
+    </div>
+
+    <!-- Low Stock Alerts -->
+    @if (lowStockProducts().length > 0) {
+      <div class="section-header">
+        <h3 class="section-title alert-title">⚠️ Low Stock Alerts</h3>
+      </div>
+      <div class="low-stock-list">
+        @for (product of lowStockProducts(); track product.id) {
+          <div class="low-stock-item">
+            <div class="low-stock-info">
+              <p class="low-stock-name">{{ product.variantName }}</p>
+              <p class="low-stock-set">{{ product.setName }}</p>
+            </div>
+            <div class="low-stock-levels">
+              @if (product.stock.cup < 10) {
+                <ion-chip color="warning" class="stock-chip-sm">Cup: {{ product.stock.cup }}</ion-chip>
+              }
+              @if (product.stock.pint < 10) {
+                <ion-chip color="warning" class="stock-chip-sm">Pint: {{ product.stock.pint }}</ion-chip>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Recent Orders Table -->
+    <div class="section-header">
+      <h3 class="section-title">Recent Orders</h3>
+      <ion-button fill="clear" size="small" [routerLink]="'/admin/orders'" class="see-all-btn">View All</ion-button>
+    </div>
+    @if (adminRecentOrders().length > 0) {
+      <div class="admin-orders-list">
+        @for (order of adminRecentOrders(); track trackOrder($index, order)) {
+          <div class="admin-order-row" [routerLink]="['/orders', order.id]">
+            <div class="admin-order-left">
+              <span class="admin-order-id">#{{ order.id.slice(-6).toUpperCase() }}</span>
+              <span class="admin-order-email">{{ order.customerEmail }}</span>
+            </div>
+            <div class="admin-order-right">
+              <span class="admin-order-total">{{ order.grandTotal | peso }}</span>
+              <app-order-status-badge [status]="order.status"></app-order-status-badge>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+
+</ion-content>

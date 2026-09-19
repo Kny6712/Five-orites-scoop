@@ -1,0 +1,61 @@
+╔══════════════════════════════════════════════════════════════╗
+║           FIVE-ORITES SCOOP — SETUP GUIDE                   ║
+║           Read this before doing anything!                   ║
+╚══════════════════════════════════════════════════════════════╝
+
+WHAT IS ALREADY DONE FOR YOU ✅
+────────────────────────────────
+- All 73+ source code files
+- angular.json
+- tsconfig.json + tsconfig.app.json
+- ionic.config.json
+- package.json (all dependencies listed)
+- src/index.html
+- src/global.scss
+- Firestore security rules
+- Seed script for 64 products
+
+WHAT YOU MUST DO YOURSELF (2 things only) ⚠️
+──────────────────────────────────────────────
+
+THING 1 — Fill in your Firebase credentials
+  File to edit: src/environments/environment.ts
+  
+  Replace each PASTE_YOUR_xxx_HERE with your real values.
+  Get them from: Firebase Console → Project Settings → Your Apps → </>
+
+THING 2 — Add your Service Account Key
+  File to add: scripts/serviceAccountKey.json
+  
+  Get it from: Firebase Console → Project Settings → Service Accounts
+               → Generate new private key → download the .json file
+  Rename it to: serviceAccountKey.json
+  Place it in:  the scripts/ folder
+
+STEPS TO RUN THE APP
+──────────────────────
+1. Open this folder in VS Code
+2. Open terminal (Ctrl + `)
+3. Run: npm install --legacy-peer-deps
+4. Run: npm run seed          (writes 64 products to Firestore)
+5. Run: npx ionic serve       (opens app in browser)
+6. Open: http://localhost:8100
+
+FIREBASE SETUP CHECKLIST
+──────────────────────────
+□ Created Firebase project at console.firebase.google.com
+□ Enabled Firestore Database (Build → Firestore → Create database)
+□ Enabled Authentication → Email/Password + Google sign-in
+□ Registered a Web App (Project Settings → </> icon)
+□ Copied credentials into src/environments/environment.ts
+□ Downloaded service account key → renamed → placed in scripts/
+□ Ran: npm run seed  (seeds 64 products)
+□ Ran: firebase deploy --only firestore  (applies security rules)
+
+TEAM MEMBERS
+──────────────
+- Kenn Karlo Umadhay     (Main Lead, Full Stack, UI/UX, QA, Docs)
+- Heaven Alvior           (QA, Documentation)
+- Justin Curby Esguerra  (Full Stack, UI/UX, QA, Documentation)
+- Renz Gabriel De la Cruz (QA, Documentation)
+- Antonio Miguel Villanueva (Full Stack, UI/UX, QA, Documentation)

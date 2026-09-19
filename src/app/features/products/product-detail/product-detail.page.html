@@ -1,0 +1,101 @@
+<!-- src/app/features/products/product-detail/product-detail.page.html -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/products" text="Flavors"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ product()?.variantName ?? 'Product Detail' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  @if (isLoading()) {
+    <ion-skeleton-text animated class="hero-skeleton"></ion-skeleton-text>
+    <div class="detail-body">
+      <ion-skeleton-text animated style="height: 24px; width: 70%; margin-bottom: 8px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="height: 140px;"></ion-skeleton-text>
+    </div>
+  }
+
+  @if (!isLoading() && errorMessage()) {
+    <div class="error-state"><p>{{ errorMessage() }}</p></div>
+  }
+
+  @if (!isLoading() && product()) {
+    <div class="hero-wrap">
+      <img
+        [src]="product()!.imageUrl || ''"
+        [alt]="product()!.variantName"
+        class="hero-image"
+      />
+      <div class="hero-overlay">
+        <ion-badge class="set-badge-hero">
+          Set {{ product()!.setNumber }} · {{ product()!.setName }}
+        </ion-badge>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <h1 class="detail-name">{{ product()!.variantName }}</h1>
+      <p class="detail-description">{{ product()!.description }}</p>
+
+      <h2 class="section-title">Choose Your Size</h2>
+      <div class="size-grid">
+        @for (opt of sizeOptions; track opt.key) {
+          <button
+            class="size-tile"
+            [class.selected]="selectedSize() === opt.key"
+            [class.out-of-stock]="product()!.stock[opt.key] === 0"
+            (click)="selectSize(opt.key)"
+            [attr.aria-pressed]="selectedSize() === opt.key"
+          >
+            <span class="tile-size">{{ opt.label }}</span>
+            <span class="tile-price">{{ product()!.pricing[opt.key] | peso }}</span>
+            <span class="tile-stock"
+              [class.stock-in-stock]="product()!.stock[opt.key] >= 10"
+              [class.stock-low-stock]="product()!.stock[opt.key] > 0 && product()!.stock[opt.key] < 10"
+              [class.stock-out-of-stock]="product()!.stock[opt.key] === 0">
+              {{ product()!.stock[opt.key] === 0 ? 'Out of Stock' :
+                 product()!.stock[opt.key] < 10 ? 'Low Stock (' + product()!.stock[opt.key] + ')' : 'In Stock' }}
+            </span>
+          </button>
+        }
+      </div>
+
+      <div class="qty-row">
+        <span class="qty-label">Quantity</span>
+        <div class="qty-controls">
+          <button class="qty-btn" (click)="decrementQty()" [disabled]="quantity() <= 1">
+            <ion-icon name="remove-outline"></ion-icon>
+          </button>
+          <span class="qty-value">{{ quantity() }}</span>
+          <button class="qty-btn" (click)="incrementQty()" [disabled]="quantity() >= currentStock()">
+            <ion-icon name="add-outline"></ion-icon>
+          </button>
+        </div>
+        <span class="line-total">{{ lineTotal() | peso }}</span>
+      </div>
+
+      <ion-button
+        expand="block"
+        class="add-to-cart-cta"
+        [disabled]="isOutOfStock() || isAdding()"
+        (click)="addToCart()"
+      >
+        <ion-icon name="cart-outline" slot="start"></ion-icon>
+        {{ isAdding() ? 'Adding...' : isOutOfStock() ? 'Out of Stock' : 'Add to Cart' }}
+      </ion-button>
+
+      <div class="reviews-section">
+        <h2 class="section-title">Customer Reviews</h2>
+        <div class="reviews-empty">
+          <app-star-rating [rating]="0" [showCount]="true" [reviewCount]="0"></app-star-rating>
+          <p class="no-reviews">No reviews yet — be the first!</p>
+        </div>
+      </div>
+    </div>
+  }
+
+</ion-content>

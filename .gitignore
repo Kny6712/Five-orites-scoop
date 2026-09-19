@@ -1,0 +1,29 @@
+# Five-orites Scoop — .gitignore
+
+# ── Sensitive / Credentials ─────────────────────────────────────────────────────
+scripts/serviceAccountKey.json
+.env
+.env.*
+!.env.example
+
+# ── Dependencies ─────────────────────────────────────────────────────────────────
+node_modules/
+dist/
+www/
+
+# ── Angular CLI ──────────────────────────────────────────────────────────────────
+.angular/cache
+
+# ── Capacitor ────────────────────────────────────────────────────────────────────
+android/
+ios/
+
+# ── IDE ──────────────────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# ── OS ───────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

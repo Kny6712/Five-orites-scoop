@@ -1,0 +1,164 @@
+<!-- src/app/features/auth/auth.page.html -->
+<!-- Five-orites Scoop — Auth Page (Login / Register / Admin Register) -->
+
+<ion-content class="auth-content" fullscreen>
+  <div class="auth-container">
+
+    <!-- Branding Hero -->
+    <div class="auth-hero">
+      <div class="auth-logo-wrap">
+        <img src="" alt="Five-orites Scoop logo" class="auth-logo" />
+      </div>
+      <h1 class="auth-brand">Five-orites Scoop</h1>
+      <p class="auth-tagline">Premium ice cream, scooped to your door</p>
+    </div>
+
+    <!-- Auth Card -->
+    <div class="auth-card">
+
+      <!-- Mode Tabs -->
+      <div class="mode-tabs">
+        <button
+          class="mode-tab"
+          [class.active]="mode() === 'login'"
+          (click)="setMode('login')"
+        >
+          Sign In
+        </button>
+        <button
+          class="mode-tab"
+          [class.active]="mode() === 'register'"
+          (click)="setMode('register')"
+        >
+          Sign Up
+        </button>
+        <button
+          class="mode-tab mode-tab-admin"
+          [class.active]="mode() === 'register-admin'"
+          (click)="setMode('register-admin')"
+        >
+          🛡️ Admin
+        </button>
+      </div>
+
+      <!-- Title -->
+      <h2 class="auth-title">
+        @if (mode() === 'login') { Welcome back }
+        @if (mode() === 'register') { Create account }
+        @if (mode() === 'register-admin') { Admin Registration }
+      </h2>
+      <p class="auth-subtitle">
+        @if (mode() === 'login') { Sign in to order your favourite scoops }
+        @if (mode() === 'register') { Join us for fresh flavors delivered daily }
+        @if (mode() === 'register-admin') { Enter your details and the admin secret code }
+      </p>
+
+      <!-- Error Message -->
+      @if (errorMessage()) {
+        <div class="error-banner" role="alert">{{ errorMessage() }}</div>
+      }
+
+      <!-- Admin Notice -->
+      @if (mode() === 'register-admin') {
+        <div class="admin-notice">
+          🛡️ Admin accounts have full access to inventory, orders, and analytics.
+          You need the secret admin code to register.
+        </div>
+      }
+
+      <!-- Form Fields -->
+      <div class="auth-form">
+
+        <!-- Name field (register modes only) -->
+        @if (mode() === 'register' || mode() === 'register-admin') {
+          <div class="input-group">
+            <ion-icon name="person-outline" class="input-icon"></ion-icon>
+            <ion-input
+              type="text"
+              placeholder="Full name"
+              [(ngModel)]="displayName"
+              class="auth-input"
+              autocomplete="name"
+            ></ion-input>
+          </div>
+        }
+
+        <!-- Email -->
+        <div class="input-group">
+          <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="Email address"
+            [(ngModel)]="email"
+            class="auth-input"
+            autocomplete="email"
+          ></ion-input>
+        </div>
+
+        <!-- Password -->
+        <div class="input-group">
+          <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+          <ion-input
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="Password"
+            [(ngModel)]="password"
+            class="auth-input"
+          ></ion-input>
+          <button class="eye-toggle" (click)="togglePasswordVisibility()" type="button">
+            <ion-icon [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </div>
+
+        <!-- Admin Secret Code (admin register only) -->
+        @if (mode() === 'register-admin') {
+          <div class="input-group admin-code-group">
+            <ion-icon name="shield-checkmark-outline" class="input-icon admin-icon"></ion-icon>
+            <ion-input
+              type="password"
+              placeholder="Admin secret code"
+              [(ngModel)]="adminCode"
+              class="auth-input"
+            ></ion-input>
+          </div>
+        }
+
+        <!-- Submit Button -->
+        <ion-button
+          expand="block"
+          class="submit-btn"
+          [class.submit-btn-admin]="mode() === 'register-admin'"
+          (click)="submit()"
+          [disabled]="isLoading()"
+        >
+          @if (isLoading()) {
+            <ion-spinner name="crescent" slot="start"></ion-spinner>
+          }
+          @if (mode() === 'login') { Sign In }
+          @if (mode() === 'register') { Create Account }
+          @if (mode() === 'register-admin') { Register as Admin }
+        </ion-button>
+
+        <!-- Divider (login only) -->
+        @if (mode() === 'login') {
+          <div class="divider">
+            <span class="divider-line"></span>
+            <span class="divider-text">or</span>
+            <span class="divider-line"></span>
+          </div>
+
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="google-btn"
+            (click)="signInWithGoogle()"
+            [disabled]="isLoading()"
+          >
+            <ion-icon name="logo-google" slot="start"></ion-icon>
+            Continue with Google
+          </ion-button>
+        }
+
+      </div>
+    </div>
+  </div>
+</ion-content>

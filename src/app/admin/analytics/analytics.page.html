@@ -1,0 +1,76 @@
+<!-- src/app/admin/analytics/analytics.page.html -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Sales Analytics</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (isLoading()) {
+    <div class="analytics-body">
+      @for (s of [1,2,3,4]; track s) {
+        <ion-card><ion-skeleton-text animated style="height:80px;"></ion-skeleton-text></ion-card>
+      }
+    </div>
+  }
+
+  @if (!isLoading()) {
+    <div class="analytics-body">
+
+      <div class="kpi-grid">
+        <div class="kpi-tile kpi-revenue">
+          <ion-icon name="cash-outline" class="kpi-icon"></ion-icon>
+          <p class="kpi-label">Total Revenue</p>
+          <p class="kpi-val">{{ totalRevenue() | peso }}</p>
+        </div>
+        <div class="kpi-tile kpi-orders">
+          <ion-icon name="receipt-outline" class="kpi-icon"></ion-icon>
+          <p class="kpi-label">Total Orders</p>
+          <p class="kpi-val">{{ totalOrders() }}</p>
+        </div>
+        <div class="kpi-tile kpi-delivered">
+          <ion-icon name="trending-up-outline" class="kpi-icon"></ion-icon>
+          <p class="kpi-label">Delivered</p>
+          <p class="kpi-val">{{ deliveredOrders() }}</p>
+        </div>
+        <div class="kpi-tile kpi-avg">
+          <ion-icon name="ice-cream-outline" class="kpi-icon"></ion-icon>
+          <p class="kpi-label">Avg. Order</p>
+          <p class="kpi-val">{{ avgOrderValue() | peso }}</p>
+        </div>
+      </div>
+
+      <h3 class="section-title">Top Flavors by Units Sold</h3>
+      @if (topFlavors().length === 0) {
+        <p class="no-data">No sales data yet.</p>
+      }
+      @for (flavor of topFlavors(); track flavor.name; let i = $index) {
+        <div class="flavor-row">
+          <span class="flavor-rank">#{{ i + 1 }}</span>
+          <div class="flavor-info">
+            <span class="flavor-name">{{ flavor.name }}</span>
+            <div class="flavor-bar-wrap">
+              <div
+                class="flavor-bar"
+                [style.width.%]="topFlavors()[0].count > 0 ? (flavor.count / topFlavors()[0].count) * 100 : 0"
+              ></div>
+            </div>
+          </div>
+          <div class="flavor-stats">
+            <span class="flavor-units">{{ flavor.count }} units</span>
+            <span class="flavor-revenue">{{ flavor.revenue | peso }}</span>
+          </div>
+        </div>
+      }
+
+    </div>
+  }
+</ion-content>

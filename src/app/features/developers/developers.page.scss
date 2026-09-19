@@ -1,0 +1,94 @@
+// src/app/features/developers/developers.page.scss
+
+:host { display: block; }
+
+// ── Hero ──────────────────────────────────────────────────
+.dev-hero {
+  background: linear-gradient(145deg, var(--color-brand-primary) 0%, #9b6ed4 100%);
+  padding: 36px 24px 28px;
+  text-align: center;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.dev-hero-icon { font-size: 48px; color: rgba(255,255,255,0.85); }
+.dev-hero-title { font-size: 26px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
+.dev-hero-sub { font-size: 14px; margin: 0; opacity: 0.8; }
+
+// ── Grid ──────────────────────────────────────────────────
+.dev-grid { padding: 12px 8px 8px; }
+
+ion-col { padding: 6px; }
+
+// ── Developer Card ────────────────────────────────────────
+.dev-card {
+  border-radius: 18px;
+  box-shadow: 0 3px 14px rgba(107,63,160,0.1);
+  margin: 0;
+}
+
+.dev-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 16px 20px;
+  text-align: center;
+}
+
+.dev-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dev-initials {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.dev-info { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+.dev-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ion-color-dark);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.dev-roles { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+
+.role-chip {
+  font-size: 11px;
+  height: 24px;
+  margin: 0;
+}
+
+// ── Footer ────────────────────────────────────────────────
+.dev-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 24px 16px 40px;
+  text-align: center;
+  border-top: 1px solid var(--ion-color-light-shade);
+  margin: 8px 16px 0;
+}
+.footer-icon { font-size: 28px; color: var(--color-brand-primary); }
+.footer-text { font-size: 14px; font-weight: 600; color: var(--ion-color-dark); margin: 0; }
+.footer-sub { font-size: 12px; color: var(--ion-color-medium); margin: 0; }

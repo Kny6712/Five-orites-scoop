@@ -1,0 +1,83 @@
+// src/theme/variables.scss
+// Five-orites Scoop — Global CSS Variables & Design Tokens
+// Author: [Developer Placeholder]
+
+:root {
+  // ── Brand Tokens ──────────────────────────────────────────
+  --color-brand-primary: #6B3FA0;       // Deep purple — primary brand
+  --color-brand-accent: #F4A435;        // Warm amber — highlights, CTAs
+  --color-brand-light: #F9EFF7;         // Pale lavender — backgrounds
+  --color-success: #2E7D32;
+  --color-warning: #E65100;
+  --color-danger: #C62828;
+  --color-stock-ok: var(--color-success);
+  --color-stock-low: var(--color-warning);
+  --color-stock-out: var(--color-danger);
+
+  // ── Ionic Ion Color Overrides ─────────────────────────────
+  --ion-color-primary: #6B3FA0;
+  --ion-color-primary-rgb: 107, 63, 160;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #5e378d;
+  --ion-color-primary-tint: #7a52aa;
+
+  --ion-color-secondary: #F4A435;
+  --ion-color-secondary-rgb: 244, 164, 53;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #d7912e;
+  --ion-color-secondary-tint: #f5ad49;
+
+  --ion-color-success: #2E7D32;
+  --ion-color-success-rgb: 46, 125, 50;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-shade: #286e2c;
+  --ion-color-success-tint: #438a47;
+
+  --ion-color-warning: #E65100;
+  --ion-color-warning-rgb: 230, 81, 0;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-shade: #ca4700;
+  --ion-color-warning-tint: #e9621a;
+
+  --ion-color-danger: #C62828;
+  --ion-color-danger-rgb: 198, 40, 40;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #ae2323;
+  --ion-color-danger-tint: #cc3e3e;
+
+  --ion-font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  --ion-background-color: #f8f8f8;
+  --ion-toolbar-background: var(--color-brand-primary);
+  --ion-toolbar-color: #ffffff;
+}
+
+// ── Typography Scale ─────────────────────────────────────────
+h1 { font-size: 28px; font-weight: 700; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 18px; font-weight: 600; }
+
+// ── Global Component Defaults ─────────────────────────────────
+ion-card {
+  border-radius: 16px !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+ion-button {
+  --border-radius: 12px;
+  font-weight: 600;
+}
+
+ion-toolbar {
+  --background: var(--color-brand-primary);
+  --color: #ffffff;
+}
+
+ion-menu-button {
+  --color: #ffffff;
+}
+
+ion-back-button {
+  --color: #ffffff;
+}

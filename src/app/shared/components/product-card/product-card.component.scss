@@ -1,0 +1,125 @@
+// src/app/shared/components/product-card/product-card.component.scss
+
+:host {
+  display: block;
+}
+
+.product-card {
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(107, 63, 160, 0.1);
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 63, 160, 0.18);
+  }
+}
+
+// ── Image ──────────────────────────────────────────────
+.card-image-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 66%;
+  background: var(--color-brand-light);
+  overflow: hidden;
+}
+
+.image-skeleton {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.image-visible {
+    opacity: 1;
+  }
+}
+
+.set-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--color-brand-primary);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.2px;
+}
+
+// ── Card Body ──────────────────────────────────────────
+.card-body {
+  padding: 12px 14px 14px;
+}
+
+.variety-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Size Segment ───────────────────────────────────────
+.size-segment {
+  --background: var(--ion-color-light);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.size-btn {
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  font-size: 11px;
+  --color-checked: var(--color-brand-primary);
+  --indicator-color: var(--color-brand-primary);
+}
+
+// ── Price + Stock ──────────────────────────────────────
+.price-stock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-brand-primary);
+}
+
+.stock-chip {
+  font-size: 11px;
+  height: 24px;
+  margin: 0;
+}
+
+// ── Add to Cart ────────────────────────────────────────
+.add-to-cart-btn {
+  --background: var(--color-brand-accent);
+  --color: #ffffff;
+  --border-radius: 10px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}

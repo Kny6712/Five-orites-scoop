@@ -1,0 +1,53 @@
+{
+  "name": "five-orites-scoop",
+  "version": "1.0.0",
+  "description": "Five-orites Scoop — Premium Ice Cream E-Commerce + Real-Time Inventory App",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "lint": "ng lint",
+    "build:android": "ng build && npx cap sync android && npx cap open android",
+    "build:ios": "ng build && npx cap sync ios && npx cap open ios",
+    "seed": "npx ts-node --project scripts/tsconfig.json scripts/seed-products.ts",
+    "seed:preserve-stock": "cross-env PRESERVE_STOCK=true npx ts-node --project scripts/tsconfig.json scripts/seed-products.ts"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^17.0.0",
+    "@angular/compiler": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/fire": "^17.0.0",
+    "@angular/forms": "^17.0.0",
+    "@angular/platform-browser": "^17.0.0",
+    "@angular/platform-browser-dynamic": "^17.0.0",
+    "@angular/router": "^17.0.0",
+    "@capacitor/app": "^5.0.0",
+    "@capacitor/core": "^5.0.0",
+    "@capacitor/haptics": "^5.0.0",
+    "@capacitor/keyboard": "^5.0.0",
+    "@capacitor/preferences": "^5.0.0",
+    "@capacitor/push-notifications": "^5.0.0",
+    "@capacitor/status-bar": "^5.0.0",
+    "@ionic/angular": "^7.0.0",
+    "firebase": "^10.0.0",
+    "ionicons": "^7.0.0",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.0.0",
+    "@angular/cli": "17.3.17",
+    "@angular/compiler-cli": "^17.0.0",
+    "@capacitor/cli": "^5.0.0",
+    "@ionic/cli": "^7.0.0",
+    "@types/node": "^20.0.0",
+    "cross-env": "^7.0.3",
+    "firebase-admin": "^12.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.2.0"
+  }
+}

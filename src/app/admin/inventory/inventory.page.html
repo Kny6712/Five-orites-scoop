@@ -1,0 +1,130 @@
+<!-- src/app/admin/inventory/inventory.page.html -->
+<!-- Five-orites Scoop — Admin Inventory Manager -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Inventory Manager</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="inv-header">
+    <ion-searchbar
+      placeholder="Search products..."
+      debounce="300"
+      (ionInput)="onSearch($event)"
+      class="inv-search"
+      aria-label="Search inventory"
+    ></ion-searchbar>
+    <p class="inv-count">{{ filteredProducts().length }} products</p>
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="inv-list">
+      @for (s of skeletonItems; track $index) {
+        <ion-card class="inv-card">
+          <ion-skeleton-text animated style="height:80px;"></ion-skeleton-text>
+        </ion-card>
+      }
+    </div>
+  }
+
+  <!-- Product List -->
+  @if (!isLoading()) {
+    <div class="inv-list">
+      @for (product of filteredProducts(); track product.id) {
+        <ion-card class="inv-card" [class.inactive-card]="!product.isActive">
+
+          <ion-card-header class="inv-card-header">
+            <div class="inv-card-title-row">
+              <div>
+                <ion-chip color="primary" class="set-chip-sm">Set {{ product.setNumber }}</ion-chip>
+                <p class="inv-set-name">{{ product.setName }}</p>
+              </div>
+              <ion-toggle
+                [checked]="product.isActive"
+                (ionChange)="toggleActive(product)"
+                color="success"
+              ></ion-toggle>
+            </div>
+            <ion-card-title class="inv-variant-name">{{ product.variantName }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content class="inv-card-content">
+
+            @if (editingId() === product.id) {
+              <!-- Edit Mode -->
+              <div class="stock-edit-grid">
+                @for (size of sizes; track size) {
+                  <div class="stock-edit-cell">
+                    <label class="stock-edit-label">{{ sizeLabels[size] }}</label>
+                    <ion-input
+                      type="number"
+                      [(ngModel)]="editStock[product.id][size]"
+                      [min]="0"
+                      (ionBlur)="validateStock(product.id, size)"
+                      class="stock-edit-input"
+                    ></ion-input>
+                  </div>
+                }
+              </div>
+              <div class="edit-actions">
+                <ion-button
+                  expand="block"
+                  class="save-btn"
+                  (click)="saveStock(product)"
+                  [disabled]="savingId() === product.id"
+                >
+                  <ion-icon name="save-outline" slot="start"></ion-icon>
+                  {{ savingId() === product.id ? 'Saving...' : 'Save Changes' }}
+                </ion-button>
+                <ion-button expand="block" fill="outline" color="medium" (click)="cancelEdit()">
+                  Cancel
+                </ion-button>
+              </div>
+            } @else {
+              <!-- View Mode -->
+              <div class="stock-view-grid">
+                @for (size of sizes; track size) {
+                  <div class="stock-view-cell">
+                    <span class="stock-size-label">{{ sizeLabels[size] }}</span>
+                    <span class="stock-qty"
+                      [class.stock-in-stock]="product.stock[size] >= 10"
+                      [class.stock-low-stock]="product.stock[size] > 0 && product.stock[size] < 10"
+                      [class.stock-out-of-stock]="product.stock[size] === 0">
+                      {{ product.stock[size] }}
+                    </span>
+                    @if (product.stock[size] < 10) {
+                      <ion-icon name="alert-circle-outline" class="stock-alert-icon"
+                        [color]="product.stock[size] === 0 ? 'danger' : 'warning'">
+                      </ion-icon>
+                    }
+                  </div>
+                }
+              </div>
+              <ion-button
+                expand="block"
+                fill="outline"
+                class="edit-btn"
+                (click)="startEdit(product)"
+              >
+                <ion-icon name="create-outline" slot="start"></ion-icon>
+                Edit Stock
+              </ion-button>
+            }
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  }
+
+</ion-content>

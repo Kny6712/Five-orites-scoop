@@ -1,0 +1,100 @@
+// src/app/features/products/products.page.scss
+
+:host {
+  display: block;
+}
+
+// ── Filter Bar ─────────────────────────────────────────
+.filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  padding: 8px 0 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.product-searchbar {
+  --border-radius: 12px;
+  --background: var(--ion-color-light);
+  padding: 0 8px;
+}
+
+// ── Set Chips Horizontal Scroll ──────────────────────────
+.set-chips-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 12px 8px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.set-chip {
+  flex-shrink: 0;
+  font-size: 13px;
+  height: 30px;
+}
+
+// ── Secondary Filters ─────────────────────────────────────
+.secondary-filters {
+  padding: 0 8px 4px;
+}
+
+.stock-filter-item {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --min-height: 40px;
+}
+
+.filter-label {
+  font-size: 14px;
+  color: var(--ion-color-dark);
+  font-weight: 500;
+}
+
+// ── Product Grid ─────────────────────────────────────────
+.products-grid {
+  padding: 12px 8px 24px;
+}
+
+ion-col {
+  padding: 6px;
+}
+
+// ── Skeleton Card ─────────────────────────────────────────
+.skeleton-card {
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 0;
+}
+
+// ── Empty / Error State ───────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  gap: 12px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  color: var(--ion-color-light-shade);
+}
+
+.empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0;
+}
+
+.empty-message {
+  font-size: 15px;
+  color: var(--ion-color-medium);
+  margin: 0;
+}

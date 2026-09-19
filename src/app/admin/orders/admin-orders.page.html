@@ -1,0 +1,147 @@
+<!-- src/app/admin/orders/admin-orders.page.html -->
+<!-- Five-orites Scoop — Admin Order Fulfillment -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Order Fulfillment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Status Filter Tabs -->
+  <div class="filter-scroll">
+    <ion-segment
+      [value]="selectedFilter()"
+      (ionChange)="onFilterChange($event)"
+      scrollable
+      class="status-segment"
+    >
+      @for (opt of filterOptions; track opt.value) {
+        <ion-segment-button [value]="opt.value">
+          <ion-label>{{ opt.label }}</ion-label>
+        </ion-segment-button>
+      }
+    </ion-segment>
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="orders-list">
+      @for (s of skeletonItems; track $index) {
+        <ion-card class="order-card">
+          <ion-skeleton-text animated style="height:80px;"></ion-skeleton-text>
+        </ion-card>
+      }
+    </div>
+  }
+
+  <!-- Empty -->
+  @if (!isLoading() && filteredOrders().length === 0) {
+    <div class="empty-state">
+      <ion-icon name="receipt-outline" class="empty-icon"></ion-icon>
+      <p class="empty-title">No orders</p>
+      <p class="empty-sub">No orders matching this filter.</p>
+    </div>
+  }
+
+  <!-- Orders -->
+  @if (!isLoading() && filteredOrders().length > 0) {
+    <div class="orders-list">
+      @for (order of filteredOrders(); track trackOrder($index, order)) {
+        <ion-card class="order-card">
+          <!-- Order Header (always visible) -->
+          <div class="order-card-header" (click)="toggleExpand(order.id)">
+            <div class="order-card-left">
+              <span class="order-id-label">#{{ order.id.slice(-6).toUpperCase() }}</span>
+              <span class="order-email">{{ order.customerEmail }}</span>
+              <span class="order-date">{{ formatDate(order.createdAt) }}</span>
+            </div>
+            <div class="order-card-right">
+              <span class="order-total">{{ order.grandTotal | peso }}</span>
+              <app-order-status-badge [status]="order.status"></app-order-status-badge>
+            </div>
+          </div>
+
+          <!-- Expanded Detail Panel -->
+          @if (expandedId() === order.id) {
+            <ion-card-content class="order-detail-panel">
+
+              <!-- Items -->
+              <p class="detail-section-label">Items</p>
+              @for (item of order.items; track item.productId + item.size) {
+                <div class="detail-item-row">
+                  <span class="detail-item-name">{{ item.variantName }} ({{ sizeLabels[item.size] }})</span>
+                  <span class="detail-item-qty">×{{ item.quantity }}</span>
+                  <span class="detail-item-price">{{ item.subtotal | peso }}</span>
+                </div>
+              }
+
+              <!-- Address -->
+              <div class="detail-address">
+                <p class="detail-section-label">Delivery Address</p>
+                <p class="detail-address-value">{{ order.deliveryAddress }}</p>
+                @if (order.notes) {
+                  <p class="detail-notes">Note: {{ order.notes }}</p>
+                }
+              </div>
+
+              <!-- Totals -->
+              <div class="detail-totals">
+                <div class="detail-total-row">
+                  <span>Subtotal</span>
+                  <span>{{ order.totalAmount | peso }}</span>
+                </div>
+                <div class="detail-total-row">
+                  <span>Delivery</span>
+                  <span>{{ order.deliveryFee | peso }}</span>
+                </div>
+                <div class="detail-total-row grand">
+                  <span>Total</span>
+                  <span>{{ order.grandTotal | peso }}</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="detail-actions">
+                @if (nextStatus[order.status]) {
+                  <ion-button
+                    expand="block"
+                    class="advance-btn"
+                    (click)="advanceStatus(order)"
+                    [disabled]="updatingId() === order.id"
+                  >
+                    <ion-icon name="arrow-forward-outline" slot="start"></ion-icon>
+                    {{ updatingId() === order.id ? 'Updating...' : 'Mark as ' + getNextStatusLabel(order.status) }}
+                  </ion-button>
+                }
+                @if (order.status !== 'delivered' && order.status !== 'cancelled') {
+                  <ion-button
+                    expand="block"
+                    fill="outline"
+                    color="danger"
+                    class="cancel-btn"
+                    (click)="cancelOrder(order)"
+                    [disabled]="updatingId() === order.id"
+                  >
+                    <ion-icon name="close-outline" slot="start"></ion-icon>
+                    Cancel Order
+                  </ion-button>
+                }
+              </div>
+
+            </ion-card-content>
+          }
+        </ion-card>
+      }
+    </div>
+  }
+
+</ion-content>

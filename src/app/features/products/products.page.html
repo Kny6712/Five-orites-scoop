@@ -1,0 +1,124 @@
+<!-- src/app/features/products/products.page.html -->
+<!-- Five-orites Scoop — Product Catalog Template -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Our Flavors</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Sticky Filter Bar -->
+  <div class="filter-bar">
+    <ion-searchbar
+      placeholder="Search flavors..."
+      debounce="300"
+      (ionInput)="onSearch($event)"
+      class="product-searchbar"
+      aria-label="Search ice cream flavors"
+    ></ion-searchbar>
+
+    <!-- Set Filter Chips (horizontal scroll) -->
+    <div class="set-chips-scroll">
+      @for (chip of setChips; track chip.label) {
+        <ion-chip
+          [color]="selectedSet() === chip.value ? 'primary' : 'medium'"
+          [outline]="selectedSet() !== chip.value"
+          (click)="selectSet(chip.value)"
+          class="set-chip"
+        >
+          <ion-label>{{ chip.label }}</ion-label>
+        </ion-chip>
+      }
+    </div>
+
+    <!-- Secondary Filters -->
+    <div class="secondary-filters">
+      <ion-item lines="none" class="stock-filter-item">
+        <ion-label class="filter-label">In Stock Only</ion-label>
+        <ion-toggle
+          slot="end"
+          (ionChange)="onInStockToggle($event)"
+          aria-label="Show in-stock products only"
+        ></ion-toggle>
+      </ion-item>
+    </div>
+  </div>
+
+  <!-- Loading Skeleton -->
+  @if (isLoading()) {
+    <ion-grid class="products-grid">
+      <ion-row>
+        @for (s of skeletonItems; track $index) {
+          <ion-col size="6" size-md="4" size-lg="3">
+            <ion-card class="skeleton-card">
+              <ion-skeleton-text animated style="height: 140px; margin: 0;"></ion-skeleton-text>
+              <div style="padding: 12px;">
+                <ion-skeleton-text animated style="height: 16px; width: 80%; margin-bottom: 8px;"></ion-skeleton-text>
+                <ion-skeleton-text animated style="height: 32px; margin-bottom: 8px;"></ion-skeleton-text>
+                <ion-skeleton-text animated style="height: 20px; width: 60%; margin-bottom: 8px;"></ion-skeleton-text>
+                <ion-skeleton-text animated style="height: 40px;"></ion-skeleton-text>
+              </div>
+            </ion-card>
+          </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+  }
+
+  <!-- Error State -->
+  @if (!isLoading() && errorMessage()) {
+    <div class="empty-state">
+      <ion-icon name="sad-outline" class="empty-icon"></ion-icon>
+      <ion-text>
+        <p class="empty-title">Oops!</p>
+        <p class="empty-message">{{ errorMessage() }}</p>
+      </ion-text>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading() && !errorMessage() && filteredProducts().length === 0) {
+    <div class="empty-state">
+      <ion-icon name="ice-cream-outline" class="empty-icon"></ion-icon>
+      <ion-text>
+        <p class="empty-title">No flavors found</p>
+        <p class="empty-message">Try a different search or filter.</p>
+      </ion-text>
+    </div>
+  }
+
+  <!-- Product Grid -->
+  @if (!isLoading() && displayedProducts().length > 0) {
+    <ion-grid class="products-grid">
+      <ion-row>
+        @for (product of displayedProducts(); track trackProduct($index, product)) {
+          <ion-col size="6" size-md="4" size-lg="3">
+            <app-product-card [product]="product"></app-product-card>
+          </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+  }
+
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll
+    [disabled]="displayedCount() >= filteredProducts().length"
+    (ionInfinite)="loadMore($event)"
+  >
+    <ion-infinite-scroll-content
+      loadingSpinner="crescent"
+      loadingText="Loading more flavors..."
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

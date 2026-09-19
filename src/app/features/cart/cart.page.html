@@ -1,0 +1,176 @@
+<!-- src/app/features/cart/cart.page.html -->
+<!-- Five-orites Scoop — Cart & Checkout -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      @if (checkoutStep() === 1) { My Cart }
+      @if (checkoutStep() === 2) { Review Order }
+      @if (checkoutStep() === 3) { Order Placed! }
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  @if (checkoutStep() === 1) {
+
+    @if (cart().items.length === 0) {
+      <div class="empty-cart">
+        <ion-icon name="cart-outline" class="empty-cart-icon"></ion-icon>
+        <ion-text>
+          <h2 class="empty-title">Your cart is empty</h2>
+          <p class="empty-sub">Add some delicious scoops to get started!</p>
+        </ion-text>
+        <ion-button [routerLink]="'/products'" expand="block" class="browse-btn">
+          Browse Flavors
+        </ion-button>
+      </div>
+    } @else {
+      <div class="cart-items">
+        @for (item of cart().items; track trackItem($index, item)) {
+          <div class="cart-item">
+            <div class="item-image-wrap">
+              <img [src]="item.imageUrl || ''" [alt]="item.variantName" class="item-image" />
+            </div>
+            <div class="item-info">
+              <p class="item-name">{{ item.variantName }}</p>
+              <p class="item-meta">{{ item.setName }} · {{ sizeLabels[item.size] }}</p>
+              <p class="item-unit-price">{{ item.unitPrice | peso }} each</p>
+            </div>
+            <div class="item-controls">
+              <div class="qty-stepper">
+                <button class="qty-btn" (click)="decrementQty(item)">
+                  <ion-icon name="remove-outline"></ion-icon>
+                </button>
+                <span class="qty-num">{{ item.quantity }}</span>
+                <button class="qty-btn" (click)="incrementQty(item)">
+                  <ion-icon name="add-outline"></ion-icon>
+                </button>
+              </div>
+              <p class="item-subtotal">{{ (item.unitPrice * item.quantity) | peso }}</p>
+              <button class="remove-btn" (click)="removeItem(item)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>{{ cart().totalAmount | peso }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery Fee</span>
+          <span>{{ deliveryFee | peso }}</span>
+        </div>
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span class="total-amount">{{ grandTotal() | peso }}</span>
+        </div>
+      </div>
+
+      <div class="checkout-form">
+        <h3 class="form-title">Delivery Details</h3>
+
+        @if (errorMessage()) {
+          <div class="error-banner" role="alert">{{ errorMessage() }}</div>
+        }
+
+        <div class="input-wrap">
+          <label class="field-label">Delivery Address *</label>
+          <ion-textarea
+            [(ngModel)]="deliveryAddress"
+            placeholder="Enter your full delivery address..."
+            rows="3"
+            class="field-input"
+          ></ion-textarea>
+        </div>
+
+        <div class="input-wrap">
+          <label class="field-label">Order Notes (optional)</label>
+          <ion-textarea
+            [(ngModel)]="notes"
+            placeholder="Special instructions, landmarks, etc."
+            rows="2"
+            class="field-input"
+          ></ion-textarea>
+        </div>
+
+        <ion-button expand="block" class="checkout-btn" (click)="proceedToReview()">
+          Review Order
+          <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+
+        <ion-button expand="block" fill="clear" color="danger" (click)="clearCart()" class="clear-btn">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Clear Cart
+        </ion-button>
+      </div>
+    }
+  }
+
+  @if (checkoutStep() === 2) {
+    <div class="review-container">
+      <h3 class="review-section-title">Order Items</h3>
+      @for (item of cart().items; track trackItem($index, item)) {
+        <div class="review-item">
+          <span class="review-item-name">{{ item.variantName }} ({{ sizeLabels[item.size] }})</span>
+          <span class="review-item-qty">×{{ item.quantity }}</span>
+          <span class="review-item-price">{{ (item.unitPrice * item.quantity) | peso }}</span>
+        </div>
+      }
+
+      <div class="review-address-box">
+        <p class="review-label">Delivering to</p>
+        <p class="review-value">{{ deliveryAddress }}</p>
+        @if (notes) {
+          <p class="review-notes">Note: {{ notes }}</p>
+        }
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>{{ cart().totalAmount | peso }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span>{{ deliveryFee | peso }}</span>
+        </div>
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span class="total-amount">{{ grandTotal() | peso }}</span>
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-banner" role="alert">{{ errorMessage() }}</div>
+      }
+
+      <ion-button expand="block" class="place-order-btn" (click)="placeOrder()" [disabled]="isPlacingOrder()">
+        @if (isPlacingOrder()) { <ion-spinner name="crescent" slot="start"></ion-spinner> }
+        {{ isPlacingOrder() ? 'Placing Order...' : 'Place Order' }}
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" (click)="backToCart()" class="back-btn">
+        Back to Cart
+      </ion-button>
+    </div>
+  }
+
+  @if (checkoutStep() === 3) {
+    <div class="confirmed-state">
+      <ion-icon name="checkmark-circle-outline" class="confirmed-icon"></ion-icon>
+      <h2 class="confirmed-title">Order Placed!</h2>
+      <p class="confirmed-sub">Your scoops are on the way. Redirecting to your order tracker...</p>
+      <ion-spinner name="dots"></ion-spinner>
+    </div>
+  }
+
+</ion-content>

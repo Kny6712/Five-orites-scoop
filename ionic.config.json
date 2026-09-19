@@ -1,0 +1,7 @@
+{
+  "name": "Five-orites Scoop",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

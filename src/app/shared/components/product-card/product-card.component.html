@@ -1,0 +1,59 @@
+<!-- src/app/shared/components/product-card/product-card.component.html -->
+
+<ion-card class="product-card" [routerLink]="['/products', product.id]">
+
+  <div class="card-image-wrap">
+    @if (!imageLoaded()) {
+      <ion-skeleton-text animated class="image-skeleton"></ion-skeleton-text>
+    }
+    <img
+      [src]="product.imageUrl || ''"
+      [alt]="product.variantName"
+      class="card-image"
+      [class.image-visible]="imageLoaded()"
+      (load)="onImageLoad()"
+    />
+    <div class="set-badge">Set {{ product.setNumber }} · {{ product.setName }}</div>
+  </div>
+
+  <ion-card-content class="card-body" (click)="$event.stopPropagation()">
+
+    <h3 class="variety-name">{{ product.variantName }}</h3>
+
+    <ion-segment
+      [value]="selectedSize()"
+      (ionChange)="onSizeChange($event)"
+      class="size-segment"
+      mode="md"
+    >
+      @for (size of sizes; track size) {
+        <ion-segment-button [value]="size" class="size-btn">
+          <ion-label>{{ sizeLabels[size] }}</ion-label>
+        </ion-segment-button>
+      }
+    </ion-segment>
+
+    <div class="price-stock-row">
+      <span class="price">{{ currentPrice() | peso }}</span>
+      <ion-chip
+        [color]="currentStock() === 0 ? 'danger' : currentStock() < 10 ? 'warning' : 'success'"
+        class="stock-chip"
+      >
+        <ion-label>
+          {{ currentStock() === 0 ? 'Out of Stock' : currentStock() < 10 ? 'Low Stock' : 'In Stock' }}
+        </ion-label>
+      </ion-chip>
+    </div>
+
+    <ion-button
+      expand="block"
+      class="add-to-cart-btn"
+      [disabled]="isOutOfStock() || isAdding()"
+      (click)="addToCart()"
+    >
+      <ion-icon name="cart-outline" slot="start"></ion-icon>
+      {{ isAdding() ? 'Adding...' : isOutOfStock() ? 'Out of Stock' : 'Add to Cart' }}
+    </ion-button>
+
+  </ion-card-content>
+</ion-card>
