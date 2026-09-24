@@ -4,6 +4,7 @@
 
 const admin = require('firebase-admin');
 const path = require('path');
+import { getProductImageUrl } from '../src/app/core/config/product-images.config';
 
 const SERVICE_ACCOUNT_PATH = path.resolve(__dirname, 'serviceAccountKey.json');
 const DEFAULT_STOCK = { cup: 50, pint: 30, halfGallon: 20, gallon: 10 };
@@ -134,7 +135,7 @@ async function seedProducts(): Promise<void> {
       setName: product.setName,
       variantName: product.variantName,
       description: product.description,
-      imageUrl: '',
+      imageUrl: getProductImageUrl(product.variantName),
       pricing,
       stock: stockToWrite,
       isActive: true,

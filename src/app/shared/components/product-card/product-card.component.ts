@@ -69,7 +69,18 @@ export class ProductCardComponent implements OnInit {
 
     this.isAdding.set(true);
     try {
-      this.cartService.addItem(this.product, this.selectedSize(), 1);
+      const added = this.cartService.addItem(this.product, this.selectedSize(), 1);
+      if (!added) {
+        const toast = await this.toastCtrl.create({
+          message: 'This size is out of stock.',
+          duration: 2500,
+          color: 'danger',
+          position: 'bottom',
+        });
+        await toast.present();
+        return;
+      }
+
       this.addedToCart.emit();
 
       const toast = await this.toastCtrl.create({

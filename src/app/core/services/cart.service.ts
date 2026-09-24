@@ -57,11 +57,19 @@ export class CartService {
 
   // ── Public API ───────────────────────────────────────────────────────────────
 
-  addItem(product: Product, size: SizeVariant, quantity: number): void {
+  addItem(product: Product, size: SizeVariant, quantity: number): boolean {
     const currentItems = [...this.cartSubject.getValue().items];
     const existingIndex = currentItems.findIndex(
       (i) => i.productId === product.id && i.size === size
     );
+    const currentQuantity = existingIndex >= 0
+      ? currentItems[existingIndex].quantity
+      : 0;
+    const stock = product.stock?.[size] ?? 0;
+
+    if (quantity <= 0 || currentQuantity + quantity > stock) {
+      return false;
+    }
 
     const unitPrice = product.pricing[size];
 
@@ -84,6 +92,7 @@ export class CartService {
     }
 
     this.updateCart(currentItems);
+    return true;
   }
 
   removeItem(productId: string, size: SizeVariant): void {

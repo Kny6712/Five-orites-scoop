@@ -123,11 +123,22 @@ export class ProductDetailPage implements OnInit, OnDestroy {
 
   async addToCart(): Promise<void> {
     const product = this.product();
-    if (!product || this.isOutOfStock() || this.isAdding()) return;
+    if (!product || this.isAdding()) return;
 
     this.isAdding.set(true);
     try {
-      this.cartService.addItem(product, this.selectedSize(), this.quantity());
+      const added = this.cartService.addItem(product, this.selectedSize(), this.quantity());
+      if (!added) {
+        const toast = await this.toastCtrl.create({
+          message: 'This size is out of stock or the requested quantity is unavailable.',
+          duration: 2500,
+          color: 'danger',
+          position: 'bottom',
+        });
+        await toast.present();
+        return;
+      }
+
       const toast = await this.toastCtrl.create({
         message: `${product.variantName} added to your cart!`,
         duration: 2000,
