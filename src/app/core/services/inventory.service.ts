@@ -15,6 +15,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Product, FlavorSet, SizeVariant, ProductFilter } from '../models/product.model';
+import { getProductImageUrl } from '../config/product-images.config';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
@@ -31,10 +32,14 @@ export class InventoryService {
       const unsubscribe = onSnapshot(
         q,
         (snapshot) => {
-          let products = snapshot.docs.map((docSnap) => ({
-            id: docSnap.id,
-            ...docSnap.data(),
-          })) as Product[];
+          let products = snapshot.docs.map((docSnap) => {
+            const data = docSnap.data() as Product;
+            return {
+              ...data,
+              id: docSnap.id,
+              imageUrl: getProductImageUrl(data.variantName, data.imageUrl),
+            };
+          });
 
           // Sort client-side to avoid needing Firestore composite indexes
           products.sort((a, b) => {
@@ -82,7 +87,12 @@ export class InventoryService {
         productDocRef,
         (docSnap) => {
           if (docSnap.exists()) {
-            observer.next({ id: docSnap.id, ...docSnap.data() } as Product);
+            const data = docSnap.data() as Product;
+            observer.next({
+              ...data,
+              id: docSnap.id,
+              imageUrl: getProductImageUrl(data.variantName, data.imageUrl),
+            });
           } else {
             observer.error(new Error(`Product ${productId} not found`));
           }
