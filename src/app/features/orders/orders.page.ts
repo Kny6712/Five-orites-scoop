@@ -1,6 +1,6 @@
 // src/app/features/orders/orders.page.ts
 // Five-orites Scoop — Customer Order History Page
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';

@@ -1,6 +1,6 @@
 // src/app/core/models/cart.model.ts
 // Five-orites Scoop — Cart Data Models
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { SizeVariant } from './product.model';
 
@@ -20,12 +20,9 @@ export interface Cart {
   itemCount: number;
 }
 
-export const DELIVERY_FEE = 50; // ₱50 flat rate — Metro Manila
-export const FREE_DELIVERY_THRESHOLD = 500; // Free delivery over ₱500
-
-export function getDeliveryFee(subtotal: number): number {
-  return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
-}
+// Delivery figures live in core/logic/delivery.ts so the unit tests can import
+// them without pulling in Angular. Re-exported here for existing call sites.
+export { DELIVERY_FEE, FREE_DELIVERY_THRESHOLD, getDeliveryFee } from '../logic/delivery';
 
 export const EMPTY_CART: Cart = {
   items: [],

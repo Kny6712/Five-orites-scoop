@@ -1,6 +1,6 @@
 // src/app/core/guards/admin.guard.ts
 // Five-orites Scoop — Admin Role Route Guard
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';

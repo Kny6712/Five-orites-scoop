@@ -1,6 +1,6 @@
 // src/app/shared/components/star-rating/star-rating.component.ts
 // Five-orites Scoop — Interactive Star Rating Component
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';

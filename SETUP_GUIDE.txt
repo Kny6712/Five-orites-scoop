@@ -15,22 +15,33 @@ WHAT IS ALREADY DONE FOR YOU ✅
 - Firestore security rules
 - Seed script for 64 products
 
-WHAT YOU MUST DO YOURSELF (2 things only) ⚠️
+WHAT YOU MUST DO YOURSELF (3 things) ⚠️
 ──────────────────────────────────────────────
 
 THING 1 — Fill in your Firebase credentials
   File to edit: src/environments/environment.ts
-  
-  Replace each PASTE_YOUR_xxx_HERE with your real values.
+  Template:    src/environments/environment.example.ts
+
+  Start from the example file:
+     cp src/environments/environment.example.ts src/environments/environment.ts
+     (Windows: copy src\environments\environment.example.ts src\environments\environment.ts)
+
+  Then replace each PASTE_YOUR_xxx_HERE with your real values.
   Get them from: Firebase Console → Project Settings → Your Apps → </>
 
+  environment.prod.ts is swapped in automatically for production builds
+  (see fileReplacements in angular.json), so fill in the same values there
+  before deploying.
+
 THING 2 — Add your Service Account Key
-  File to add: scripts/serviceAccountKey.json
-  
+  File to add: scripts/serviceAccountKey.json  (git-ignored — never commit it)
+
   Get it from: Firebase Console → Project Settings → Service Accounts
                → Generate new private key → download the .json file
   Rename it to: serviceAccountKey.json
   Place it in:  the scripts/ folder
+
+  Only needed for `npm run seed`. The app itself does not use it.
 
 THING 3 — Connect Cloudinary (for Add Product images)
   File to edit: src/environments/environment.ts (and environment.prod.ts)
@@ -48,10 +59,22 @@ STEPS TO RUN THE APP
 ──────────────────────
 1. Open this folder in VS Code
 2. Open terminal (Ctrl + `)
-3. Run: npm install --legacy-peer-deps
-4. Run: npm run seed          (writes 64 products to Firestore)
-5. Run: npx ionic serve       (opens app in browser)
-6. Open: http://localhost:8100
+3. Run: npm install
+   (if peer-dependency errors appear, retry with npm install --legacy-peer-deps)
+4. Run: npm run typecheck      (optional sanity check — no Firebase needed)
+5. Run: npm run test:logic     (optional — 18 business-logic tests)
+6. Run: npm run seed           (writes 64 products to Firestore)
+7. Run: npm start              (dev server, opens in browser)
+8. Open: http://localhost:4200
+
+VERIFYING A PRODUCTION BUILD
+────────────────────────────
+  npm run build        → output lands in www/browser
+  firebase deploy --only hosting
+
+  Note: both firebase.json (hosting.public) and capacitor.config.ts (webDir)
+  point at www/browser, because that is where Angular 17's application builder
+  writes. Do not change one without the other.
 
 FIREBASE SETUP CHECKLIST
 ──────────────────────────
@@ -60,9 +83,13 @@ FIREBASE SETUP CHECKLIST
 □ Enabled Authentication → Email/Password + Google sign-in
 □ Registered a Web App (Project Settings → </> icon)
 □ Copied credentials into src/environments/environment.ts
+  (and environment.prod.ts before deploying)
 □ Downloaded service account key → renamed → placed in scripts/
 □ Ran: npm run seed  (seeds 64 products)
-□ Ran: firebase deploy --only firestore  (applies security rules)
+□ Ran: firebase deploy --only firestore  (applies security rules + indexes)
+□ Promoted your first admin by hand:
+  Firebase Console → Firestore → users → your user doc → role = "admin"
+  (the security rules read this field; there are no custom claims)
 
 TEAM MEMBERS
 ──────────────

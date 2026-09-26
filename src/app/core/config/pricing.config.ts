@@ -1,6 +1,6 @@
 // src/app/core/config/pricing.config.ts
 // Five-orites Scoop — Authoritative Pricing Matrix
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { SizePricing, SizeVariant } from '../models/product.model';
 

@@ -1,6 +1,6 @@
 // src/main.ts
 // Five-orites Scoop — Angular Application Bootstrap
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';

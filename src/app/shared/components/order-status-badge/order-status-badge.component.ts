@@ -1,6 +1,6 @@
 // src/app/shared/components/order-status-badge/order-status-badge.component.ts
 // Five-orites Scoop — Order Status Badge Component
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, Input } from '@angular/core';
 import { IonChip, IonIcon, IonLabel } from '@ionic/angular/standalone';

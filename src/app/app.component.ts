@@ -1,6 +1,6 @@
 // src/app/app.component.ts
 // Five-orites Scoop — Root App Shell with ion-split-pane + ion-menu
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';

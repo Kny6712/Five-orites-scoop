@@ -1,6 +1,6 @@
 // src/app/core/services/notification.service.ts
 // Five-orites Scoop — Push Notification Service (Capacitor + PWA fallback)
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Injectable, inject } from '@angular/core';
 import { ToastController, Platform } from '@ionic/angular/standalone';

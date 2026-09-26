@@ -1,6 +1,6 @@
 // src/app/shared/pipes/peso.pipe.ts
 // Five-orites Scoop — Philippine Peso Currency Formatter
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Pipe, PipeTransform } from '@angular/core';
 

@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test:logic": "node --test tests/",
+    "test:logic": "tsx --test tests/*.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "build:android": "ng build && npx cap sync android && npx cap open android",
     "build:ios": "ng build && npx cap sync ios && npx cap open ios",
@@ -48,6 +48,7 @@
     "cross-env": "^7.0.3",
     "firebase-admin": "^12.0.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.23.15",
     "typescript": "~5.2.0"
   }
 }

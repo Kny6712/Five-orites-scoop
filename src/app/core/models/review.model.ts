@@ -3,23 +3,18 @@
 
 import { Timestamp } from '@angular/fire/firestore';
 
+// summarizeRatings lives in core/logic/rating.ts so the unit tests can import
+// it without pulling in AngularFire. Re-exported here.
+export { summarizeRatings, type RatingSummary } from '../logic/rating';
+
+import type { RatingSummary } from '../logic/rating';
+
 export interface Review {
   id: string;
   productId: string;
   userId: string;
   displayName: string;
-  rating: number; // 1–5
+  rating: number; // 1-5
   comment: string;
   createdAt: Timestamp;
-}
-
-export interface RatingSummary {
-  average: number;
-  count: number;
-}
-
-export function summarizeRatings(reviews: Pick<Review, 'rating'>[]): RatingSummary {
-  if (reviews.length === 0) return { average: 0, count: 0 };
-  const sum = reviews.reduce((s, r) => s + r.rating, 0);
-  return { average: Math.round((sum / reviews.length) * 10) / 10, count: reviews.length };
 }

@@ -1,6 +1,6 @@
 // src/app/core/models/product.model.ts
 // Five-orites Scoop — Product Data Models
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Timestamp } from '@angular/fire/firestore';
 

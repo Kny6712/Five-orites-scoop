@@ -1,6 +1,6 @@
 // src/app/core/services/auth.service.ts
 // Five-orites Scoop — Authentication Service
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Injectable, inject } from '@angular/core';
 import {

@@ -1,6 +1,6 @@
 // src/app/features/about/about.page.ts
 // Five-orites Scoop — About the App
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';

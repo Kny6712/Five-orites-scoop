@@ -1,6 +1,6 @@
 // src/app/features/dashboard/dashboard.page.ts
 // Five-orites Scoop — Role-Aware Dashboard Hub
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';

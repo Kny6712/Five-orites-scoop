@@ -1,6 +1,6 @@
 // src/app/core/guards/auth.guard.ts
 // Five-orites Scoop — Authentication Route Guard
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';

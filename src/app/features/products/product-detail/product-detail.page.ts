@@ -1,6 +1,6 @@
 // src/app/features/products/product-detail/product-detail.page.ts
 // Five-orites Scoop — Product Detail Page
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';

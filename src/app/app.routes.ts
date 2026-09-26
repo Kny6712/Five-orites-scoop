@@ -1,6 +1,6 @@
 // src/app/app.routes.ts
 // Five-orites Scoop — Root Route Definitions
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';

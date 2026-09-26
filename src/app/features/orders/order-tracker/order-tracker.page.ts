@@ -1,6 +1,6 @@
 // src/app/features/orders/order-tracker/order-tracker.page.ts
 // Five-orites Scoop — Real-Time Order Status Tracker
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';

@@ -1,6 +1,6 @@
 // src/app/features/developers/developers.page.ts
 // Five-orites Scoop — Team Credits Page
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';

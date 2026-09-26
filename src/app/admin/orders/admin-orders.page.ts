@@ -1,6 +1,6 @@
 // src/app/admin/orders/admin-orders.page.ts
 // Five-orites Scoop — Admin Order Fulfillment Dashboard
-// Author: [Developer Placeholder]
+// Author: Five-orites Scoop team (see README)
 
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
