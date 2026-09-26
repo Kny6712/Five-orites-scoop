@@ -19,9 +19,10 @@ import {
   doc,
   getDoc,
   setDoc,
+  serverTimestamp,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AppUser, UserRole } from '../models/user.model';
+import { AppUser } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -32,13 +33,22 @@ export class AuthService {
   readonly currentUser$: Observable<AppUser | null> =
     this.currentUserSubject.asObservable();
 
+  private authReadySubject = new BehaviorSubject<boolean>(false);
+  readonly authReady$ = this.authReadySubject.asObservable();
+
   constructor() {
     onAuthStateChanged(this.auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const appUser = await this.buildAppUser(firebaseUser);
-        this.currentUserSubject.next(appUser);
-      } else {
-        this.currentUserSubject.next(null);
+      try {
+        if (firebaseUser) {
+          const appUser = await this.buildAppUser(firebaseUser);
+          this.currentUserSubject.next(appUser);
+        } else {
+          this.currentUserSubject.next(null);
+        }
+      } finally {
+        if (!this.authReadySubject.getValue()) {
+          this.authReadySubject.next(true);
+        }
       }
     });
   }
@@ -59,8 +69,8 @@ export class AuthService {
         email: firebaseUser.email ?? '',
         displayName: firebaseUser.displayName ?? 'Scoop Lover',
         photoURL: firebaseUser.photoURL ?? undefined,
-        role: 'customer',   // default role
-        createdAt: new Date() as never,
+        role: 'customer',   // default role, never trust client input
+        createdAt: serverTimestamp() as never,
       };
 
       await setDoc(userDocRef, {
@@ -68,8 +78,8 @@ export class AuthService {
         email: newUser.email,
         displayName: newUser.displayName,
         photoURL: newUser.photoURL ?? null,
-        role: newUser.role,
-        createdAt: new Date().toISOString(),
+        role: 'customer',
+        createdAt: serverTimestamp(),
       });
 
       return newUser;
@@ -92,23 +102,23 @@ export class AuthService {
   async registerWithEmail(
     email: string,
     password: string,
-    displayName: string,
-    role: UserRole = 'customer'
+    displayName: string
   ): Promise<void> {
     const credential = await createUserWithEmailAndPassword(
       this.auth, email, password
     );
     await updateProfile(credential.user, { displayName });
 
-    // Write Firestore doc immediately after registration
+    // Write Firestore doc immediately after registration.
+    // Role is always customer — admins are promoted manually/via backend.
     const userDocRef = doc(this.firestore, `users/${credential.user.uid}`);
     await setDoc(userDocRef, {
       uid: credential.user.uid,
       email: credential.user.email ?? '',
       displayName,
       photoURL: null,
-      role,   // 'customer' or 'admin'
-      createdAt: new Date().toISOString(),
+      role: 'customer',
+      createdAt: serverTimestamp(),
     });
   }
 

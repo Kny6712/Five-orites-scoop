@@ -9,11 +9,19 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class PesoPipe implements PipeTransform {
+  private formatter = new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
   transform(value: number | null | undefined): string {
-    if (value === null || value === undefined || isNaN(value)) return '₱0';
-    return `₱${value.toLocaleString('en-PH', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    })}`;
+    if (value === null || value === undefined || !Number.isFinite(Number(value))) return '₱0';
+    try {
+      return this.formatter.format(Number(value)).replace('PHP', '₱');
+    } catch {
+      return `₱${Number(value).toLocaleString('en-PH', { maximumFractionDigits: 0 })}`;
+    }
   }
 }

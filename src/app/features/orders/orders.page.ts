@@ -10,7 +10,8 @@ import {
   IonButtons, IonMenuButton,
   IonList, IonItem, IonLabel, IonIcon, IonText,
   IonSkeletonText, IonRefresher, IonRefresherContent,
-  IonNote, IonBadge,
+  IonNote, IonBadge, IonButton,
+  AlertController, ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { receiptOutline, chevronForwardOutline, sadOutline } from 'ionicons/icons';
@@ -30,7 +31,7 @@ import { PesoPipe } from '../../shared/pipes/peso.pipe';
     IonButtons, IonMenuButton,
     IonList, IonItem, IonLabel, IonIcon, IonText,
     IonSkeletonText, IonRefresher, IonRefresherContent,
-    IonNote, IonBadge,
+    IonNote, IonBadge, IonButton,
     OrderStatusBadgeComponent, PesoPipe,
   ],
   templateUrl: './orders.page.html',
@@ -40,11 +41,14 @@ export class OrdersPage implements OnInit, OnDestroy {
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
   private sub?: Subscription;
 
   orders = signal<Order[]>([]);
   isLoading = signal(true);
   errorMessage = signal('');
+  cancellingId = signal<string | null>(null);
   skeletonItems = Array(5).fill(0);
 
   constructor() {
@@ -85,6 +89,47 @@ export class OrdersPage implements OnInit, OnDestroy {
   handleRefresh(event: CustomEvent): void {
     this.loadOrders();
     setTimeout(() => (event.target as HTMLIonRefresherElement).complete(), 1000);
+  }
+
+  canCancel(order: Order): boolean {
+    return order.status === 'pending';
+  }
+
+  async cancelOrder(order: Order, event: Event): Promise<void> {
+    event.stopPropagation();
+    event.preventDefault();
+    const alert = await this.alertCtrl.create({
+      header: 'Cancel Order',
+      message: `Cancel order #${order.id.slice(-6).toUpperCase()}? Stock will be restored.`,
+      inputs: [{ name: 'reason', type: 'text', placeholder: 'Reason (optional)' }],
+      buttons: [
+        { text: 'Back', role: 'cancel' },
+        {
+          text: 'Cancel Order',
+          role: 'destructive',
+          handler: async (data) => {
+            this.cancellingId.set(order.id);
+            try {
+              await this.orderService.cancelOrder(order.id, data?.reason);
+              const toast = await this.toastCtrl.create({
+                message: 'Order cancelled. Stock restored.',
+                color: 'warning', duration: 2500, position: 'top',
+              });
+              await toast.present();
+            } catch (err) {
+              const toast = await this.toastCtrl.create({
+                message: err instanceof Error ? err.message : 'Failed to cancel order.',
+                color: 'danger', duration: 3000, position: 'top',
+              });
+              await toast.present();
+            } finally {
+              this.cancellingId.set(null);
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   formatDate(timestamp: unknown): string {

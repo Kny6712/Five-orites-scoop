@@ -25,6 +25,7 @@ import { InventoryService } from '../../core/services/inventory.service';
 import { OrderService } from '../../core/services/order.service';
 import { CartService } from '../../core/services/cart.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { LOW_STOCK_THRESHOLD } from '../../core/config/stock.config';
 import { Product } from '../../core/models/product.model';
 import { Order } from '../../core/models/order.model';
 import { AppUser } from '../../core/models/user.model';
@@ -75,6 +76,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   totalOrderCount = signal(0);
   adminRecentOrders = signal<Order[]>([]);
   lowStockProducts = signal<Product[]>([]);
+  readonly lowStockThreshold = LOW_STOCK_THRESHOLD;
 
   constructor() {
     addIcons({
@@ -85,7 +87,16 @@ export class DashboardPage implements OnInit, OnDestroy {
 
     this.authService.currentUser$
       .pipe(takeUntilDestroyed())
-      .subscribe((user) => this.currentUser.set(user));
+      .subscribe((user) => {
+        const wasAdmin = this.isAdmin();
+        this.currentUser.set(user);
+        // Reload when role resolves (fixes admin seeing customer view on refresh).
+        if (user && this.isAdmin() !== wasAdmin) {
+          this.loadDashboard();
+        } else if (user && this.featuredProducts().length === 0 && this.adminRecentOrders().length === 0) {
+          this.loadDashboard();
+        }
+      });
 
     this.cartService.cart$
       .pipe(takeUntilDestroyed())
@@ -136,7 +147,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   private loadAdminDashboard(): void {
-    // All orders for KPIs
+    // All orders for KPIs (capped server-side at 100, see OrderService).
     const s1 = this.orderService
       .getAllOrders()
       .pipe(catchError(() => of([])))
@@ -146,13 +157,15 @@ export class DashboardPage implements OnInit, OnDestroy {
           orders.filter((o) => o.status === 'pending' || o.status === 'confirmed').length
         );
 
-        // Today's revenue
+        // Today's revenue: delivered orders today (paymentStatus stays
+        // 'pending' until a payment gateway is integrated).
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const todayOrders = orders.filter((o) => {
           try {
-            const ts = o.createdAt as { toDate(): Date };
-            return ts.toDate() >= today && o.paymentStatus === 'paid';
+            const raw = o.createdAt as unknown as { toDate(): Date } | string;
+            const date = typeof raw === 'string' ? new Date(raw) : raw.toDate();
+            return date >= today && (o.status === 'delivered' || o.paymentStatus === 'paid');
           } catch { return false; }
         });
         this.todayRevenue.set(todayOrders.reduce((sum, o) => sum + (o.grandTotal ?? 0), 0));
@@ -189,8 +202,10 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   formatDate(timestamp: unknown): string {
     try {
-      const ts = timestamp as { toDate(): Date };
-      return ts.toDate().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      if (timestamp === null || timestamp === undefined) return '—';
+      const ts = timestamp as { toDate(): Date } | string;
+      const date = typeof ts === 'string' ? new Date(ts) : ts.toDate();
+      return date.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch { return '—'; }
   }
 

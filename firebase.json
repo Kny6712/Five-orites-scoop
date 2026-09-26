@@ -1,7 +1,7 @@
 {
   "//": "Five-orites Scoop — Firebase Deployment Configuration",
   "hosting": {
-    "public": "www",
+    "public": "www/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

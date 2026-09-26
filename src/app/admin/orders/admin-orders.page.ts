@@ -19,6 +19,7 @@ import {
 } from 'ionicons/icons';
 import { Subscription, catchError, of } from 'rxjs';
 import { OrderService } from '../../core/services/order.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { Order, OrderStatus, ORDER_STATUS_META } from '../../core/models/order.model';
 import { OrderStatusBadgeComponent } from '../../shared/components/order-status-badge/order-status-badge.component';
 import { PesoPipe } from '../../shared/pipes/peso.pipe';
@@ -49,6 +50,7 @@ const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
 })
 export class AdminOrdersPage implements OnInit, OnDestroy {
   private orderService = inject(OrderService);
+  private notificationService = inject(NotificationService);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
   private sub?: Subscription;
@@ -127,6 +129,7 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
             this.updatingId.set(order.id);
             try {
               await this.orderService.updateOrderStatus(order.id, next);
+              await this.notificationService.notifyOrderStatusChange(order.id, next);
               const toast = await this.toastCtrl.create({
                 message: `Order updated to "${ORDER_STATUS_META[next].label}"`,
                 color: 'success', duration: 2000, position: 'top',
@@ -151,18 +154,29 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
   async cancelOrder(order: Order): Promise<void> {
     const alert = await this.alertCtrl.create({
       header: 'Cancel Order',
-      message: `Cancel order #${order.id.slice(-6).toUpperCase()}? This cannot be undone.`,
+      message: `Cancel order #${order.id.slice(-6).toUpperCase()}? Stock will be restored.`,
+      inputs: [{ name: 'reason', type: 'text', placeholder: 'Reason (optional)' }],
       buttons: [
         { text: 'Back', role: 'cancel' },
         {
           text: 'Cancel Order',
           role: 'destructive',
-          handler: async () => {
+          handler: async (data) => {
             this.updatingId.set(order.id);
             try {
-              await this.orderService.updateOrderStatus(order.id, 'cancelled');
-            } catch {
-              // handle silently
+              await this.orderService.cancelOrder(order.id, data?.reason);
+              await this.notificationService.notifyOrderStatusChange(order.id, 'cancelled');
+              const toast = await this.toastCtrl.create({
+                message: 'Order cancelled and stock restored.',
+                color: 'warning', duration: 2500, position: 'top',
+              });
+              await toast.present();
+            } catch (err: unknown) {
+              const toast = await this.toastCtrl.create({
+                message: err instanceof Error ? err.message : 'Failed to cancel order.',
+                color: 'danger', duration: 3000, position: 'top',
+              });
+              await toast.present();
             } finally {
               this.updatingId.set(null);
             }
@@ -180,8 +194,10 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
 
   formatDate(timestamp: unknown): string {
     try {
-      const ts = timestamp as { toDate(): Date };
-      return ts.toDate().toLocaleDateString('en-PH', {
+      if (timestamp === null || timestamp === undefined) return '—';
+      const ts = timestamp as { toDate(): Date } | string;
+      const date = typeof ts === 'string' ? new Date(ts) : ts.toDate();
+      return date.toLocaleDateString('en-PH', {
         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
       });
     } catch { return '—'; }

@@ -12,4 +12,10 @@ export const environment = {
   deliveryFeePhp: 50,
   freeDeliveryThresholdPhp: 500,
   lowStockThreshold: 10,
+  // Cloudinary unsigned upload for product images.
+  // Cloudinary Console > Settings > Upload > Upload presets > Add (Signing Mode: Unsigned).
+  cloudinary: {
+    cloudName: '',
+    uploadPreset: '',
+  },
 };

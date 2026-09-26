@@ -13,18 +13,12 @@ import { addIcons } from 'ionicons';
 import {
   logoGoogle, mailOutline, lockClosedOutline,
   personOutline, eyeOutline, eyeOffOutline,
-  shieldCheckmarkOutline,
 } from 'ionicons/icons';
 import { AuthService } from '../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
-import { UserRole } from '../../core/models/user.model';
 
-// ── SECRET ADMIN CODE ──────────────────────────────────────────
-// Change this to any secret phrase your team agrees on
-const ADMIN_SECRET_CODE = 'fiveorites2025admin';
-
-type AuthMode = 'login' | 'register' | 'register-admin';
+type AuthMode = 'login' | 'register';
 
 @Component({
   selector: 'app-auth',
@@ -45,7 +39,6 @@ export class AuthPage implements OnInit {
   email = '';
   password = '';
   displayName = '';
-  adminCode = '';
   showPassword = signal(false);
   isLoading = signal(false);
   errorMessage = signal('');
@@ -54,7 +47,6 @@ export class AuthPage implements OnInit {
     addIcons({
       logoGoogle, mailOutline, lockClosedOutline,
       personOutline, eyeOutline, eyeOffOutline,
-      shieldCheckmarkOutline,
     });
 
     this.authService.currentUser$
@@ -67,7 +59,6 @@ export class AuthPage implements OnInit {
   setMode(mode: AuthMode): void {
     this.mode.set(mode);
     this.errorMessage.set('');
-    this.adminCode = '';
   }
 
   togglePasswordVisibility(): void {
@@ -82,27 +73,13 @@ export class AuthPage implements OnInit {
       if (this.mode() === 'login') {
         await this.authService.signInWithEmail(this.email, this.password);
 
-      } else if (this.mode() === 'register') {
+      } else {
         if (!this.displayName.trim()) {
           this.errorMessage.set('Please enter your full name.');
           return;
         }
         await this.authService.registerWithEmail(
-          this.email, this.password, this.displayName, 'customer'
-        );
-
-      } else if (this.mode() === 'register-admin') {
-        // ── Admin Registration ─────────────────────────────
-        if (!this.displayName.trim()) {
-          this.errorMessage.set('Please enter your full name.');
-          return;
-        }
-        if (this.adminCode !== ADMIN_SECRET_CODE) {
-          this.errorMessage.set('Invalid admin code. Please try again.');
-          return;
-        }
-        await this.authService.registerWithEmail(
-          this.email, this.password, this.displayName, 'admin'
+          this.email, this.password, this.displayName
         );
       }
 

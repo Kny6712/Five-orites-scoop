@@ -71,6 +71,17 @@ export class NotificationService {
         message,
         newStatus === 'cancelled' ? 'danger' : 'success'
       );
+      this.showBrowserNotification('Five-orites Scoop', `${message} (#${orderId.slice(-6).toUpperCase()})`);
+    }
+  }
+
+  private showBrowserNotification(title: string, body: string): void {
+    try {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      // eslint-disable-next-line no-new
+      new Notification(title, { body });
+    } catch {
+      // Notifications unsupported/blocked — toast already shown.
     }
   }
 }

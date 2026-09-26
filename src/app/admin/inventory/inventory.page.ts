@@ -11,7 +11,7 @@ import {
   IonButton, IonIcon, IonToggle,
   IonSkeletonText, IonRefresher, IonRefresherContent,
   IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-  IonChip, AlertController, ToastController,
+  IonChip, AlertController, ToastController, ModalController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -21,6 +21,9 @@ import { Subscription, catchError, of } from 'rxjs';
 import { InventoryService } from '../../core/services/inventory.service';
 import { Product, SizeVariant } from '../../core/models/product.model';
 import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
+import { LOW_STOCK_THRESHOLD } from '../../core/config/stock.config';
+import { AddProductModalComponent } from './add-product-modal.component';
+import { EditProductModalComponent } from './edit-product-modal.component';
 
 interface EditableStock { cup: number; pint: number; halfGallon: number; gallon: number; }
 
@@ -44,6 +47,7 @@ export class InventoryPage implements OnInit, OnDestroy {
   private inventoryService = inject(InventoryService);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
+  private modalCtrl = inject(ModalController);
   private sub?: Subscription;
 
   products = signal<Product[]>([]);
@@ -55,6 +59,7 @@ export class InventoryPage implements OnInit, OnDestroy {
 
   readonly sizes: SizeVariant[] = ['cup', 'pint', 'halfGallon', 'gallon'];
   readonly sizeLabels = SIZE_DISPLAY_LABELS;
+  readonly lowStockThreshold = LOW_STOCK_THRESHOLD;
   skeletonItems = Array(6).fill(0);
 
   constructor() {
@@ -177,6 +182,61 @@ export class InventoryPage implements OnInit, OnDestroy {
     setTimeout(() => (event.target as HTMLIonRefresherElement).complete(), 1000);
   }
 
-  isLowStock(stock: number): boolean { return stock > 0 && stock < 10; }
+  isLowStock(stock: number): boolean { return stock > 0 && stock < this.lowStockThreshold; }
   isOutOfStock(stock: number): boolean { return stock === 0; }
+
+  async bulkRestock(): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: 'Bulk Restock',
+      message: 'Add the same amount to EVERY size of ALL active products.',
+      inputs: [{ name: 'amount', type: 'number', placeholder: 'e.g. 10', min: 1 }],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Restock All',
+          handler: async (data) => {
+            const amount = Math.floor(Number(data?.amount));
+            if (!Number.isInteger(amount) || amount <= 0) {
+              void this.toast('Enter a positive whole number.', 'danger');
+              return;
+            }
+            try {
+              const count = await this.inventoryService.bulkRestock(amount);
+              await this.toast(`✅ Restocked ${count} products (+${amount} each size).`, 'success');
+            } catch (err: unknown) {
+              await this.toast(err instanceof Error ? err.message : 'Bulk restock failed.', 'danger');
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  // ── Add Product: dropdown form (flavor-set list + New), with description ───
+  async addProduct(): Promise<void> {
+    const loaded = this.products();
+    const modal = await this.modalCtrl.create({
+      component: AddProductModalComponent,
+      componentProps: {
+        maxSetNumber: loaded.length > 0 ? Math.max(...loaded.map((p) => p.setNumber)) : 8,
+        variants: loaded.map((p) => ({ setNumber: p.setNumber, variantName: p.variantName })),
+      },
+    });
+    await modal.present();
+  }
+
+  async editDetails(product: Product): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: EditProductModalComponent,
+      componentProps: { product },
+      cssClass: 'large-sheet-modal',
+    });
+    await modal.present();
+  }
+
+  private async toast(message: string, color: 'success' | 'danger' | 'warning'): Promise<void> {
+    const t = await this.toastCtrl.create({ message, color, duration: 2500, position: 'top' });
+    await t.present();
+  }
 }

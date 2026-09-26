@@ -48,7 +48,16 @@
         <div class="cancelled-banner">
           <ion-icon name="close-circle-outline"></ion-icon>
           This order has been cancelled.
+          @if (order()!.cancelReason) {
+            <p class="info-notes">Reason: {{ order()!.cancelReason }}</p>
+          }
         </div>
+      }
+
+      @if (canCancel()) {
+        <ion-button expand="block" fill="outline" color="danger" (click)="cancelOrder()" [disabled]="isCancelling()">
+          {{ isCancelling() ? 'Cancelling...' : 'Cancel Order' }}
+        </ion-button>
       }
 
       <!-- Status Timeline (vertical stepper) -->
@@ -106,9 +115,15 @@
               <span>Subtotal</span>
               <span>{{ order()!.totalAmount | peso }}</span>
             </div>
+            @if ((order()!.discountAmount ?? 0) > 0) {
+              <div class="total-row">
+                <span>Voucher {{ order()!.voucherCode }}</span>
+                <span>-{{ (order()!.discountAmount ?? 0) | peso }}</span>
+              </div>
+            }
             <div class="total-row">
               <span>Delivery</span>
-              <span>{{ order()!.deliveryFee | peso }}</span>
+              <span>{{ order()!.deliveryFee === 0 ? 'FREE' : (order()!.deliveryFee | peso) }}</span>
             </div>
             <div class="total-row grand">
               <span>Total</span>

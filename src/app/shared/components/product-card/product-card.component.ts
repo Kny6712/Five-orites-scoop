@@ -13,11 +13,13 @@ import {
   ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { cartOutline, addOutline } from 'ionicons/icons';
+import { cartOutline, addOutline, heartOutline, heart } from 'ionicons/icons';
 import { Product, SizeVariant } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 import { PesoPipe } from '../../pipes/peso.pipe';
 import { SIZE_DISPLAY_LABELS } from '../../../core/config/pricing.config';
+import { LOW_STOCK_THRESHOLD } from '../../../core/config/stock.config';
 
 @Component({
   selector: 'app-product-card',
@@ -36,24 +38,29 @@ export class ProductCardComponent implements OnInit {
   @Output() addedToCart = new EventEmitter<void>();
 
   private cartService = inject(CartService);
+  private wishlistService = inject(WishlistService);
   private toastCtrl = inject(ToastController);
 
   selectedSize = signal<SizeVariant>('cup');
   imageLoaded = signal(false);
   isAdding = signal(false); // ← lock prevents double-add
+  isWished = signal(false);
 
   sizeLabels = SIZE_DISPLAY_LABELS;
   sizes: SizeVariant[] = ['cup', 'pint', 'halfGallon', 'gallon'];
+  lowStockThreshold = LOW_STOCK_THRESHOLD;
 
   currentPrice = computed(() => this.product.pricing[this.selectedSize()]);
   currentStock = computed(() => this.product.stock?.[this.selectedSize()] ?? 0);
   isOutOfStock = computed(() => this.currentStock() === 0);
 
   constructor() {
-    addIcons({ cartOutline, addOutline });
+    addIcons({ cartOutline, addOutline, heartOutline, heart });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isWished.set(this.wishlistService.isWished(this.product.id));
+  }
 
   onSizeChange(event: CustomEvent): void {
     this.selectedSize.set(event.detail.value as SizeVariant);
@@ -63,8 +70,15 @@ export class ProductCardComponent implements OnInit {
     this.imageLoaded.set(true);
   }
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img && !img.src.endsWith('placeholder-scoop.svg')) {
+      img.src = 'assets/placeholder-scoop.svg';
+    }
+    this.imageLoaded.set(true);
+  }
+
   async addToCart(): Promise<void> {
-    // Guard: if already adding, do nothing (prevents double-tap)
     if (this.isOutOfStock() || this.isAdding()) return;
 
     this.isAdding.set(true);
@@ -81,9 +95,40 @@ export class ProductCardComponent implements OnInit {
       await toast.present();
     } catch (err) {
       console.error('Add to cart error:', err);
+      const toast = await this.toastCtrl.create({
+        message: err instanceof Error ? err.message : 'Could not add to cart.',
+        duration: 3000,
+        color: 'warning',
+        position: 'bottom',
+      });
+      await toast.present();
     } finally {
       // Reset lock after 800ms to prevent rapid double-tap
       setTimeout(() => this.isAdding.set(false), 800);
+    }
+  }
+
+  async toggleWishlist(event: Event): Promise<void> {
+    event.stopPropagation();
+    event.preventDefault();
+    try {
+      const added = this.wishlistService.toggle(this.product.id);
+      this.isWished.set(added);
+      const toast = await this.toastCtrl.create({
+        message: added ? 'Saved to wishlist! 💖' : 'Removed from wishlist.',
+        duration: 1500,
+        color: 'primary',
+        position: 'bottom',
+      });
+      await toast.present();
+    } catch (err) {
+      const toast = await this.toastCtrl.create({
+        message: err instanceof Error ? err.message : 'Sign in to use wishlist.',
+        duration: 2500,
+        color: 'warning',
+        position: 'bottom',
+      });
+      await toast.present();
     }
   }
 }

@@ -9,3 +9,11 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+/* Large centered card modals (admin forms) — bigger and more presentable
+   than the default small alert dialogs. */
+.large-sheet-modal {
+  --width: min(680px, 94vw);
+  --height: min(720px, 92vh);
+  --border-radius: 18px;
+}

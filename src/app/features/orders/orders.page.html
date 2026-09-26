@@ -69,8 +69,20 @@
             <p class="order-meta">
               {{ order.items.length }} item{{ order.items.length !== 1 ? 's' : '' }}
               · {{ order.grandTotal | peso }}
+              @if (order.voucherCode) { · {{ order.voucherCode }} }
             </p>
             <p class="order-date">{{ formatDate(order.createdAt) }}</p>
+            @if (canCancel(order)) {
+              <ion-button
+                fill="outline"
+                color="danger"
+                size="small"
+                (click)="cancelOrder(order, $event)"
+                [disabled]="cancellingId() === order.id"
+              >
+                {{ cancellingId() === order.id ? 'Cancelling...' : 'Cancel Order' }}
+              </ion-button>
+            }
           </div>
         </ion-item>
       }

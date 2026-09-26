@@ -1,5 +1,5 @@
 <!-- src/app/features/auth/auth.page.html -->
-<!-- Five-orites Scoop — Auth Page (Login / Register / Admin Register) -->
+<!-- Five-orites Scoop — Auth Page (Login / Register) -->
 
 <ion-content class="auth-content" fullscreen>
   <div class="auth-container">
@@ -32,25 +32,16 @@
         >
           Sign Up
         </button>
-        <button
-          class="mode-tab mode-tab-admin"
-          [class.active]="mode() === 'register-admin'"
-          (click)="setMode('register-admin')"
-        >
-          🛡️ Admin
-        </button>
       </div>
 
       <!-- Title -->
       <h2 class="auth-title">
         @if (mode() === 'login') { Welcome back }
         @if (mode() === 'register') { Create account }
-        @if (mode() === 'register-admin') { Admin Registration }
       </h2>
       <p class="auth-subtitle">
         @if (mode() === 'login') { Sign in to order your favourite scoops }
         @if (mode() === 'register') { Join us for fresh flavors delivered daily }
-        @if (mode() === 'register-admin') { Enter your details and the admin secret code }
       </p>
 
       <!-- Error Message -->
@@ -58,19 +49,11 @@
         <div class="error-banner" role="alert">{{ errorMessage() }}</div>
       }
 
-      <!-- Admin Notice -->
-      @if (mode() === 'register-admin') {
-        <div class="admin-notice">
-          🛡️ Admin accounts have full access to inventory, orders, and analytics.
-          You need the secret admin code to register.
-        </div>
-      }
-
       <!-- Form Fields -->
       <div class="auth-form">
 
-        <!-- Name field (register modes only) -->
-        @if (mode() === 'register' || mode() === 'register-admin') {
+        <!-- Name field (register mode only) -->
+        @if (mode() === 'register') {
           <div class="input-group">
             <ion-icon name="person-outline" class="input-icon"></ion-icon>
             <ion-input
@@ -109,24 +92,10 @@
           </button>
         </div>
 
-        <!-- Admin Secret Code (admin register only) -->
-        @if (mode() === 'register-admin') {
-          <div class="input-group admin-code-group">
-            <ion-icon name="shield-checkmark-outline" class="input-icon admin-icon"></ion-icon>
-            <ion-input
-              type="password"
-              placeholder="Admin secret code"
-              [(ngModel)]="adminCode"
-              class="auth-input"
-            ></ion-input>
-          </div>
-        }
-
         <!-- Submit Button -->
         <ion-button
           expand="block"
           class="submit-btn"
-          [class.submit-btn-admin]="mode() === 'register-admin'"
           (click)="submit()"
           [disabled]="isLoading()"
         >
@@ -135,7 +104,6 @@
           }
           @if (mode() === 'login') { Sign In }
           @if (mode() === 'register') { Create Account }
-          @if (mode() === 'register-admin') { Register as Admin }
         </ion-button>
 
         <!-- Divider (login only) -->

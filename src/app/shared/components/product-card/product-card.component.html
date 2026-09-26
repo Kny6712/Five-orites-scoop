@@ -7,13 +7,17 @@
       <ion-skeleton-text animated class="image-skeleton"></ion-skeleton-text>
     }
     <img
-      [src]="product.imageUrl || ''"
+      [src]="product.imageUrl || 'assets/placeholder-scoop.svg'"
       [alt]="product.variantName"
       class="card-image"
       [class.image-visible]="imageLoaded()"
       (load)="onImageLoad()"
+      (error)="onImageError($event)"
     />
     <div class="set-badge">Set {{ product.setNumber }} · {{ product.setName }}</div>
+    <button class="wishlist-btn" (click)="toggleWishlist($event)" [attr.aria-label]="isWished() ? 'Remove from wishlist' : 'Save to wishlist'">
+      <ion-icon [name]="isWished() ? 'heart' : 'heart-outline'" [color]="isWished() ? 'danger' : 'medium'"></ion-icon>
+    </button>
   </div>
 
   <ion-card-content class="card-body" (click)="$event.stopPropagation()">
@@ -36,11 +40,11 @@
     <div class="price-stock-row">
       <span class="price">{{ currentPrice() | peso }}</span>
       <ion-chip
-        [color]="currentStock() === 0 ? 'danger' : currentStock() < 10 ? 'warning' : 'success'"
+        [color]="currentStock() === 0 ? 'danger' : currentStock() < lowStockThreshold ? 'warning' : 'success'"
         class="stock-chip"
       >
         <ion-label>
-          {{ currentStock() === 0 ? 'Out of Stock' : currentStock() < 10 ? 'Low Stock' : 'In Stock' }}
+          {{ currentStock() === 0 ? 'Out of Stock' : currentStock() < lowStockThreshold ? 'Low Stock' : 'In Stock' }}
         </ion-label>
       </ion-chip>
     </div>

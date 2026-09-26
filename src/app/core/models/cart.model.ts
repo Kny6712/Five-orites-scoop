@@ -23,6 +23,10 @@ export interface Cart {
 export const DELIVERY_FEE = 50; // ₱50 flat rate — Metro Manila
 export const FREE_DELIVERY_THRESHOLD = 500; // Free delivery over ₱500
 
+export function getDeliveryFee(subtotal: number): number {
+  return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
+}
+
 export const EMPTY_CART: Cart = {
   items: [],
   totalAmount: 0,

@@ -7,26 +7,29 @@ import {
   collection,
   query,
   where,
+  limit,
   onSnapshot,
   doc,
+  addDoc,
   updateDoc,
   serverTimestamp,
   runTransaction,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Product, FlavorSet, SizeVariant, ProductFilter } from '../models/product.model';
+import { Product, FlavorSet, SizeVariant, StockLevel, ProductFilter } from '../models/product.model';
+import { LOW_STOCK_THRESHOLD } from '../config/stock.config';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
   private firestore = inject(Firestore);
 
   // ── Real-time product stream ──────────────────────────────────────────────────
-  getProducts(filters?: ProductFilter): Observable<Product[]> {
+  getProducts(filters?: ProductFilter, maxResults = 200): Observable<Product[]> {
     return new Observable<Product[]>((observer) => {
       const productsCol = collection(this.firestore, 'products');
 
       // Simple query — no composite index needed
-      const q = query(productsCol, where('isActive', '==', true));
+      const q = query(productsCol, where('isActive', '==', true), limit(maxResults));
 
       const unsubscribe = onSnapshot(
         q,
@@ -97,7 +100,7 @@ export class InventoryService {
     });
   }
 
-  subscribeToLowStock(threshold = 10): Observable<Product[]> {
+  subscribeToLowStock(threshold = LOW_STOCK_THRESHOLD): Observable<Product[]> {
     return new Observable<Product[]>((observer) => {
       const productsCol = collection(this.firestore, 'products');
       const q = query(productsCol, where('isActive', '==', true));
@@ -124,12 +127,17 @@ export class InventoryService {
   }
 
   // ── Admin Stock Update ────────────────────────────────────────────────────────
+  // Transactional so concurrent checkouts cannot clobber admin edits.
   async updateStock(productId: string, size: SizeVariant, newQuantity: number): Promise<void> {
-    if (newQuantity < 0) throw new Error('Stock cannot be negative.');
+    if (!Number.isInteger(newQuantity) || newQuantity < 0) throw new Error('Stock cannot be negative.');
     const productRef = doc(this.firestore, `products/${productId}`);
-    await updateDoc(productRef, {
-      [`stock.${size}`]: newQuantity,
-      updatedAt: serverTimestamp(),
+    await runTransaction(this.firestore, async (transaction) => {
+      const snap = await transaction.get(productRef);
+      if (!snap.exists()) throw new Error(`Product ${productId} not found.`);
+      transaction.update(productRef, {
+        [`stock.${size}`]: newQuantity,
+        updatedAt: serverTimestamp(),
+      });
     });
   }
 
@@ -139,6 +147,75 @@ export class InventoryService {
       isActive,
       updatedAt: serverTimestamp(),
     });
+  }
+
+  // ── Replace ALL size quantities at once (Edit Details modal) ──────────────
+  async updateStocks(productId: string, stock: StockLevel): Promise<void> {
+    for (const size of Object.keys(stock) as SizeVariant[]) {
+      const qty = stock[size];
+      if (!Number.isInteger(qty) || qty < 0) throw new Error('Stock cannot be negative.');
+    }
+    const productRef = doc(this.firestore, `products/${productId}`);
+    await updateDoc(productRef, {
+      stock: { ...stock },
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  // ── Admin Product CRUD ────────────────────────────────────────────────────
+  async createProduct(input: {
+    setNumber: FlavorSet;
+    setName: string;
+    variantName: string;
+    description: string;
+    imageUrl?: string;
+    pricing: { cup: number; pint: number; halfGallon: number; gallon: number };
+    stock: { cup: number; pint: number; halfGallon: number; gallon: number };
+  }): Promise<string> {
+    if (!input.variantName.trim()) throw new Error('Variant name is required.');
+    const productsCol = collection(this.firestore, 'products');
+    const ref = await addDoc(productsCol, {
+      setNumber: input.setNumber,
+      setName: input.setName.trim(),
+      variantName: input.variantName.trim(),
+      description: (input.description || '').trim(),
+      imageUrl: (input.imageUrl || '').trim(),
+      pricing: input.pricing,
+      stock: input.stock,
+      isActive: true,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return ref.id;
+  }
+
+  async updateProductDetails(
+    productId: string,
+    patch: Partial<Pick<Product, 'variantName' | 'description' | 'imageUrl' | 'pricing' | 'setName' | 'setNumber'>>
+  ): Promise<void> {
+    const productRef = doc(this.firestore, `products/${productId}`);
+    await updateDoc(productRef, { ...patch, updatedAt: serverTimestamp() });
+  }
+
+  // ── Bulk restock: add `amount` to EVERY size of EVERY active product ──────
+  async bulkRestock(amount: number): Promise<number> {
+    if (!Number.isInteger(amount) || amount <= 0) throw new Error('Restock amount must be a positive whole number.');
+    const { getDocs } = await import('@angular/fire/firestore');
+    const productsCol = collection(this.firestore, 'products');
+    const snap = await getDocs(query(productsCol, where('isActive', '==', true), limit(200)));
+    let updated = 0;
+    for (const d of snap.docs) {
+      const data = d.data() as Product;
+      await updateDoc(doc(this.firestore, `products/${d.id}`), {
+        'stock.cup': (data.stock?.cup ?? 0) + amount,
+        'stock.pint': (data.stock?.pint ?? 0) + amount,
+        'stock.halfGallon': (data.stock?.halfGallon ?? 0) + amount,
+        'stock.gallon': (data.stock?.gallon ?? 0) + amount,
+        updatedAt: serverTimestamp(),
+      });
+      updated++;
+    }
+    return updated;
   }
 
   // ── Firestore Transaction: Stock Validation ────────────────────────────────────
@@ -173,6 +250,26 @@ export class InventoryService {
         const newStock = check.data.stock[check.size] - check.quantity;
         transaction.update(check.ref, {
           [`stock.${check.size}`]: newStock,
+          updatedAt: serverTimestamp(),
+        });
+      }
+    });
+  }
+
+  // ── Restock (e.g. order cancelled) ──────────────────────────────────────────
+  async restockItems(
+    items: { productId: string; size: SizeVariant; quantity: number }[]
+  ): Promise<void> {
+    if (items.length === 0) return;
+    await runTransaction(this.firestore, async (transaction) => {
+      for (const item of items) {
+        const ref = doc(this.firestore, `products/${item.productId}`);
+        const snap = await transaction.get(ref);
+        if (!snap.exists()) continue;
+        const product = { id: snap.id, ...snap.data() } as Product;
+        const current = product.stock?.[item.size] ?? 0;
+        transaction.update(ref, {
+          [`stock.${item.size}`]: current + item.quantity,
           updatedAt: serverTimestamp(),
         });
       }

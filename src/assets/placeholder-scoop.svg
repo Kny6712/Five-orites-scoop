@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" rx="24" fill="#FFF3E4"/>
+  <circle cx="200" cy="120" r="62" fill="#F8BBD0"/>
+  <circle cx="168" cy="105" r="14" fill="#F48FB1"/>
+  <circle cx="228" cy="132" r="10" fill="#F48FB1"/>
+  <path d="M165 175 L235 175 L220 240 L180 240 Z" fill="#D7A86E"/>
+  <path d="M165 175 L235 175 L232 190 L168 190 Z" fill="#BC8A54"/>
+  <text x="200" y="272" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#8D5A2B">Five-orites Scoop</text>
+</svg>

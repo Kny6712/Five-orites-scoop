@@ -2,9 +2,9 @@
 // Five-orites Scoop — Authoritative Pricing Matrix
 // Author: [Developer Placeholder]
 
-import { FlavorSet, SizePricing, SizeVariant } from '../models/product.model';
+import { SizePricing, SizeVariant } from '../models/product.model';
 
-export const PRICING_MATRIX: Record<FlavorSet, SizePricing> = {
+export const PRICING_MATRIX: Record<number, SizePricing> = {
   1: { cup: 65,  pint: 200, halfGallon: 500, gallon: 950 }, // Chocolates
   2: { cup: 60,  pint: 190, halfGallon: 480, gallon: 900 }, // Vanilla
   3: { cup: 65,  pint: 200, halfGallon: 500, gallon: 950 }, // Strawberry
@@ -22,7 +22,7 @@ export const SIZE_DISPLAY_LABELS: Record<SizeVariant, string> = {
   gallon: 'Gallon',
 };
 
-export const SET_NAMES: Record<FlavorSet, string> = {
+export const SET_NAMES: Record<number, string> = {
   1: 'Chocolates',
   2: 'Vanilla',
   3: 'Strawberry',
@@ -32,3 +32,26 @@ export const SET_NAMES: Record<FlavorSet, string> = {
   7: 'Coffee',
   8: 'Cookies & Cream',
 };
+
+// Standard tier applied to admin-created sets until edited.
+export const DEFAULT_SET_PRICING: SizePricing = {
+  cup: 65, pint: 200, halfGallon: 500, gallon: 950,
+};
+
+export function getPricingForSet(setNumber: number): SizePricing {
+  return { ...(PRICING_MATRIX[setNumber] ?? DEFAULT_SET_PRICING) };
+}
+
+export function getSetName(setNumber: number): string {
+  return SET_NAMES[setNumber] ?? `Set ${setNumber}`;
+}
+
+/**
+ * Single source of truth for "this SKU is running low".
+ *
+ * Previously the number 10 was written literally in four templates plus
+ * StockStatusPipe while `environment.lowStockThreshold` sat unused by those
+ * files — changing the environment value silently did nothing. Import this
+ * everywhere instead.
+ */
+export { LOW_STOCK_THRESHOLD } from './stock.config';

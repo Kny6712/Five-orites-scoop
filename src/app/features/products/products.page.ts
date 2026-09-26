@@ -18,6 +18,7 @@ import { sadOutline, iceCreamOutline, filterOutline } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { catchError, of } from 'rxjs';
 import { InventoryService } from '../../core/services/inventory.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 import { Product, FlavorSet } from '../../core/models/product.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { SET_NAMES } from '../../core/config/pricing.config';
@@ -42,7 +43,9 @@ interface SetChip { label: string; value: FlavorSet | null; }
 })
 export class ProductsPage implements OnInit, OnDestroy {
   private inventoryService = inject(InventoryService);
+  private wishlistService = inject(WishlistService);
   private sub?: Subscription;
+  private wishlistSub?: Subscription;
 
   allProducts = signal<Product[]>([]);
   isLoading = signal(true);
@@ -50,6 +53,8 @@ export class ProductsPage implements OnInit, OnDestroy {
   searchQuery = signal('');
   selectedSet = signal<FlavorSet | null>(null);
   inStockOnly = signal(false);
+  wishlistOnly = signal(false);
+  wishlistIds = signal<string[]>([]);
   PAGE_SIZE = 20;
   displayedCount = signal(this.PAGE_SIZE);
 
@@ -71,6 +76,10 @@ export class ProductsPage implements OnInit, OnDestroy {
     if (this.inStockOnly()) products = products.filter(
       (p) => p.stock.cup > 0 || p.stock.pint > 0 || p.stock.halfGallon > 0 || p.stock.gallon > 0
     );
+    if (this.wishlistOnly()) {
+      const ids = new Set(this.wishlistIds());
+      products = products.filter((p) => ids.has(p.id));
+    }
     return products;
   });
 
@@ -84,8 +93,8 @@ export class ProductsPage implements OnInit, OnDestroy {
     addIcons({ sadOutline, iceCreamOutline, filterOutline });
   }
 
-  ngOnInit(): void { this.loadProducts(); }
-  ngOnDestroy(): void { this.sub?.unsubscribe(); }
+  ngOnInit(): void { this.loadProducts(); this.wishlistSub = this.wishlistService.wishlist$.subscribe((ids) => this.wishlistIds.set(ids)); }
+  ngOnDestroy(): void { this.sub?.unsubscribe(); this.wishlistSub?.unsubscribe(); }
 
   loadProducts(): void {
     this.isLoading.set(true);
@@ -114,6 +123,11 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   onInStockToggle(event: CustomEvent): void {
     this.inStockOnly.set(event.detail.checked);
+  }
+
+  onWishlistToggle(event: CustomEvent): void {
+    this.wishlistOnly.set(event.detail.checked);
+    this.displayedCount.set(this.PAGE_SIZE);
   }
 
   handleRefresh(event: CustomEvent): void {

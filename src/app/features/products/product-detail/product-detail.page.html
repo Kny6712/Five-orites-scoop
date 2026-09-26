@@ -26,9 +26,10 @@
   @if (!isLoading() && product()) {
     <div class="hero-wrap">
       <img
-        [src]="product()!.imageUrl || ''"
+        [src]="product()!.imageUrl || 'assets/placeholder-scoop.svg'"
         [alt]="product()!.variantName"
         class="hero-image"
+        onerror="this.src='assets/placeholder-scoop.svg'"
       />
       <div class="hero-overlay">
         <ion-badge class="set-badge-hero">
@@ -39,6 +40,11 @@
 
     <div class="detail-body">
       <h1 class="detail-name">{{ product()!.variantName }}</h1>
+      <app-star-rating [rating]="avgRating()" [showCount]="true" [reviewCount]="reviewCount()"></app-star-rating>
+      <ion-button fill="outline" size="small" (click)="toggleWishlist()">
+        <ion-icon [name]="isWished() ? 'heart' : 'heart-outline'" slot="start"></ion-icon>
+        {{ isWished() ? 'Wishlisted' : 'Wishlist' }}
+      </ion-button>
       <p class="detail-description">{{ product()!.description }}</p>
 
       <h2 class="section-title">Choose Your Size</h2>
@@ -54,11 +60,11 @@
             <span class="tile-size">{{ opt.label }}</span>
             <span class="tile-price">{{ product()!.pricing[opt.key] | peso }}</span>
             <span class="tile-stock"
-              [class.stock-in-stock]="product()!.stock[opt.key] >= 10"
-              [class.stock-low-stock]="product()!.stock[opt.key] > 0 && product()!.stock[opt.key] < 10"
+              [class.stock-in-stock]="product()!.stock[opt.key] >= lowStockThreshold"
+              [class.stock-low-stock]="product()!.stock[opt.key] > 0 && product()!.stock[opt.key] < lowStockThreshold"
               [class.stock-out-of-stock]="product()!.stock[opt.key] === 0">
               {{ product()!.stock[opt.key] === 0 ? 'Out of Stock' :
-                 product()!.stock[opt.key] < 10 ? 'Low Stock (' + product()!.stock[opt.key] + ')' : 'In Stock' }}
+                 product()!.stock[opt.key] < lowStockThreshold ? 'Low Stock (' + product()!.stock[opt.key] + ')' : 'In Stock' }}
             </span>
           </button>
         }
@@ -90,9 +96,27 @@
 
       <div class="reviews-section">
         <h2 class="section-title">Customer Reviews</h2>
-        <div class="reviews-empty">
-          <app-star-rating [rating]="0" [showCount]="true" [reviewCount]="0"></app-star-rating>
-          <p class="no-reviews">No reviews yet — be the first!</p>
+        @if (reviews().length === 0) {
+          <div class="reviews-empty">
+            <app-star-rating [rating]="0" [showCount]="true" [reviewCount]="0"></app-star-rating>
+            <p class="no-reviews">No reviews yet — be the first!</p>
+          </div>
+        } @else {
+          @for (r of reviews(); track r.id) {
+            <div class="review-item">
+              <app-star-rating [rating]="r.rating"></app-star-rating>
+              <p class="review-author">{{ r.displayName }}</p>
+              <p class="review-comment">{{ r.comment }}</p>
+            </div>
+          }
+        }
+        <div class="review-form">
+          <h3 class="section-title">Write a review</h3>
+          <app-star-rating [rating]="newRating()" [interactive]="true" (ratingChange)="newRating.set($event)"></app-star-rating>
+          <ion-textarea [(ngModel)]="newComment" placeholder="What did you love?" rows="2"></ion-textarea>
+          <ion-button expand="block" (click)="submitReview()" [disabled]="isSubmittingReview()">
+            {{ isSubmittingReview() ? 'Submitting...' : 'Submit Review' }}
+          </ion-button>
         </div>
       </div>
     </div>

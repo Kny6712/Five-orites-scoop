@@ -34,7 +34,7 @@
         @for (item of cart().items; track trackItem($index, item)) {
           <div class="cart-item">
             <div class="item-image-wrap">
-              <img [src]="item.imageUrl || ''" [alt]="item.variantName" class="item-image" />
+              <img [src]="item.imageUrl || 'assets/placeholder-scoop.svg'" [alt]="item.variantName" class="item-image" onerror="this.src='assets/placeholder-scoop.svg'" />
             </div>
             <div class="item-info">
               <p class="item-name">{{ item.variantName }}</p>
@@ -47,7 +47,8 @@
                   <ion-icon name="remove-outline"></ion-icon>
                 </button>
                 <span class="qty-num">{{ item.quantity }}</span>
-                <button class="qty-btn" (click)="incrementQty(item)">
+                <button class="qty-btn" (click)="incrementQty(item)"
+                  [disabled]="atStockLimit(item)">
                   <ion-icon name="add-outline"></ion-icon>
                 </button>
               </div>
@@ -65,10 +66,21 @@
           <span>Subtotal</span>
           <span>{{ cart().totalAmount | peso }}</span>
         </div>
+        @if (voucherDiscount() > 0) {
+          <div class="summary-row">
+            <span>Voucher {{ appliedVoucher() }}</span>
+            <span>-{{ voucherDiscount() | peso }}</span>
+          </div>
+        }
         <div class="summary-row">
           <span>Delivery Fee</span>
-          <span>{{ deliveryFee | peso }}</span>
+          <span>{{ isFreeDelivery() ? 'FREE' : (deliveryFee() | peso) }}</span>
         </div>
+        @if (!isFreeDelivery()) {
+          <p class="free-delivery-hint">Add {{ amountAwayFromFreeDelivery() | peso }} more for FREE delivery (over {{ freeDeliveryThreshold | peso }}).</p>
+        } @else {
+          <p class="free-delivery-hint">🎉 You've unlocked FREE delivery!</p>
+        }
         <div class="summary-row total-row">
           <span>Total</span>
           <span class="total-amount">{{ grandTotal() | peso }}</span>
@@ -76,7 +88,40 @@
       </div>
 
       <div class="checkout-form">
+        <h3 class="form-title">Voucher</h3>
+        @if (!appliedVoucher()) {
+          <div class="input-wrap">
+            <label class="field-label">Promo code (try SCOOP10)</label>
+            <ion-textarea
+              [(ngModel)]="voucherCode"
+              placeholder="Enter code..."
+              rows="1"
+              class="field-input"
+            ></ion-textarea>
+          </div>
+          <ion-button expand="block" fill="outline" (click)="applyVoucher()">Apply Voucher</ion-button>
+        } @else {
+          <p class="review-notes">✅ {{ appliedVoucher() }} applied.</p>
+          <ion-button expand="block" fill="clear" color="medium" (click)="removeVoucher()">Remove Voucher</ion-button>
+        }
+        @if (voucherMessage()) {
+          <p class="review-notes">{{ voucherMessage() }}</p>
+        }
+      </div>
+
+      <div class="checkout-form">
         <h3 class="form-title">Delivery Details</h3>
+
+        @if (savedAddresses().length > 0) {
+          <div class="input-wrap">
+            <label class="field-label">Saved addresses</label>
+            @for (addr of savedAddresses(); track addr) {
+              <ion-button expand="block" fill="outline" size="small" (click)="useSavedAddress(addr)">
+                {{ addr }}
+              </ion-button>
+            }
+          </div>
+        }
 
         @if (errorMessage()) {
           <div class="error-banner" role="alert">{{ errorMessage() }}</div>
@@ -139,9 +184,15 @@
           <span>Subtotal</span>
           <span>{{ cart().totalAmount | peso }}</span>
         </div>
+        @if (voucherDiscount() > 0) {
+          <div class="summary-row">
+            <span>Voucher {{ appliedVoucher() }}</span>
+            <span>-{{ voucherDiscount() | peso }}</span>
+          </div>
+        }
         <div class="summary-row">
           <span>Delivery</span>
-          <span>{{ deliveryFee | peso }}</span>
+          <span>{{ isFreeDelivery() ? 'FREE' : (deliveryFee() | peso) }}</span>
         </div>
         <div class="summary-row total-row">
           <span>Total</span>
@@ -170,6 +221,14 @@
       <h2 class="confirmed-title">Order Placed!</h2>
       <p class="confirmed-sub">Your scoops are on the way. Redirecting to your order tracker...</p>
       <ion-spinner name="dots"></ion-spinner>
+      <div class="confirmed-actions">
+        <ion-button expand="block" class="place-order-btn" (click)="viewTracker()">
+          View Order Tracker
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="orderMore()" class="back-btn">
+          Order More Flavors
+        </ion-button>
+      </div>
     </div>
   }
 

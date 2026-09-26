@@ -25,6 +25,10 @@
       aria-label="Search inventory"
     ></ion-searchbar>
     <p class="inv-count">{{ filteredProducts().length }} products</p>
+    <div class="inv-actions">
+      <ion-button size="small" (click)="addProduct()">+ Add Product</ion-button>
+      <ion-button size="small" fill="outline" (click)="bulkRestock()">Bulk Restock</ion-button>
+    </div>
   </div>
 
   <!-- Loading -->
@@ -98,12 +102,12 @@
                   <div class="stock-view-cell">
                     <span class="stock-size-label">{{ sizeLabels[size] }}</span>
                     <span class="stock-qty"
-                      [class.stock-in-stock]="product.stock[size] >= 10"
-                      [class.stock-low-stock]="product.stock[size] > 0 && product.stock[size] < 10"
+                      [class.stock-in-stock]="product.stock[size] >= lowStockThreshold"
+                      [class.stock-low-stock]="product.stock[size] > 0 && product.stock[size] < lowStockThreshold"
                       [class.stock-out-of-stock]="product.stock[size] === 0">
                       {{ product.stock[size] }}
                     </span>
-                    @if (product.stock[size] < 10) {
+                    @if (product.stock[size] < lowStockThreshold) {
                       <ion-icon name="alert-circle-outline" class="stock-alert-icon"
                         [color]="product.stock[size] === 0 ? 'danger' : 'warning'">
                       </ion-icon>
@@ -111,15 +115,25 @@
                   </div>
                 }
               </div>
-              <ion-button
-                expand="block"
-                fill="outline"
-                class="edit-btn"
-                (click)="startEdit(product)"
-              >
-                <ion-icon name="create-outline" slot="start"></ion-icon>
-                Edit Stock
-              </ion-button>
+              <div class="card-actions">
+                <ion-button
+                  fill="outline"
+                  size="small"
+                  class="edit-btn action-btn"
+                  (click)="startEdit(product)"
+                >
+                  <ion-icon name="create-outline" slot="start"></ion-icon>
+                  Edit Stock
+                </ion-button>
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  class="details-btn action-btn"
+                  (click)="editDetails(product)"
+                >
+                  Details
+                </ion-button>
+              </div>
             }
           </ion-card-content>
         </ion-card>

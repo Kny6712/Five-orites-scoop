@@ -38,7 +38,7 @@
         <p class="welcome-sub">What flavor are you craving today?</p>
       </div>
       <div class="welcome-image-wrap">
-        <img src="" alt="Colorful ice cream scoop illustration" class="welcome-image" />
+        <img src="assets/placeholder-scoop.svg" alt="Colorful ice cream scoop illustration" class="welcome-image" />
       </div>
     </div>
 
@@ -187,11 +187,17 @@
               <p class="low-stock-set">{{ product.setName }}</p>
             </div>
             <div class="low-stock-levels">
-              @if (product.stock.cup < 10) {
+              @if (product.stock.cup < lowStockThreshold) {
                 <ion-chip color="warning" class="stock-chip-sm">Cup: {{ product.stock.cup }}</ion-chip>
               }
-              @if (product.stock.pint < 10) {
+              @if (product.stock.pint < lowStockThreshold) {
                 <ion-chip color="warning" class="stock-chip-sm">Pint: {{ product.stock.pint }}</ion-chip>
+              }
+              @if (product.stock.halfGallon < lowStockThreshold) {
+                <ion-chip color="warning" class="stock-chip-sm">Half Gal: {{ product.stock.halfGallon }}</ion-chip>
+              }
+              @if (product.stock.gallon < lowStockThreshold) {
+                <ion-chip color="warning" class="stock-chip-sm">Gallon: {{ product.stock.gallon }}</ion-chip>
               }
             </div>
           </div>

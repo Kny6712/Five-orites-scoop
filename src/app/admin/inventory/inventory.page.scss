@@ -67,3 +67,8 @@
 .edit-actions { display: flex; flex-direction: column; gap: 6px; }
 .save-btn { --background: var(--color-brand-primary); --border-radius: 10px; font-weight: 700; }
 .edit-btn { --border-radius: 10px; --color: var(--color-brand-primary); --border-color: var(--color-brand-primary); }
+
+// ── View-mode action row: Edit Stock + Details side-by-side ───────────────
+.card-actions { display: flex; gap: 8px; margin-top: 4px; }
+.action-btn { flex: 1; margin: 0; --border-radius: 10px; font-weight: 600; min-height: 36px; }
+.details-btn { --color: var(--color-brand-primary); border: 1px solid var(--ion-color-light-shade, #e0e0e0); border-radius: 10px; }

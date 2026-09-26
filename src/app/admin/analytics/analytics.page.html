@@ -25,10 +25,18 @@
   @if (!isLoading()) {
     <div class="analytics-body">
 
+      <ion-segment [value]="dateRange()" (ionChange)="setDateRange($any($event).detail.value)">
+        <ion-segment-button value="all"><ion-label>All</ion-label></ion-segment-button>
+        <ion-segment-button value="today"><ion-label>Today</ion-label></ion-segment-button>
+        <ion-segment-button value="7d"><ion-label>7d</ion-label></ion-segment-button>
+        <ion-segment-button value="30d"><ion-label>30d</ion-label></ion-segment-button>
+      </ion-segment>
+      <ion-button expand="block" fill="outline" (click)="exportCsv()">Export CSV</ion-button>
+
       <div class="kpi-grid">
         <div class="kpi-tile kpi-revenue">
           <ion-icon name="cash-outline" class="kpi-icon"></ion-icon>
-          <p class="kpi-label">Total Revenue</p>
+          <p class="kpi-label">Revenue (Delivered)</p>
           <p class="kpi-val">{{ totalRevenue() | peso }}</p>
         </div>
         <div class="kpi-tile kpi-orders">
@@ -43,12 +51,12 @@
         </div>
         <div class="kpi-tile kpi-avg">
           <ion-icon name="ice-cream-outline" class="kpi-icon"></ion-icon>
-          <p class="kpi-label">Avg. Order</p>
+          <p class="kpi-label">Avg. Delivered Order</p>
           <p class="kpi-val">{{ avgOrderValue() | peso }}</p>
         </div>
       </div>
 
-      <h3 class="section-title">Top Flavors by Units Sold</h3>
+      <h3 class="section-title">Top Flavors by Units Sold (Delivered)</h3>
       @if (topFlavors().length === 0) {
         <p class="no-data">No sales data yet.</p>
       }
@@ -67,6 +75,28 @@
           <div class="flavor-stats">
             <span class="flavor-units">{{ flavor.count }} units</span>
             <span class="flavor-revenue">{{ flavor.revenue | peso }}</span>
+          </div>
+        </div>
+      }
+
+      <h3 class="section-title">Sales by Flavor Set (Delivered)</h3>
+      @for (s of salesBySet(); track s.name) {
+        <div class="flavor-row">
+          <div class="flavor-info"><span class="flavor-name">{{ s.name }}</span></div>
+          <div class="flavor-stats">
+            <span class="flavor-units">{{ s.count }} units</span>
+            <span class="flavor-revenue">{{ s.revenue | peso }}</span>
+          </div>
+        </div>
+      }
+
+      <h3 class="section-title">Sales by Size (Delivered)</h3>
+      @for (s of salesBySize(); track s.name) {
+        <div class="flavor-row">
+          <div class="flavor-info"><span class="flavor-name">{{ s.name }}</span></div>
+          <div class="flavor-stats">
+            <span class="flavor-units">{{ s.count }} units</span>
+            <span class="flavor-revenue">{{ s.revenue | peso }}</span>
           </div>
         </div>
       }

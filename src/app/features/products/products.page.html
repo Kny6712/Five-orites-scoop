@@ -51,6 +51,14 @@
           aria-label="Show in-stock products only"
         ></ion-toggle>
       </ion-item>
+      <ion-item lines="none" class="stock-filter-item">
+        <ion-label class="filter-label">💖 Wishlist Only</ion-label>
+        <ion-toggle
+          slot="end"
+          (ionChange)="onWishlistToggle($event)"
+          aria-label="Show wishlisted products only"
+        ></ion-toggle>
+      </ion-item>
     </div>
   </div>
 

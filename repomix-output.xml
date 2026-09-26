@@ -40,126 +40,1180 @@ The content is organized as follows:
 </file_summary>
 
 <directory_structure>
-five-orites-scoop/
-  scripts/
-    seed-products.ts
-    tsconfig.json
-  src/
-    app/
-      admin/
-        analytics/
-          analytics.page.html
-          analytics.page.scss
-          analytics.page.ts
-        inventory/
-          inventory.page.html
-          inventory.page.scss
-          inventory.page.ts
-        orders/
-          admin-orders.page.html
-          admin-orders.page.scss
-          admin-orders.page.ts
-      core/
-        config/
-          pricing.config.ts
-        guards/
-          admin.guard.ts
-          auth.guard.ts
-        models/
-          cart.model.ts
-          order.model.ts
-          product.model.ts
-          user.model.ts
-        services/
-          auth.service.ts
-          cart.service.ts
-          inventory.service.ts
-          notification.service.ts
-          order.service.ts
-      features/
-        about/
-          about.page.html
-          about.page.scss
-          about.page.ts
-        auth/
-          auth.page.html
-          auth.page.scss
-          auth.page.ts
-        cart/
-          cart.page.html
-          cart.page.scss
-          cart.page.ts
-        dashboard/
-          dashboard.page.html
-          dashboard.page.scss
-          dashboard.page.ts
-        developers/
-          developers.page.html
-          developers.page.scss
-          developers.page.ts
-        orders/
-          order-tracker/
-            order-tracker.page.html
-            order-tracker.page.scss
-            order-tracker.page.ts
-          orders.page.html
-          orders.page.scss
-          orders.page.ts
-        products/
-          product-detail/
-            product-detail.page.html
-            product-detail.page.scss
-            product-detail.page.ts
-          products.page.html
-          products.page.scss
-          products.page.ts
-      shared/
-        components/
-          order-status-badge/
-            order-status-badge.component.ts
-          product-card/
-            product-card.component.html
-            product-card.component.scss
-            product-card.component.ts
-          star-rating/
-            star-rating.component.ts
-        pipes/
-          peso.pipe.ts
-          stock-status.pipe.ts
-      app.component.html
-      app.component.scss
-      app.component.ts
-      app.config.ts
-      app.routes.ts
-    assets/
-      .gitkeep
-    environments/
-      environment.prod.ts
-      environment.ts
-    theme/
-      variables.scss
-    favicon.ico
-    global.scss
-    index.html
-    main.ts
-  .gitignore
-  angular.json
-  capacitor.config.ts
-  firebase.json
-  firestore.indexes.json
-  firestore.rules
-  ionic.config.json
-  package.json
-  README.md
-  SETUP_GUIDE.txt
-  tsconfig.app.json
+scripts/
+  seed-products.ts
   tsconfig.json
+src/
+  app/
+    admin/
+      analytics/
+        analytics.page.html
+        analytics.page.scss
+        analytics.page.ts
+      inventory/
+        add-product-modal.component.ts
+        edit-product-modal.component.ts
+        inventory.page.html
+        inventory.page.scss
+        inventory.page.ts
+      orders/
+        admin-orders.page.html
+        admin-orders.page.scss
+        admin-orders.page.ts
+    core/
+      config/
+        pricing.config.ts
+      guards/
+        admin.guard.ts
+        auth.guard.ts
+      models/
+        cart.model.ts
+        order.model.ts
+        product.model.ts
+        review.model.ts
+        user.model.ts
+        voucher.model.ts
+      services/
+        address.service.ts
+        auth.service.ts
+        cart.service.ts
+        image-upload.service.ts
+        inventory.service.ts
+        notification.service.ts
+        order.service.ts
+        review.service.ts
+        voucher.service.ts
+        wishlist.service.ts
+    features/
+      about/
+        about.page.html
+        about.page.scss
+        about.page.ts
+      auth/
+        auth.page.html
+        auth.page.scss
+        auth.page.ts
+      cart/
+        cart.page.html
+        cart.page.scss
+        cart.page.ts
+      dashboard/
+        dashboard.page.html
+        dashboard.page.scss
+        dashboard.page.ts
+      developers/
+        developers.page.html
+        developers.page.scss
+        developers.page.ts
+      orders/
+        order-tracker/
+          order-tracker.page.html
+          order-tracker.page.scss
+          order-tracker.page.ts
+        orders.page.html
+        orders.page.scss
+        orders.page.ts
+      products/
+        product-detail/
+          product-detail.page.html
+          product-detail.page.scss
+          product-detail.page.ts
+        products.page.html
+        products.page.scss
+        products.page.ts
+    shared/
+      components/
+        order-status-badge/
+          order-status-badge.component.ts
+        product-card/
+          product-card.component.html
+          product-card.component.scss
+          product-card.component.ts
+        star-rating/
+          star-rating.component.ts
+      pipes/
+        peso.pipe.ts
+        stock-status.pipe.ts
+    app.component.html
+    app.component.scss
+    app.component.ts
+    app.config.ts
+    app.routes.ts
+  assets/
+    .gitkeep
+    placeholder-scoop.svg
+  environments/
+    environment.example.ts
+    environment.prod.ts
+    environment.ts
+  theme/
+    variables.scss
+  favicon.ico
+  global.scss
+  index.html
+  main.ts
+tests/
+  logic.test.mjs
+.gitignore
+.nvmrc
+angular.json
+capacitor.config.ts
+firebase.json
+firestore.indexes.json
+firestore.rules
+ionic.config.json
+package.json
+README.md
+SETUP_GUIDE.txt
+tsconfig.app.json
+tsconfig.json
 </directory_structure>
 
 <files>
 This section contains the contents of the repository's files.
 
-<file path="five-orites-scoop/scripts/seed-products.ts">
+<file path="src/app/admin/inventory/add-product-modal.component.ts">
+// src/app/admin/inventory/add-product-modal.component.ts
+// Five-orites Scoop — Add Product form (dropdown + New option)
+
+import { Component, Input, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent,
+  IonButtons, IonButton, IonList, IonItem,
+  IonSelect, IonSelectOption, IonInput, IonTextarea, IonIcon,
+  ModalController, ToastController,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { imageOutline } from 'ionicons/icons';
+import { InventoryService } from '../../core/services/inventory.service';
+import { ImageUploadService } from '../../core/services/image-upload.service';
+import { SET_NAMES, getPricingForSet } from '../../core/config/pricing.config';
+
+@Component({
+  selector: 'app-add-product-modal',
+  standalone: true,
+  imports: [
+    CommonModule, FormsModule,
+    IonHeader, IonToolbar, IonTitle, IonContent,
+    IonButtons, IonButton, IonList, IonItem,
+    IonSelect, IonSelectOption, IonInput, IonTextarea, IonIcon,
+  ],
+  template: `
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Add Product</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cancel()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-list>
+        <ion-item>
+          <ion-select
+            label="Flavor Set"
+            labelPlacement="stacked"
+            interface="popover"
+            [(ngModel)]="selectedSet"
+            (ionChange)="onSetChange()"
+          >
+            @for (s of sets; track s.value) {
+              <ion-select-option [value]="s.value">
+                Set {{ s.value }} · {{ s.label }}
+              </ion-select-option>
+            }
+            <ion-select-option value="new">✨ New flavor set…</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        @if (isNewSet) {
+          <ion-item>
+            <ion-input
+              label="New set name"
+              labelPlacement="stacked"
+              placeholder="e.g. Pistachio"
+              [(ngModel)]="newSetName"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              label="Variant name"
+              labelPlacement="stacked"
+              placeholder="e.g. Roasted Pistachio"
+              [(ngModel)]="variantName"
+            ></ion-input>
+          </ion-item>
+        } @else {
+          <ion-item>
+            <ion-select
+              label="Variant name"
+              labelPlacement="stacked"
+              interface="popover"
+              placeholder="Choose a variant…"
+              [(ngModel)]="selectedVariant"
+            >
+              @for (v of availableVariants; track v) {
+                <ion-select-option [value]="v">{{ v }}</ion-select-option>
+              }
+              <ion-select-option value="new">✨ New variant…</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          @if (isNewVariant) {
+            <ion-item>
+              <ion-input
+                label="New variant name"
+                labelPlacement="stacked"
+                placeholder="e.g. Rocky Road"
+                [(ngModel)]="customVariant"
+              ></ion-input>
+            </ion-item>
+          }
+        }
+
+        <ion-item>
+          <ion-textarea
+            label="Description"
+            labelPlacement="stacked"
+            placeholder="Describe this flavor…"
+            rows="3"
+            [(ngModel)]="description"
+          ></ion-textarea>
+        </ion-item>
+
+        <h3 class="section-title">Product Image (optional)</h3>
+        <div
+          class="img-box"
+          (click)="fileInput.click()"
+          (keydown.enter)="fileInput.click()"
+          tabindex="0"
+          role="button"
+          aria-label="Choose image from device"
+        >
+          @if (previewImage) {
+            <img [src]="previewImage" alt="Product image preview" class="img-box-fill" />
+            <span class="img-box-change">Tap to change</span>
+          } @else {
+            <div class="img-box-empty">
+              <ion-icon name="image-outline" class="img-box-icon"></ion-icon>
+              <span>Tap to choose image from device</span>
+            </div>
+          }
+        </div>
+        <input #fileInput type="file" accept="image/*" hidden (change)="onFilePicked($event)" />
+        @if (pendingFile) {
+          <ion-button expand="block" fill="clear" size="small" color="medium" (click)="clearFile()">
+            Remove device image
+          </ion-button>
+        }
+        @if (!uploadService.isConfigured) {
+          <p class="config-hint">⚠️ Cloudinary is not set up yet — fill cloudName + uploadPreset in environment.ts to enable image uploads.</p>
+        }
+      </ion-list>
+
+      <ion-button
+        expand="block"
+        (click)="create()"
+        [disabled]="isSaving"
+        class="create-btn"
+      >
+        {{ isUploading ? 'Uploading image…' : isSaving ? 'Creating…' : isNewSet ? 'Create New Set' : 'Create Product' }}
+      </ion-button>
+    </ion-content>
+  `,
+  styles: [`
+    .create-btn { --background: var(--color-brand-primary); --border-radius: 10px; font-weight: 700; margin-top: 16px; }
+    .section-title { font-size: 14px; font-weight: 800; color: var(--ion-color-dark); margin: 18px 2px 4px; }
+    .img-box {
+      position: relative; min-height: 180px; border-radius: 14px; overflow: hidden; cursor: pointer;
+      border: 2px dashed var(--ion-color-medium, #999); background: var(--ion-color-light);
+      display: flex; align-items: center; justify-content: center; margin: 4px 2px 0;
+    }
+    .img-box-empty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px 12px; color: var(--ion-color-medium); font-size: 13px; font-weight: 600; text-align: center; }
+    .img-box-icon { font-size: 44px; }
+    .img-box-fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .img-box-change {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.65); color: #fff; font-size: 12px; font-weight: 600;
+      padding: 4px 14px; border-radius: 20px; white-space: nowrap;
+    }
+    .config-hint { font-size: 12px; color: var(--ion-color-warning-shade, #9a6b00); margin: 6px 2px 0; }
+  `],
+})
+export class AddProductModalComponent {
+  private inventoryService = inject(InventoryService);
+  private modalCtrl = inject(ModalController);
+  private toastCtrl = inject(ToastController);
+  readonly uploadService = inject(ImageUploadService);
+
+  @Input() maxSetNumber: number = 8;
+  @Input() variants: { setNumber: number; variantName: string }[] = [];
+
+  sets = Object.entries(SET_NAMES).map(([k, v]) => ({ value: k, label: v }));
+  selectedSet: string = '1';
+  selectedVariant: string = '';
+  customVariant = '';
+  newSetName = '';
+  variantName = '';
+  description = '';
+  pendingFile: File | null = null;
+  previewObjectUrl = '';
+  isSaving = false;
+  isUploading = false;
+
+  constructor() {
+    addIcons({ imageOutline });
+  }
+
+  get isNewSet(): boolean {
+    return this.selectedSet === 'new';
+  }
+
+  get isNewVariant(): boolean {
+    return this.selectedVariant === 'new';
+  }
+
+  get availableVariants(): string[] {
+    const set = Number(this.selectedSet) || 0;
+    const names = this.variants
+      .filter((v) => v.setNumber === set)
+      .map((v) => v.variantName);
+    return [...new Set(names)].sort((a, b) => a.localeCompare(b));
+  }
+
+  onSetChange(): void {
+    this.selectedVariant = '';
+    this.customVariant = '';
+  }
+
+  get previewImage(): string {
+    return this.previewObjectUrl;
+  }
+
+  onFilePicked(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      void this.toast('Please choose an image file.', 'danger');
+      return;
+    }
+    if (this.previewObjectUrl) URL.revokeObjectURL(this.previewObjectUrl);
+    this.pendingFile = file;
+    this.previewObjectUrl = URL.createObjectURL(file);
+  }
+
+  clearFile(): void {
+    if (this.previewObjectUrl) URL.revokeObjectURL(this.previewObjectUrl);
+    this.pendingFile = null;
+    this.previewObjectUrl = '';
+  }
+
+  cancel(): void {
+    void this.modalCtrl.dismiss();
+  }
+
+  async create(): Promise<void> {
+    if (this.isSaving) return;
+
+    let setNumber: number;
+    let setName: string;
+    let variant: string;
+    if (this.isNewSet) {
+      const name = this.newSetName.trim();
+      if (!name) {
+        await this.toast('New set name is required.', 'danger');
+        return;
+      }
+      variant = this.variantName.trim();
+      if (!variant) {
+        await this.toast('Variant name is required.', 'danger');
+        return;
+      }
+      setNumber = this.maxSetNumber + 1;
+      setName = name;
+    } else {
+      setNumber = Number(this.selectedSet) || 1;
+      setName = SET_NAMES[setNumber] ?? `Set ${setNumber}`;
+      if (this.isNewVariant) {
+        variant = this.customVariant.trim();
+        if (!variant) {
+          await this.toast('New variant name is required.', 'danger');
+          return;
+        }
+      } else {
+        variant = this.selectedVariant;
+        if (!variant) {
+          await this.toast('Choose a variant, or pick New variant…', 'danger');
+          return;
+        }
+      }
+    }
+
+    this.isSaving = true;
+    try {
+      // Device image → Cloudinary URL first; empty when no image was picked.
+      let finalImageUrl = '';
+      if (this.pendingFile) {
+        this.isUploading = true;
+        try {
+          finalImageUrl = await this.uploadService.uploadProductImage(this.pendingFile);
+        } finally {
+          this.isUploading = false;
+        }
+      }
+      await this.inventoryService.createProduct({
+        setNumber,
+        setName,
+        variantName: variant,
+        description: this.description.trim() || 'New Five-orites flavor.',
+        imageUrl: finalImageUrl,
+        pricing: getPricingForSet(setNumber),
+        stock: { cup: 0, pint: 0, halfGallon: 0, gallon: 0 },
+      });
+      await this.toast(
+        this.isNewSet
+          ? `✅ Set ${setNumber} · ${setName} created. Set its stock next.`
+          : '✅ Product created. Set its stock next.',
+        'success'
+      );
+      await this.modalCtrl.dismiss({ created: true });
+    } catch (err: unknown) {
+      await this.toast(err instanceof Error ? err.message : 'Failed to create product.', 'danger');
+    } finally {
+      this.isSaving = false;
+    }
+  }
+
+  private async toast(message: string, color: 'success' | 'danger'): Promise<void> {
+    const t = await this.toastCtrl.create({ message, color, duration: 2500, position: 'top' });
+    await t.present();
+  }
+}
+</file>
+
+<file path="src/app/admin/inventory/edit-product-modal.component.ts">
+// src/app/admin/inventory/edit-product-modal.component.ts
+// Five-orites Scoop — Edit Product: Details + Edit Stocks (quantities only)
+
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent,
+  IonButtons, IonButton, IonList, IonItem,
+  IonInput, IonTextarea, IonIcon,
+  ModalController, ToastController,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { addOutline, removeOutline } from 'ionicons/icons';
+import { InventoryService } from '../../core/services/inventory.service';
+import { Product, SizeVariant, StockLevel } from '../../core/models/product.model';
+import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
+
+@Component({
+  selector: 'app-edit-product-modal',
+  standalone: true,
+  imports: [
+    CommonModule, FormsModule,
+    IonHeader, IonToolbar, IonTitle, IonContent,
+    IonButtons, IonButton, IonList, IonItem,
+    IonInput, IonTextarea, IonIcon,
+  ],
+  template: `
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Edit Product</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cancel()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      @if (product) {
+        <h3 class="section-title">Details</h3>
+        <ion-list class="card-list">
+          <ion-item>
+            <ion-input
+              label="Variant name"
+              labelPlacement="stacked"
+              [(ngModel)]="variantName"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-textarea
+              label="Description"
+              labelPlacement="stacked"
+              rows="3"
+              [(ngModel)]="description"
+            ></ion-textarea>
+          </ion-item>
+          <ion-item lines="none" class="total-row">
+            <span class="total-label">Total quantity (all sizes)</span>
+            <span class="total-value" slot="end">{{ totalStock }}</span>
+          </ion-item>
+        </ion-list>
+
+        <h3 class="section-title">Edit Stocks</h3>
+        <ion-list class="card-list">
+          @for (size of sizes; track size) {
+            <ion-item>
+              <span class="stock-size">{{ sizeLabels[size] }}</span>
+              <div class="stepper" slot="end">
+                <button class="step-btn" (click)="adjust(size, -1)" aria-label="Decrease quantity">
+                  <ion-icon name="remove-outline"></ion-icon>
+                </button>
+                <ion-input
+                  type="number"
+                  min="0"
+                  [(ngModel)]="stocks[size]"
+                  (ionBlur)="clamp(size)"
+                  class="qty-input"
+                  aria-label="Quantity"
+                ></ion-input>
+                <button class="step-btn" (click)="adjust(size, 1)" aria-label="Increase quantity">
+                  <ion-icon name="add-outline"></ion-icon>
+                </button>
+              </div>
+            </ion-item>
+          }
+        </ion-list>
+
+        <ion-button expand="block" (click)="save()" [disabled]="isSaving" class="save-btn">
+          {{ isSaving ? 'Saving…' : 'Save Changes' }}
+        </ion-button>
+      }
+    </ion-content>
+  `,
+  styles: [`
+    .section-title { font-size: 15px; font-weight: 800; color: var(--ion-color-dark); margin: 18px 2px 8px; }
+    .section-title:first-of-type { margin-top: 2px; }
+    .card-list { border-radius: 14px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+    .total-row { --background: var(--ion-color-light); font-weight: 700; }
+    .total-label { font-size: 14px; }
+    .total-value { font-size: 20px; font-weight: 800; color: var(--color-brand-primary); }
+    .stock-size { font-size: 14px; font-weight: 600; }
+    .stepper { display: flex; align-items: center; gap: 6px; }
+    .step-btn {
+      width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--ion-color-light-shade, #e0e0e0);
+      background: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer; color: var(--color-brand-primary);
+    }
+    .qty-input { width: 64px; text-align: center; font-weight: 800; font-size: 17px; --background: var(--ion-color-light); --border-radius: 10px; }
+    .save-btn { --background: var(--color-brand-primary); --border-radius: 12px; font-weight: 700; margin-top: 20px; min-height: 48px; font-size: 16px; }
+  `],
+})
+export class EditProductModalComponent implements OnInit {
+  private inventoryService = inject(InventoryService);
+  private modalCtrl = inject(ModalController);
+  private toastCtrl = inject(ToastController);
+
+  @Input() product: Product | null = null;
+
+  variantName = '';
+  description = '';
+  stocks: StockLevel = { cup: 0, pint: 0, halfGallon: 0, gallon: 0 };
+  isSaving = false;
+
+  readonly sizes: SizeVariant[] = ['cup', 'pint', 'halfGallon', 'gallon'];
+  readonly sizeLabels = SIZE_DISPLAY_LABELS;
+
+  constructor() {
+    addIcons({ addOutline, removeOutline });
+  }
+
+  ngOnInit(): void {
+    if (this.product) {
+      this.variantName = this.product.variantName;
+      this.description = this.product.description ?? '';
+      this.stocks = { ...this.product.stock };
+    }
+  }
+
+  get totalStock(): number {
+    return this.sizes.reduce((sum, s) => sum + (Number(this.stocks[s]) || 0), 0);
+  }
+
+  adjust(size: SizeVariant, delta: number): void {
+    this.stocks[size] = Math.max((Number(this.stocks[size]) || 0) + delta, 0);
+  }
+
+  clamp(size: SizeVariant): void {
+    const val = Math.floor(Number(this.stocks[size]));
+    this.stocks[size] = Number.isFinite(val) && val > 0 ? val : 0;
+  }
+
+  cancel(): void {
+    void this.modalCtrl.dismiss();
+  }
+
+  async save(): Promise<void> {
+    if (!this.product || this.isSaving) return;
+    const name = this.variantName.trim();
+    if (!name) {
+      await this.toast('Variant name is required.', 'danger');
+      return;
+    }
+    const stocks: StockLevel = {
+      cup: Math.max(Math.floor(Number(this.stocks.cup)) || 0, 0),
+      pint: Math.max(Math.floor(Number(this.stocks.pint)) || 0, 0),
+      halfGallon: Math.max(Math.floor(Number(this.stocks.halfGallon)) || 0, 0),
+      gallon: Math.max(Math.floor(Number(this.stocks.gallon)) || 0, 0),
+    };
+
+    this.isSaving = true;
+    try {
+      await this.inventoryService.updateProductDetails(this.product.id, {
+        variantName: name,
+        description: this.description.trim(),
+      });
+      await this.inventoryService.updateStocks(this.product.id, stocks);
+      await this.toast('✅ Product updated.', 'success');
+      await this.modalCtrl.dismiss({ saved: true });
+    } catch (err: unknown) {
+      await this.toast(err instanceof Error ? err.message : 'Failed to update product.', 'danger');
+    } finally {
+      this.isSaving = false;
+    }
+  }
+
+  private async toast(message: string, color: 'success' | 'danger'): Promise<void> {
+    const t = await this.toastCtrl.create({ message, color, duration: 2500, position: 'top' });
+    await t.present();
+  }
+}
+</file>
+
+<file path="src/app/core/models/review.model.ts">
+// src/app/core/models/review.model.ts
+// Five-orites Scoop — Product Review Data Models
+
+import { Timestamp } from '@angular/fire/firestore';
+
+export interface Review {
+  id: string;
+  productId: string;
+  userId: string;
+  displayName: string;
+  rating: number; // 1–5
+  comment: string;
+  createdAt: Timestamp;
+}
+
+export interface RatingSummary {
+  average: number;
+  count: number;
+}
+
+export function summarizeRatings(reviews: Pick<Review, 'rating'>[]): RatingSummary {
+  if (reviews.length === 0) return { average: 0, count: 0 };
+  const sum = reviews.reduce((s, r) => s + r.rating, 0);
+  return { average: Math.round((sum / reviews.length) * 10) / 10, count: reviews.length };
+}
+</file>
+
+<file path="src/app/core/models/voucher.model.ts">
+// src/app/core/models/voucher.model.ts
+// Five-orites Scoop — Voucher / Promo Code Data Models
+
+export type VoucherType = 'percent' | 'fixed';
+
+export interface Voucher {
+  id: string;
+  code: string; // uppercase, e.g. SCOOP10
+  type: VoucherType;
+  value: number; // percent 1–90 or fixed peso amount
+  minOrder?: number; // minimum subtotal to apply
+  isActive: boolean;
+}
+
+export function calculateDiscount(subtotal: number, voucher: Voucher): number {
+  if (!voucher.isActive) return 0;
+  if ((voucher.minOrder ?? 0) > subtotal) return 0;
+  if (voucher.type === 'percent') {
+    const pct = Math.min(Math.max(voucher.value, 0), 90);
+    return Math.floor((subtotal * pct) / 100);
+  }
+  return Math.min(Math.max(voucher.value, 0), subtotal);
+}
+
+// Built-in fallback so demos work even when Firestore `vouchers` is empty.
+export const BUILT_IN_VOUCHERS: Voucher[] = [
+  { id: 'builtin-scoop10', code: 'SCOOP10', type: 'percent', value: 10, minOrder: 200, isActive: true },
+  { id: 'builtin-free50', code: 'FREE50', type: 'fixed', value: 50, minOrder: 500, isActive: true },
+];
+</file>
+
+<file path="src/app/core/services/address.service.ts">
+// src/app/core/services/address.service.ts
+// Five-orites Scoop — Saved Delivery Address Book (per-user localStorage)
+
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+
+const GLOBAL_KEY = 'five_orites_addresses_v1';
+
+function readAll(): Record<string, string[]> {
+  try {
+    return JSON.parse(localStorage.getItem(GLOBAL_KEY) ?? '{}') as Record<string, string[]>;
+  } catch {
+    return {};
+  }
+}
+
+function writeAll(all: Record<string, string[]>): void {
+  try {
+    localStorage.setItem(GLOBAL_KEY, JSON.stringify(all));
+  } catch {
+    // storage full / private mode — ignore
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class AddressService {
+  private authService = inject(AuthService);
+  private addressesSubject = new BehaviorSubject<string[]>([]);
+  readonly addresses$: Observable<string[]> = this.addressesSubject.asObservable();
+
+  constructor() {
+    this.authService.currentUser$.subscribe((user) => {
+      this.addressesSubject.next(user ? (readAll()[user.uid] ?? []) : []);
+    });
+  }
+
+  get addresses(): string[] {
+    return [...this.addressesSubject.getValue()];
+  }
+
+  saveAddress(address: string): void {
+    const user = this.authService.currentUserSnapshot;
+    const cleaned = address.trim();
+    if (!user || !cleaned) return;
+    const all = readAll();
+    const list = all[user.uid] ?? [];
+    if (!list.includes(cleaned)) {
+      all[user.uid] = [cleaned, ...list].slice(0, 5); // keep max 5
+      writeAll(all);
+      this.addressesSubject.next(all[user.uid]);
+    }
+  }
+
+  removeAddress(address: string): void {
+    const user = this.authService.currentUserSnapshot;
+    if (!user) return;
+    const all = readAll();
+    all[user.uid] = (all[user.uid] ?? []).filter((a) => a !== address);
+    writeAll(all);
+    this.addressesSubject.next(all[user.uid]);
+  }
+}
+</file>
+
+<file path="src/app/core/services/image-upload.service.ts">
+// src/app/core/services/image-upload.service.ts
+// Five-orites Scoop — Product image upload via Cloudinary (unsigned preset, no secret in app)
+
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+
+// Uploads are downscaled client-side first to keep them fast and small.
+const MAX_SIDE_PX = 1024;
+
+function readAsImage(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Could not read that image.'));
+    };
+    img.src = url;
+  });
+}
+
+function downscale(img: HTMLImageElement): Promise<Blob> {
+  const scale = Math.min(1, MAX_SIDE_PX / Math.max(img.width, img.height));
+  const w = Math.max(Math.round(img.width * scale), 1);
+  const h = Math.max(Math.round(img.height * scale), 1);
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Image processing is not supported on this device.');
+  ctx.drawImage(img, 0, 0, w, h);
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error('Could not process that image.'))),
+      'image/jpeg',
+      0.85
+    );
+  });
+}
+
+@Injectable({ providedIn: 'root' })
+export class ImageUploadService {
+  get isConfigured(): boolean {
+    const c = environment.cloudinary;
+    return !!c && !!c.cloudName && !!c.uploadPreset;
+  }
+
+  /** Uploads a device image to Cloudinary and returns its HTTPS URL. */
+  async uploadProductImage(file: File): Promise<string> {
+    const c = environment.cloudinary;
+    if (!c || !c.cloudName || !c.uploadPreset) {
+      throw new Error('Cloudinary is not configured. Ask your admin to add the cloud name + upload preset.');
+    }
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Please choose an image file.');
+    }
+
+    const blob = await downscale(await readAsImage(file));
+    const form = new FormData();
+    form.append('file', blob, 'product.jpg');
+    form.append('upload_preset', c.uploadPreset);
+    form.append('folder', 'five-orites-scoop/products');
+
+    let res: Response;
+    try {
+      res = await fetch(`https://api.cloudinary.com/v1_1/${c.cloudName}/image/upload`, {
+        method: 'POST',
+        body: form,
+      });
+    } catch {
+      throw new Error('Upload failed. Check your internet connection and try again.');
+    }
+    const json = (await res.json()) as { secure_url?: string; error?: { message?: string } };
+    if (!res.ok || !json.secure_url) {
+      throw new Error(json.error?.message ?? 'Image upload failed. Check your upload preset.');
+    }
+    return json.secure_url;
+  }
+}
+</file>
+
+<file path="src/app/core/services/review.service.ts">
+// src/app/core/services/review.service.ts
+// Five-orites Scoop — Product Reviews (Firestore `reviews` collection)
+
+import { Injectable, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
+  onSnapshot,
+  addDoc,
+  serverTimestamp,
+} from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { Review, summarizeRatings, RatingSummary } from '../models/review.model';
+import { AuthService } from './auth.service';
+
+@Injectable({ providedIn: 'root' })
+export class ReviewService {
+  private firestore = inject(Firestore);
+  private authService = inject(AuthService);
+
+  getProductReviews(productId: string, maxResults = 50): Observable<Review[]> {
+    return new Observable<Review[]>((observer) => {
+      const col = collection(this.firestore, 'reviews');
+      const q = query(
+        col,
+        where('productId', '==', productId),
+        orderBy('createdAt', 'desc'),
+        limit(maxResults)
+      );
+      const unsub = onSnapshot(
+        q,
+        (snap) => observer.next(snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Review[]),
+        (err) => observer.error(err)
+      );
+      return () => unsub();
+    });
+  }
+
+  getRatingSummary(productId: string): Observable<RatingSummary> {
+    return new Observable<RatingSummary>((observer) => {
+      const sub = this.getProductReviews(productId, 200).subscribe({
+        next: (reviews) => observer.next(summarizeRatings(reviews)),
+        error: (e) => observer.error(e),
+      });
+      return () => sub.unsubscribe();
+    });
+  }
+
+  async addReview(productId: string, rating: number, comment: string): Promise<string> {
+    const user = this.authService.currentUserSnapshot;
+    if (!user) throw new Error('Sign in to leave a review.');
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+      throw new Error('Rating must be 1–5 stars.');
+    }
+    if (!comment.trim()) throw new Error('Please write a short review.');
+    const col = collection(this.firestore, 'reviews');
+    const ref = await addDoc(col, {
+      productId,
+      userId: user.uid,
+      displayName: user.displayName || 'Scoop Lover',
+      rating,
+      comment: comment.trim().slice(0, 500),
+      createdAt: serverTimestamp(),
+    });
+    return ref.id;
+  }
+}
+</file>
+
+<file path="src/app/core/services/voucher.service.ts">
+// src/app/core/services/voucher.service.ts
+// Five-orites Scoop — Voucher lookup (Firestore + built-in fallback codes)
+
+import { Injectable, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  query,
+  where,
+  limit,
+  getDocs,
+} from '@angular/fire/firestore';
+import { BUILT_IN_VOUCHERS, Voucher, calculateDiscount } from '../models/voucher.model';
+
+@Injectable({ providedIn: 'root' })
+export class VoucherService {
+  private firestore = inject(Firestore);
+
+  async validateVoucher(code: string, subtotal: number): Promise<{ voucher: Voucher; discount: number }> {
+    const normalized = code.trim().toUpperCase();
+    if (!normalized) throw new Error('Enter a voucher code.');
+
+    // 1) Try Firestore first.
+    try {
+      const col = collection(this.firestore, 'vouchers');
+      const q = query(col, where('code', '==', normalized), where('isActive', '==', true), limit(1));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const voucher = { id: snap.docs[0].id, ...snap.docs[0].data() } as Voucher;
+        const discount = calculateDiscount(subtotal, voucher);
+        if (discount <= 0) throw new Error(`Code ${normalized} needs a minimum order of ₱${voucher.minOrder ?? 0}.`);
+        return { voucher, discount };
+      }
+    } catch (err) {
+      // Firestore lookup failed (offline / rules) — fall through to built-ins.
+      if (err instanceof Error && /minimum order/.test(err.message)) throw err;
+    }
+
+    // 2) Built-in fallback so SCOOP10 / FREE50 always work in demos.
+    const fallback = BUILT_IN_VOUCHERS.find((v) => v.code === normalized);
+    if (!fallback) throw new Error(`Voucher "${normalized}" not found.`);
+    const discount = calculateDiscount(subtotal, fallback);
+    if (discount <= 0) throw new Error(`Code ${normalized} needs a minimum order of ₱${fallback.minOrder ?? 0}.`);
+    return { voucher: fallback, discount };
+  }
+}
+</file>
+
+<file path="src/app/core/services/wishlist.service.ts">
+// src/app/core/services/wishlist.service.ts
+// Five-orites Scoop — Wishlist (per-user localStorage, works offline)
+
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+
+const GLOBAL_KEY = 'five_orites_wishlist_v1';
+
+function readAll(): Record<string, string[]> {
+  try {
+    return JSON.parse(localStorage.getItem(GLOBAL_KEY) ?? '{}') as Record<string, string[]>;
+  } catch {
+    return {};
+  }
+}
+
+function writeAll(all: Record<string, string[]>): void {
+  try {
+    localStorage.setItem(GLOBAL_KEY, JSON.stringify(all));
+  } catch {
+    // ignore
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class WishlistService {
+  private authService = inject(AuthService);
+  private wishlistSubject = new BehaviorSubject<string[]>([]);
+  readonly wishlist$: Observable<string[]> = this.wishlistSubject.asObservable();
+
+  constructor() {
+    this.authService.currentUser$.subscribe((user) => {
+      this.wishlistSubject.next(user ? (readAll()[user.uid] ?? []) : []);
+    });
+  }
+
+  isWished(productId: string): boolean {
+    return this.wishlistSubject.getValue().includes(productId);
+  }
+
+  toggle(productId: string): boolean {
+    const user = this.authService.currentUserSnapshot;
+    if (!user) throw new Error('Sign in to use your wishlist.');
+    const all = readAll();
+    const list = new Set(all[user.uid] ?? []);
+    const willAdd = !list.has(productId);
+    if (willAdd) list.add(productId);
+    else list.delete(productId);
+    all[user.uid] = [...list];
+    writeAll(all);
+    this.wishlistSubject.next(all[user.uid]);
+    return willAdd;
+  }
+}
+</file>
+
+<file path="src/assets/placeholder-scoop.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" rx="24" fill="#FFF3E4"/>
+  <circle cx="200" cy="120" r="62" fill="#F8BBD0"/>
+  <circle cx="168" cy="105" r="14" fill="#F48FB1"/>
+  <circle cx="228" cy="132" r="10" fill="#F48FB1"/>
+  <path d="M165 175 L235 175 L220 240 L180 240 Z" fill="#D7A86E"/>
+  <path d="M165 175 L235 175 L232 190 L168 190 Z" fill="#BC8A54"/>
+  <text x="200" y="272" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#8D5A2B">Five-orites Scoop</text>
+</svg>
+</file>
+
+<file path="src/environments/environment.example.ts">
+// Copy to environment.ts / environment.prod.ts and fill real values.
+// Do NOT commit real Firebase keys. Get them from:
+// Firebase Console > Project Settings > Your Apps > SDK setup.
+export const environment = {
+  production: false,
+  firebase: {
+    apiKey: 'PASTE_YOUR_API_KEY_HERE',
+    authDomain: 'PASTE_YOUR_PROJECT.firebaseapp.com',
+    projectId: 'PASTE_YOUR_PROJECT_ID',
+    storageBucket: 'PASTE_YOUR_PROJECT.firebasestorage.app',
+    messagingSenderId: 'PASTE_YOUR_SENDER_ID',
+    appId: 'PASTE_YOUR_APP_ID',
+    measurementId: '',
+  },
+  deliveryFeePhp: 50,
+  freeDeliveryThresholdPhp: 500,
+  lowStockThreshold: 10,
+  // Cloudinary Console > Settings > Upload > Upload presets > Add (Signing Mode: Unsigned).
+  cloudinary: {
+    cloudName: 'PASTE_YOUR_CLOUDINARY_CLOUD_NAME',
+    uploadPreset: 'PASTE_YOUR_UNSIGNED_PRESET',
+  },
+};
+</file>
+
+<file path="tests/logic.test.mjs">
+// Basic logic tests — mirrors src/app/core/models/cart.model.ts#getDeliveryFee
+// and cart stock-cap rule in cart.service.ts#addItem.
+// Run: npm run test:logic
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+
+const DELIVERY_FEE = 50;
+const FREE_DELIVERY_THRESHOLD = 500;
+
+function getDeliveryFee(subtotal) {
+  return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
+}
+
+function assertAddAllowed(existingQty, addQty, available) {
+  if (addQty <= 0) throw new Error('Quantity must be at least 1.');
+  if (available <= 0) throw new Error('Out of stock.');
+  if (existingQty + addQty > available) throw new Error('Exceeds available stock.');
+}
+
+describe('delivery fee', () => {
+  it('charges ₱50 below threshold', () => {
+    assert.equal(getDeliveryFee(0), 50);
+    assert.equal(getDeliveryFee(499), 50);
+  });
+  it('is FREE at and above ₱500', () => {
+    assert.equal(getDeliveryFee(500), 0);
+    assert.equal(getDeliveryFee(1200), 0);
+  });
+});
+
+describe('cart stock cap', () => {
+  it('allows within stock', () => {
+    assertAddAllowed(2, 3, 10);
+  });
+  it('rejects oversell', () => {
+    assert.throws(() => assertAddAllowed(8, 3, 10), /Exceeds available/);
+  });
+  it('rejects out of stock', () => {
+    assert.throws(() => assertAddAllowed(0, 1, 0), /Out of stock/);
+  });
+});
+
+function calculateDiscount(subtotal, voucher) {
+  if (!voucher.isActive) return 0;
+  if ((voucher.minOrder ?? 0) > subtotal) return 0;
+  if (voucher.type === 'percent') {
+    const pct = Math.min(Math.max(voucher.value, 0), 90);
+    return Math.floor((subtotal * pct) / 100);
+  }
+  return Math.min(Math.max(voucher.value, 0), subtotal);
+}
+
+describe('vouchers', () => {
+  it('applies percent with minimum order', () => {
+    assert.equal(calculateDiscount(1000, { type: 'percent', value: 10, minOrder: 200, isActive: true }), 100);
+    assert.equal(calculateDiscount(100, { type: 'percent', value: 10, minOrder: 200, isActive: true }), 0);
+  });
+  it('caps fixed discount at subtotal', () => {
+    assert.equal(calculateDiscount(30, { type: 'fixed', value: 50, isActive: true }), 30);
+  });
+  it('ignores inactive vouchers', () => {
+    assert.equal(calculateDiscount(1000, { type: 'percent', value: 10, isActive: false }), 0);
+  });
+});
+
+function summarizeRatings(reviews) {
+  if (reviews.length === 0) return { average: 0, count: 0 };
+  const sum = reviews.reduce((s, r) => s + r.rating, 0);
+  return { average: Math.round((sum / reviews.length) * 10) / 10, count: reviews.length };
+}
+
+describe('reviews', () => {
+  it('summarizes average rating', () => {
+    assert.deepEqual(summarizeRatings([]), { average: 0, count: 0 });
+    assert.deepEqual(summarizeRatings([{ rating: 5 }, { rating: 4 }]), { average: 4.5, count: 2 });
+  });
+});
+
+describe('order cancel policy', () => {
+  it('allows cancel only when pending (customer) or not delivered (admin restock path)', () => {
+    const customerCanCancel = (status) => status === 'pending';
+    assert.equal(customerCanCancel('pending'), true);
+    assert.equal(customerCanCancel('confirmed'), false);
+    assert.equal(customerCanCancel('delivered'), false);
+  });
+});
+</file>
+
+<file path=".nvmrc">
+20
+</file>
+
+<file path="scripts/seed-products.ts">
 // scripts/seed-products.ts
 // Five-orites Scoop — Firestore Product Seed Script (64 SKUs)
 // Compatible with Node.js v26
@@ -169,7 +1223,7 @@ const path = require('path');
 
 const SERVICE_ACCOUNT_PATH = path.resolve(__dirname, 'serviceAccountKey.json');
 const DEFAULT_STOCK = { cup: 50, pint: 30, halfGallon: 20, gallon: 10 };
-
+const PRESERVE_STOCK = process.env.PRESERVE_STOCK === 'true'; 
 const serviceAccount = require(SERVICE_ACCOUNT_PATH);
 
 admin.initializeApp({
@@ -281,6 +1335,16 @@ async function seedProducts(): Promise<void> {
     const docId = `set${product.setNumber}_${slug}`;
     const docRef = productsCol.doc(docId);
 
+    // Look up existing stock so we don't clobber real inventory counts
+    let stockToWrite = DEFAULT_STOCK;
+    if (PRESERVE_STOCK) {
+      const existingDoc = await docRef.get();
+      const existingStock = existingDoc.exists ? existingDoc.data()?.stock : undefined;
+      if (existingStock) {
+        stockToWrite = existingStock;
+      }
+    }
+
     batch.set(docRef, {
       setNumber: product.setNumber,
       setName: product.setName,
@@ -288,7 +1352,7 @@ async function seedProducts(): Promise<void> {
       description: product.description,
       imageUrl: '',
       pricing,
-      stock: DEFAULT_STOCK,
+      stock: stockToWrite,
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -309,17 +1373,17 @@ seedProducts().catch((err: any) => {
 });
 </file>
 
-<file path="five-orites-scoop/scripts/tsconfig.json">
+<file path="scripts/tsconfig.json">
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "commonjs",
+    "module": "nodenext",        // was "commonjs"
     "lib": ["ES2020"],
     "strict": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true
   },
   "include": ["./**/*.ts"],
@@ -327,7 +1391,7 @@ seedProducts().catch((err: any) => {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/admin/analytics/analytics.page.html">
+<file path="src/app/admin/analytics/analytics.page.html">
 <!-- src/app/admin/analytics/analytics.page.html -->
 
 <ion-header>
@@ -355,10 +1419,18 @@ seedProducts().catch((err: any) => {
   @if (!isLoading()) {
     <div class="analytics-body">
 
+      <ion-segment [value]="dateRange()" (ionChange)="setDateRange($any($event).detail.value)">
+        <ion-segment-button value="all"><ion-label>All</ion-label></ion-segment-button>
+        <ion-segment-button value="today"><ion-label>Today</ion-label></ion-segment-button>
+        <ion-segment-button value="7d"><ion-label>7d</ion-label></ion-segment-button>
+        <ion-segment-button value="30d"><ion-label>30d</ion-label></ion-segment-button>
+      </ion-segment>
+      <ion-button expand="block" fill="outline" (click)="exportCsv()">Export CSV</ion-button>
+
       <div class="kpi-grid">
         <div class="kpi-tile kpi-revenue">
           <ion-icon name="cash-outline" class="kpi-icon"></ion-icon>
-          <p class="kpi-label">Total Revenue</p>
+          <p class="kpi-label">Revenue (Delivered)</p>
           <p class="kpi-val">{{ totalRevenue() | peso }}</p>
         </div>
         <div class="kpi-tile kpi-orders">
@@ -373,12 +1445,12 @@ seedProducts().catch((err: any) => {
         </div>
         <div class="kpi-tile kpi-avg">
           <ion-icon name="ice-cream-outline" class="kpi-icon"></ion-icon>
-          <p class="kpi-label">Avg. Order</p>
+          <p class="kpi-label">Avg. Delivered Order</p>
           <p class="kpi-val">{{ avgOrderValue() | peso }}</p>
         </div>
       </div>
 
-      <h3 class="section-title">Top Flavors by Units Sold</h3>
+      <h3 class="section-title">Top Flavors by Units Sold (Delivered)</h3>
       @if (topFlavors().length === 0) {
         <p class="no-data">No sales data yet.</p>
       }
@@ -401,12 +1473,34 @@ seedProducts().catch((err: any) => {
         </div>
       }
 
+      <h3 class="section-title">Sales by Flavor Set (Delivered)</h3>
+      @for (s of salesBySet(); track s.name) {
+        <div class="flavor-row">
+          <div class="flavor-info"><span class="flavor-name">{{ s.name }}</span></div>
+          <div class="flavor-stats">
+            <span class="flavor-units">{{ s.count }} units</span>
+            <span class="flavor-revenue">{{ s.revenue | peso }}</span>
+          </div>
+        </div>
+      }
+
+      <h3 class="section-title">Sales by Size (Delivered)</h3>
+      @for (s of salesBySize(); track s.name) {
+        <div class="flavor-row">
+          <div class="flavor-info"><span class="flavor-name">{{ s.name }}</span></div>
+          <div class="flavor-stats">
+            <span class="flavor-units">{{ s.count }} units</span>
+            <span class="flavor-revenue">{{ s.revenue | peso }}</span>
+          </div>
+        </div>
+      }
+
     </div>
   }
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/admin/analytics/analytics.page.scss">
+<file path="src/app/admin/analytics/analytics.page.scss">
 // src/app/admin/analytics/analytics.page.scss
 
 :host { display: block; }
@@ -454,7 +1548,7 @@ seedProducts().catch((err: any) => {
 .flavor-revenue { font-size: 13px; font-weight: 700; color: var(--color-brand-primary); }
 </file>
 
-<file path="five-orites-scoop/src/app/admin/analytics/analytics.page.ts">
+<file path="src/app/admin/analytics/analytics.page.ts">
 // src/app/admin/analytics/analytics.page.ts
 
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
@@ -464,7 +1558,7 @@ import {
   IonButtons, IonMenuButton,
   IonCard, IonCardContent, IonIcon, IonText,
   IonSkeletonText, IonRefresher, IonRefresherContent,
-  IonChip, IonLabel,
+  IonChip, IonLabel, IonButton, IonSegment, IonSegmentButton,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -487,7 +1581,7 @@ interface TopFlavor { name: string; count: number; revenue: number; }
     IonButtons, IonMenuButton,
     IonCard, IonCardContent, IonIcon, IonText,
     IonSkeletonText, IonRefresher, IonRefresherContent,
-    IonChip, IonLabel, PesoPipe,
+    IonChip, IonLabel, IonButton, IonSegment, IonSegmentButton, PesoPipe,
   ],
   templateUrl: './analytics.page.html',
   styleUrls: ['./analytics.page.scss'],
@@ -498,13 +1592,34 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 
   orders = signal<Order[]>([]);
   isLoading = signal(true);
+  dateRange = signal<'all' | 'today' | '7d' | '30d'>('all');
+
+  rangedOrders = computed(() => {
+    const range = this.dateRange();
+    if (range === 'all') return this.orders();
+    const now = Date.now();
+    const ms = range === 'today' ? 24 * 3600 * 1000 : range === '7d' ? 7 * 24 * 3600 * 1000 : 30 * 24 * 3600 * 1000;
+    return this.orders().filter((o) => {
+      try {
+        const ts = o.createdAt as unknown as { toDate(): Date } | string;
+        const d = typeof ts === 'string' ? new Date(ts).getTime() : ts.toDate().getTime();
+        return now - d <= ms;
+      } catch {
+        return true;
+      }
+    });
+  });
 
   activeOrders = computed(() =>
-    this.orders().filter((o) => o.status !== 'cancelled')
+    this.rangedOrders().filter((o) => o.status !== 'cancelled')
+  );
+
+  deliveredOnly = computed(() =>
+    this.rangedOrders().filter((o) => o.status === 'delivered')
   );
 
   totalRevenue = computed(() =>
-    this.activeOrders().reduce((sum, o) => sum + (o.grandTotal ?? 0), 0)
+    this.deliveredOnly().reduce((sum, o) => sum + (o.grandTotal ?? 0), 0)
   );
 
   totalOrders = computed(() => this.orders().length);
@@ -527,14 +1642,14 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   );
 
   avgOrderValue = computed(() =>
-    this.activeOrders().length > 0
-      ? this.totalRevenue() / this.activeOrders().length
+    this.deliveredOnly().length > 0
+      ? this.totalRevenue() / this.deliveredOnly().length
       : 0
   );
 
   topFlavors = computed<TopFlavor[]>(() => {
     const map = new Map<string, TopFlavor>();
-    this.activeOrders().forEach((o) =>
+    this.deliveredOnly().forEach((o) =>
       o.items?.forEach((item) => {
         const key = item.variantName;
         const existing = map.get(key) ?? { name: key, count: 0, revenue: 0 };
@@ -549,6 +1664,68 @@ export class AnalyticsPage implements OnInit, OnDestroy {
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
   });
+
+  salesBySet = computed(() => {
+    const map = new Map<string, { name: string; count: number; revenue: number }>();
+    this.deliveredOnly().forEach((o) =>
+      o.items?.forEach((item) => {
+        const key = item.setName || 'Unknown';
+        const e = map.get(key) ?? { name: key, count: 0, revenue: 0 };
+        map.set(key, { name: key, count: e.count + item.quantity, revenue: e.revenue + item.subtotal });
+      })
+    );
+    return [...map.values()].sort((a, b) => b.revenue - a.revenue);
+  });
+
+  salesBySize = computed(() => {
+    const map = new Map<string, { name: string; count: number; revenue: number }>();
+    this.deliveredOnly().forEach((o) =>
+      o.items?.forEach((item) => {
+        const key = item.size;
+        const e = map.get(key) ?? { name: key, count: 0, revenue: 0 };
+        map.set(key, { name: key, count: e.count + item.quantity, revenue: e.revenue + item.subtotal });
+      })
+    );
+    return [...map.values()].sort((a, b) => b.count - a.count);
+  });
+
+  setDateRange(range: 'all' | 'today' | '7d' | '30d'): void {
+    this.dateRange.set(range);
+  }
+
+  exportCsv(): void {
+    const rows = [
+      ['order_id', 'date', 'status', 'items', 'subtotal', 'discount', 'delivery', 'grand_total'],
+      ...this.rangedOrders().map((o) => [
+        o.id,
+        this.formatDateIso(o.createdAt),
+        o.status,
+        String(o.items?.reduce((s, i) => s + i.quantity, 0) ?? 0),
+        String(o.totalAmount ?? 0),
+        String(o.discountAmount ?? 0),
+        String(o.deliveryFee ?? 0),
+        String(o.grandTotal ?? 0),
+      ]),
+    ];
+    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `five-orites-sales-${this.dateRange()}.csv`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  private formatDateIso(timestamp: unknown): string {
+    try {
+      const ts = timestamp as { toDate(): Date } | string;
+      const d = typeof ts === 'string' ? new Date(ts) : ts.toDate();
+      return d.toISOString();
+    } catch {
+      return '';
+    }
+  }
 
   constructor() {
     addIcons({
@@ -578,7 +1755,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/admin/inventory/inventory.page.html">
+<file path="src/app/admin/inventory/inventory.page.html">
 <!-- src/app/admin/inventory/inventory.page.html -->
 <!-- Five-orites Scoop — Admin Inventory Manager -->
 
@@ -606,6 +1783,10 @@ export class AnalyticsPage implements OnInit, OnDestroy {
       aria-label="Search inventory"
     ></ion-searchbar>
     <p class="inv-count">{{ filteredProducts().length }} products</p>
+    <div class="inv-actions">
+      <ion-button size="small" (click)="addProduct()">+ Add Product</ion-button>
+      <ion-button size="small" fill="outline" (click)="bulkRestock()">Bulk Restock</ion-button>
+    </div>
   </div>
 
   <!-- Loading -->
@@ -679,12 +1860,12 @@ export class AnalyticsPage implements OnInit, OnDestroy {
                   <div class="stock-view-cell">
                     <span class="stock-size-label">{{ sizeLabels[size] }}</span>
                     <span class="stock-qty"
-                      [class.stock-in-stock]="product.stock[size] >= 10"
-                      [class.stock-low-stock]="product.stock[size] > 0 && product.stock[size] < 10"
+                      [class.stock-in-stock]="product.stock[size] >= lowStockThreshold"
+                      [class.stock-low-stock]="product.stock[size] > 0 && product.stock[size] < lowStockThreshold"
                       [class.stock-out-of-stock]="product.stock[size] === 0">
                       {{ product.stock[size] }}
                     </span>
-                    @if (product.stock[size] < 10) {
+                    @if (product.stock[size] < lowStockThreshold) {
                       <ion-icon name="alert-circle-outline" class="stock-alert-icon"
                         [color]="product.stock[size] === 0 ? 'danger' : 'warning'">
                       </ion-icon>
@@ -692,15 +1873,25 @@ export class AnalyticsPage implements OnInit, OnDestroy {
                   </div>
                 }
               </div>
-              <ion-button
-                expand="block"
-                fill="outline"
-                class="edit-btn"
-                (click)="startEdit(product)"
-              >
-                <ion-icon name="create-outline" slot="start"></ion-icon>
-                Edit Stock
-              </ion-button>
+              <div class="card-actions">
+                <ion-button
+                  fill="outline"
+                  size="small"
+                  class="edit-btn action-btn"
+                  (click)="startEdit(product)"
+                >
+                  <ion-icon name="create-outline" slot="start"></ion-icon>
+                  Edit Stock
+                </ion-button>
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  class="details-btn action-btn"
+                  (click)="editDetails(product)"
+                >
+                  Details
+                </ion-button>
+              </div>
             }
           </ion-card-content>
         </ion-card>
@@ -711,7 +1902,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/admin/inventory/inventory.page.scss">
+<file path="src/app/admin/inventory/inventory.page.scss">
 // src/app/admin/inventory/inventory.page.scss
 
 :host { display: block; }
@@ -781,9 +1972,14 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 .edit-actions { display: flex; flex-direction: column; gap: 6px; }
 .save-btn { --background: var(--color-brand-primary); --border-radius: 10px; font-weight: 700; }
 .edit-btn { --border-radius: 10px; --color: var(--color-brand-primary); --border-color: var(--color-brand-primary); }
+
+// ── View-mode action row: Edit Stock + Details side-by-side ───────────────
+.card-actions { display: flex; gap: 8px; margin-top: 4px; }
+.action-btn { flex: 1; margin: 0; --border-radius: 10px; font-weight: 600; min-height: 36px; }
+.details-btn { --color: var(--color-brand-primary); border: 1px solid var(--ion-color-light-shade, #e0e0e0); border-radius: 10px; }
 </file>
 
-<file path="five-orites-scoop/src/app/admin/inventory/inventory.page.ts">
+<file path="src/app/admin/inventory/inventory.page.ts">
 // src/app/admin/inventory/inventory.page.ts
 // Five-orites Scoop — Admin Inventory Manager
 
@@ -797,7 +1993,7 @@ import {
   IonButton, IonIcon, IonToggle,
   IonSkeletonText, IonRefresher, IonRefresherContent,
   IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-  IonChip, AlertController, ToastController,
+  IonChip, AlertController, ToastController, ModalController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -807,6 +2003,9 @@ import { Subscription, catchError, of } from 'rxjs';
 import { InventoryService } from '../../core/services/inventory.service';
 import { Product, SizeVariant } from '../../core/models/product.model';
 import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
+import { AddProductModalComponent } from './add-product-modal.component';
+import { EditProductModalComponent } from './edit-product-modal.component';
+import { environment } from '../../../environments/environment';
 
 interface EditableStock { cup: number; pint: number; halfGallon: number; gallon: number; }
 
@@ -830,6 +2029,7 @@ export class InventoryPage implements OnInit, OnDestroy {
   private inventoryService = inject(InventoryService);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
+  private modalCtrl = inject(ModalController);
   private sub?: Subscription;
 
   products = signal<Product[]>([]);
@@ -841,6 +2041,7 @@ export class InventoryPage implements OnInit, OnDestroy {
 
   readonly sizes: SizeVariant[] = ['cup', 'pint', 'halfGallon', 'gallon'];
   readonly sizeLabels = SIZE_DISPLAY_LABELS;
+  readonly lowStockThreshold = environment.lowStockThreshold;
   skeletonItems = Array(6).fill(0);
 
   constructor() {
@@ -963,12 +2164,67 @@ export class InventoryPage implements OnInit, OnDestroy {
     setTimeout(() => (event.target as HTMLIonRefresherElement).complete(), 1000);
   }
 
-  isLowStock(stock: number): boolean { return stock > 0 && stock < 10; }
+  isLowStock(stock: number): boolean { return stock > 0 && stock < this.lowStockThreshold; }
   isOutOfStock(stock: number): boolean { return stock === 0; }
+
+  async bulkRestock(): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: 'Bulk Restock',
+      message: 'Add the same amount to EVERY size of ALL active products.',
+      inputs: [{ name: 'amount', type: 'number', placeholder: 'e.g. 10', min: 1 }],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Restock All',
+          handler: async (data) => {
+            const amount = Math.floor(Number(data?.amount));
+            if (!Number.isInteger(amount) || amount <= 0) {
+              void this.toast('Enter a positive whole number.', 'danger');
+              return;
+            }
+            try {
+              const count = await this.inventoryService.bulkRestock(amount);
+              await this.toast(`✅ Restocked ${count} products (+${amount} each size).`, 'success');
+            } catch (err: unknown) {
+              await this.toast(err instanceof Error ? err.message : 'Bulk restock failed.', 'danger');
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  // ── Add Product: dropdown form (flavor-set list + New), with description ───
+  async addProduct(): Promise<void> {
+    const loaded = this.products();
+    const modal = await this.modalCtrl.create({
+      component: AddProductModalComponent,
+      componentProps: {
+        maxSetNumber: loaded.length > 0 ? Math.max(...loaded.map((p) => p.setNumber)) : 8,
+        variants: loaded.map((p) => ({ setNumber: p.setNumber, variantName: p.variantName })),
+      },
+    });
+    await modal.present();
+  }
+
+  async editDetails(product: Product): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: EditProductModalComponent,
+      componentProps: { product },
+      cssClass: 'large-sheet-modal',
+    });
+    await modal.present();
+  }
+
+  private async toast(message: string, color: 'success' | 'danger' | 'warning'): Promise<void> {
+    const t = await this.toastCtrl.create({ message, color, duration: 2500, position: 'top' });
+    await t.present();
+  }
 }
 </file>
 
-<file path="five-orites-scoop/src/app/admin/orders/admin-orders.page.html">
+<file path="src/app/admin/orders/admin-orders.page.html">
 <!-- src/app/admin/orders/admin-orders.page.html -->
 <!-- Five-orites Scoop — Admin Order Fulfillment -->
 
@@ -1118,7 +2374,7 @@ export class InventoryPage implements OnInit, OnDestroy {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/admin/orders/admin-orders.page.scss">
+<file path="src/app/admin/orders/admin-orders.page.scss">
 // src/app/admin/orders/admin-orders.page.scss
 
 :host { display: block; }
@@ -1186,7 +2442,7 @@ export class InventoryPage implements OnInit, OnDestroy {
 .empty-sub { font-size: 14px; color: var(--ion-color-medium); margin: 0; }
 </file>
 
-<file path="five-orites-scoop/src/app/admin/orders/admin-orders.page.ts">
+<file path="src/app/admin/orders/admin-orders.page.ts">
 // src/app/admin/orders/admin-orders.page.ts
 // Five-orites Scoop — Admin Order Fulfillment Dashboard
 // Author: [Developer Placeholder]
@@ -1208,6 +2464,7 @@ import {
 } from 'ionicons/icons';
 import { Subscription, catchError, of } from 'rxjs';
 import { OrderService } from '../../core/services/order.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { Order, OrderStatus, ORDER_STATUS_META } from '../../core/models/order.model';
 import { OrderStatusBadgeComponent } from '../../shared/components/order-status-badge/order-status-badge.component';
 import { PesoPipe } from '../../shared/pipes/peso.pipe';
@@ -1238,6 +2495,7 @@ const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
 })
 export class AdminOrdersPage implements OnInit, OnDestroy {
   private orderService = inject(OrderService);
+  private notificationService = inject(NotificationService);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
   private sub?: Subscription;
@@ -1316,6 +2574,7 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
             this.updatingId.set(order.id);
             try {
               await this.orderService.updateOrderStatus(order.id, next);
+              await this.notificationService.notifyOrderStatusChange(order.id, next);
               const toast = await this.toastCtrl.create({
                 message: `Order updated to "${ORDER_STATUS_META[next].label}"`,
                 color: 'success', duration: 2000, position: 'top',
@@ -1340,18 +2599,29 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
   async cancelOrder(order: Order): Promise<void> {
     const alert = await this.alertCtrl.create({
       header: 'Cancel Order',
-      message: `Cancel order #${order.id.slice(-6).toUpperCase()}? This cannot be undone.`,
+      message: `Cancel order #${order.id.slice(-6).toUpperCase()}? Stock will be restored.`,
+      inputs: [{ name: 'reason', type: 'text', placeholder: 'Reason (optional)' }],
       buttons: [
         { text: 'Back', role: 'cancel' },
         {
           text: 'Cancel Order',
           role: 'destructive',
-          handler: async () => {
+          handler: async (data) => {
             this.updatingId.set(order.id);
             try {
-              await this.orderService.updateOrderStatus(order.id, 'cancelled');
-            } catch {
-              // handle silently
+              await this.orderService.cancelOrder(order.id, data?.reason);
+              await this.notificationService.notifyOrderStatusChange(order.id, 'cancelled');
+              const toast = await this.toastCtrl.create({
+                message: 'Order cancelled and stock restored.',
+                color: 'warning', duration: 2500, position: 'top',
+              });
+              await toast.present();
+            } catch (err: unknown) {
+              const toast = await this.toastCtrl.create({
+                message: err instanceof Error ? err.message : 'Failed to cancel order.',
+                color: 'danger', duration: 3000, position: 'top',
+              });
+              await toast.present();
             } finally {
               this.updatingId.set(null);
             }
@@ -1369,8 +2639,10 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
 
   formatDate(timestamp: unknown): string {
     try {
-      const ts = timestamp as { toDate(): Date };
-      return ts.toDate().toLocaleDateString('en-PH', {
+      if (timestamp === null || timestamp === undefined) return '—';
+      const ts = timestamp as { toDate(): Date } | string;
+      const date = typeof ts === 'string' ? new Date(ts) : ts.toDate();
+      return date.toLocaleDateString('en-PH', {
         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
       });
     } catch { return '—'; }
@@ -1380,14 +2652,14 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/core/config/pricing.config.ts">
+<file path="src/app/core/config/pricing.config.ts">
 // src/app/core/config/pricing.config.ts
 // Five-orites Scoop — Authoritative Pricing Matrix
 // Author: [Developer Placeholder]
 
-import { FlavorSet, SizePricing, SizeVariant } from '../models/product.model';
+import { SizePricing, SizeVariant } from '../models/product.model';
 
-export const PRICING_MATRIX: Record<FlavorSet, SizePricing> = {
+export const PRICING_MATRIX: Record<number, SizePricing> = {
   1: { cup: 65,  pint: 200, halfGallon: 500, gallon: 950 }, // Chocolates
   2: { cup: 60,  pint: 190, halfGallon: 480, gallon: 900 }, // Vanilla
   3: { cup: 65,  pint: 200, halfGallon: 500, gallon: 950 }, // Strawberry
@@ -1405,7 +2677,7 @@ export const SIZE_DISPLAY_LABELS: Record<SizeVariant, string> = {
   gallon: 'Gallon',
 };
 
-export const SET_NAMES: Record<FlavorSet, string> = {
+export const SET_NAMES: Record<number, string> = {
   1: 'Chocolates',
   2: 'Vanilla',
   3: 'Strawberry',
@@ -1415,9 +2687,22 @@ export const SET_NAMES: Record<FlavorSet, string> = {
   7: 'Coffee',
   8: 'Cookies & Cream',
 };
+
+// Standard tier applied to admin-created sets until edited.
+export const DEFAULT_SET_PRICING: SizePricing = {
+  cup: 65, pint: 200, halfGallon: 500, gallon: 950,
+};
+
+export function getPricingForSet(setNumber: number): SizePricing {
+  return { ...(PRICING_MATRIX[setNumber] ?? DEFAULT_SET_PRICING) };
+}
+
+export function getSetName(setNumber: number): string {
+  return SET_NAMES[setNumber] ?? `Set ${setNumber}`;
+}
 </file>
 
-<file path="five-orites-scoop/src/app/core/guards/admin.guard.ts">
+<file path="src/app/core/guards/admin.guard.ts">
 // src/app/core/guards/admin.guard.ts
 // Five-orites Scoop — Admin Role Route Guard
 // Author: [Developer Placeholder]
@@ -1425,14 +2710,16 @@ export const SET_NAMES: Record<FlavorSet, string> = {
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { map, take } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 
 export const adminGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.currentUser$.pipe(
+  return authService.authReady$.pipe(
+    filter((ready) => ready),
     take(1),
+    switchMap(() => authService.currentUser$.pipe(take(1))),
     map((user) => {
       if (user?.role === 'admin') return true;
       router.navigate(['/dashboard']);
@@ -1442,7 +2729,7 @@ export const adminGuard: CanActivateFn = () => {
 };
 </file>
 
-<file path="five-orites-scoop/src/app/core/guards/auth.guard.ts">
+<file path="src/app/core/guards/auth.guard.ts">
 // src/app/core/guards/auth.guard.ts
 // Five-orites Scoop — Authentication Route Guard
 // Author: [Developer Placeholder]
@@ -1450,14 +2737,16 @@ export const adminGuard: CanActivateFn = () => {
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { map, take } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 
 export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.currentUser$.pipe(
+  return authService.authReady$.pipe(
+    filter((ready) => ready),
     take(1),
+    switchMap(() => authService.currentUser$.pipe(take(1))),
     map((user) => {
       if (user) return true;
       router.navigate(['/auth']);
@@ -1467,7 +2756,7 @@ export const authGuard: CanActivateFn = () => {
 };
 </file>
 
-<file path="five-orites-scoop/src/app/core/models/cart.model.ts">
+<file path="src/app/core/models/cart.model.ts">
 // src/app/core/models/cart.model.ts
 // Five-orites Scoop — Cart Data Models
 // Author: [Developer Placeholder]
@@ -1493,6 +2782,10 @@ export interface Cart {
 export const DELIVERY_FEE = 50; // ₱50 flat rate — Metro Manila
 export const FREE_DELIVERY_THRESHOLD = 500; // Free delivery over ₱500
 
+export function getDeliveryFee(subtotal: number): number {
+  return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
+}
+
 export const EMPTY_CART: Cart = {
   items: [],
   totalAmount: 0,
@@ -1500,7 +2793,7 @@ export const EMPTY_CART: Cart = {
 };
 </file>
 
-<file path="five-orites-scoop/src/app/core/models/order.model.ts">
+<file path="src/app/core/models/order.model.ts">
 // src/app/core/models/order.model.ts
 // Five-orites Scoop — Order Data Models
 // Author: [Developer Placeholder]
@@ -1533,12 +2826,15 @@ export interface Order {
   items: OrderItem[];
   totalAmount: number;
   deliveryFee: number;
+  discountAmount?: number;
+  voucherCode?: string | null;
   grandTotal: number;
   status: OrderStatus;
   paymentReference?: string;
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   deliveryAddress: string;
-  notes?: string;
+  notes?: string | null;
+  cancelReason?: string | null;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   statusHistory: { status: OrderStatus; timestamp: Timestamp }[];
@@ -1584,7 +2880,7 @@ export const ORDER_STATUS_META: Record<OrderStatus, OrderStatusMeta> = {
 };
 </file>
 
-<file path="five-orites-scoop/src/app/core/models/product.model.ts">
+<file path="src/app/core/models/product.model.ts">
 // src/app/core/models/product.model.ts
 // Five-orites Scoop — Product Data Models
 // Author: [Developer Placeholder]
@@ -1592,7 +2888,8 @@ export const ORDER_STATUS_META: Record<OrderStatus, OrderStatusMeta> = {
 import { Timestamp } from '@angular/fire/firestore';
 
 export type SizeVariant = 'cup' | 'pint' | 'halfGallon' | 'gallon';
-export type FlavorSet = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+// Flavor set number: 1–8 built-in, extensible (admin can add new sets).
+export type FlavorSet = number;
 
 export interface SizePricing {
   cup: number;
@@ -1610,7 +2907,7 @@ export interface StockLevel {
 
 export interface Product {
   id: string;                 // Firestore document ID
-  setNumber: FlavorSet;       // 1–8
+  setNumber: FlavorSet;       // >= 1 (1–8 built-in, extensible via admin)
   setName: string;            // e.g. "Chocolates"
   variantName: string;        // e.g. "Rocky Road"
   description: string;
@@ -1642,7 +2939,7 @@ export interface StockHistoryEntry {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/core/models/user.model.ts">
+<file path="src/app/core/models/user.model.ts">
 // src/app/core/models/user.model.ts
 // Five-orites Scoop — User Data Models
 // Author: [Developer Placeholder]
@@ -1661,7 +2958,7 @@ export interface AppUser {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/core/services/auth.service.ts">
+<file path="src/app/core/services/auth.service.ts">
 // src/app/core/services/auth.service.ts
 // Five-orites Scoop — Authentication Service
 // Author: [Developer Placeholder]
@@ -1683,9 +2980,10 @@ import {
   doc,
   getDoc,
   setDoc,
+  serverTimestamp,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AppUser, UserRole } from '../models/user.model';
+import { AppUser } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -1696,13 +2994,22 @@ export class AuthService {
   readonly currentUser$: Observable<AppUser | null> =
     this.currentUserSubject.asObservable();
 
+  private authReadySubject = new BehaviorSubject<boolean>(false);
+  readonly authReady$ = this.authReadySubject.asObservable();
+
   constructor() {
     onAuthStateChanged(this.auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const appUser = await this.buildAppUser(firebaseUser);
-        this.currentUserSubject.next(appUser);
-      } else {
-        this.currentUserSubject.next(null);
+      try {
+        if (firebaseUser) {
+          const appUser = await this.buildAppUser(firebaseUser);
+          this.currentUserSubject.next(appUser);
+        } else {
+          this.currentUserSubject.next(null);
+        }
+      } finally {
+        if (!this.authReadySubject.getValue()) {
+          this.authReadySubject.next(true);
+        }
       }
     });
   }
@@ -1723,8 +3030,8 @@ export class AuthService {
         email: firebaseUser.email ?? '',
         displayName: firebaseUser.displayName ?? 'Scoop Lover',
         photoURL: firebaseUser.photoURL ?? undefined,
-        role: 'customer',   // default role
-        createdAt: new Date() as never,
+        role: 'customer',   // default role, never trust client input
+        createdAt: serverTimestamp() as never,
       };
 
       await setDoc(userDocRef, {
@@ -1732,8 +3039,8 @@ export class AuthService {
         email: newUser.email,
         displayName: newUser.displayName,
         photoURL: newUser.photoURL ?? null,
-        role: newUser.role,
-        createdAt: new Date().toISOString(),
+        role: 'customer',
+        createdAt: serverTimestamp(),
       });
 
       return newUser;
@@ -1756,23 +3063,23 @@ export class AuthService {
   async registerWithEmail(
     email: string,
     password: string,
-    displayName: string,
-    role: UserRole = 'customer'
+    displayName: string
   ): Promise<void> {
     const credential = await createUserWithEmailAndPassword(
       this.auth, email, password
     );
     await updateProfile(credential.user, { displayName });
 
-    // Write Firestore doc immediately after registration
+    // Write Firestore doc immediately after registration.
+    // Role is always customer — admins are promoted manually/via backend.
     const userDocRef = doc(this.firestore, `users/${credential.user.uid}`);
     await setDoc(userDocRef, {
       uid: credential.user.uid,
       email: credential.user.email ?? '',
       displayName,
       photoURL: null,
-      role,   // 'customer' or 'admin'
-      createdAt: new Date().toISOString(),
+      role: 'customer',
+      createdAt: serverTimestamp(),
     });
   }
 
@@ -1795,7 +3102,7 @@ export class AuthService {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/core/services/cart.service.ts">
+<file path="src/app/core/services/cart.service.ts">
 // src/app/core/services/cart.service.ts
 // Five-orites Scoop — Cart State Management Service
 // Author: [Developer Placeholder]
@@ -1856,12 +3163,22 @@ export class CartService {
   // ── Public API ───────────────────────────────────────────────────────────────
 
   addItem(product: Product, size: SizeVariant, quantity: number): void {
+    if (quantity <= 0) throw new Error('Quantity must be at least 1.');
+    const available = product.stock?.[size] ?? 0;
+    if (available <= 0) throw new Error(`${product.variantName} (${size}) is out of stock.`);
+
     const currentItems = [...this.cartSubject.getValue().items];
     const existingIndex = currentItems.findIndex(
       (i) => i.productId === product.id && i.size === size
     );
 
     const unitPrice = product.pricing[size];
+    const existingQty = existingIndex >= 0 ? currentItems[existingIndex].quantity : 0;
+    if (existingQty + quantity > available) {
+      throw new Error(
+        `Only ${available} x ${product.variantName} (${size}) available. You already have ${existingQty} in cart.`
+      );
+    }
 
     if (existingIndex >= 0) {
       currentItems[existingIndex] = {
@@ -1926,7 +3243,7 @@ export class CartService {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/core/services/inventory.service.ts">
+<file path="src/app/core/services/inventory.service.ts">
 // src/app/core/services/inventory.service.ts
 // Five-orites Scoop — Real-Time Inventory Service
 
@@ -1936,26 +3253,29 @@ import {
   collection,
   query,
   where,
+  limit,
   onSnapshot,
   doc,
+  addDoc,
   updateDoc,
   serverTimestamp,
   runTransaction,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Product, FlavorSet, SizeVariant, ProductFilter } from '../models/product.model';
+import { Product, FlavorSet, SizeVariant, StockLevel, ProductFilter } from '../models/product.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
   private firestore = inject(Firestore);
 
   // ── Real-time product stream ──────────────────────────────────────────────────
-  getProducts(filters?: ProductFilter): Observable<Product[]> {
+  getProducts(filters?: ProductFilter, maxResults = 200): Observable<Product[]> {
     return new Observable<Product[]>((observer) => {
       const productsCol = collection(this.firestore, 'products');
 
       // Simple query — no composite index needed
-      const q = query(productsCol, where('isActive', '==', true));
+      const q = query(productsCol, where('isActive', '==', true), limit(maxResults));
 
       const unsubscribe = onSnapshot(
         q,
@@ -2026,7 +3346,7 @@ export class InventoryService {
     });
   }
 
-  subscribeToLowStock(threshold = 10): Observable<Product[]> {
+  subscribeToLowStock(threshold = environment.lowStockThreshold): Observable<Product[]> {
     return new Observable<Product[]>((observer) => {
       const productsCol = collection(this.firestore, 'products');
       const q = query(productsCol, where('isActive', '==', true));
@@ -2053,12 +3373,17 @@ export class InventoryService {
   }
 
   // ── Admin Stock Update ────────────────────────────────────────────────────────
+  // Transactional so concurrent checkouts cannot clobber admin edits.
   async updateStock(productId: string, size: SizeVariant, newQuantity: number): Promise<void> {
-    if (newQuantity < 0) throw new Error('Stock cannot be negative.');
+    if (!Number.isInteger(newQuantity) || newQuantity < 0) throw new Error('Stock cannot be negative.');
     const productRef = doc(this.firestore, `products/${productId}`);
-    await updateDoc(productRef, {
-      [`stock.${size}`]: newQuantity,
-      updatedAt: serverTimestamp(),
+    await runTransaction(this.firestore, async (transaction) => {
+      const snap = await transaction.get(productRef);
+      if (!snap.exists()) throw new Error(`Product ${productId} not found.`);
+      transaction.update(productRef, {
+        [`stock.${size}`]: newQuantity,
+        updatedAt: serverTimestamp(),
+      });
     });
   }
 
@@ -2068,6 +3393,75 @@ export class InventoryService {
       isActive,
       updatedAt: serverTimestamp(),
     });
+  }
+
+  // ── Replace ALL size quantities at once (Edit Details modal) ──────────────
+  async updateStocks(productId: string, stock: StockLevel): Promise<void> {
+    for (const size of Object.keys(stock) as SizeVariant[]) {
+      const qty = stock[size];
+      if (!Number.isInteger(qty) || qty < 0) throw new Error('Stock cannot be negative.');
+    }
+    const productRef = doc(this.firestore, `products/${productId}`);
+    await updateDoc(productRef, {
+      stock: { ...stock },
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  // ── Admin Product CRUD ────────────────────────────────────────────────────
+  async createProduct(input: {
+    setNumber: FlavorSet;
+    setName: string;
+    variantName: string;
+    description: string;
+    imageUrl?: string;
+    pricing: { cup: number; pint: number; halfGallon: number; gallon: number };
+    stock: { cup: number; pint: number; halfGallon: number; gallon: number };
+  }): Promise<string> {
+    if (!input.variantName.trim()) throw new Error('Variant name is required.');
+    const productsCol = collection(this.firestore, 'products');
+    const ref = await addDoc(productsCol, {
+      setNumber: input.setNumber,
+      setName: input.setName.trim(),
+      variantName: input.variantName.trim(),
+      description: (input.description || '').trim(),
+      imageUrl: (input.imageUrl || '').trim(),
+      pricing: input.pricing,
+      stock: input.stock,
+      isActive: true,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return ref.id;
+  }
+
+  async updateProductDetails(
+    productId: string,
+    patch: Partial<Pick<Product, 'variantName' | 'description' | 'imageUrl' | 'pricing' | 'setName' | 'setNumber'>>
+  ): Promise<void> {
+    const productRef = doc(this.firestore, `products/${productId}`);
+    await updateDoc(productRef, { ...patch, updatedAt: serverTimestamp() });
+  }
+
+  // ── Bulk restock: add `amount` to EVERY size of EVERY active product ──────
+  async bulkRestock(amount: number): Promise<number> {
+    if (!Number.isInteger(amount) || amount <= 0) throw new Error('Restock amount must be a positive whole number.');
+    const { getDocs } = await import('@angular/fire/firestore');
+    const productsCol = collection(this.firestore, 'products');
+    const snap = await getDocs(query(productsCol, where('isActive', '==', true), limit(200)));
+    let updated = 0;
+    for (const d of snap.docs) {
+      const data = d.data() as Product;
+      await updateDoc(doc(this.firestore, `products/${d.id}`), {
+        'stock.cup': (data.stock?.cup ?? 0) + amount,
+        'stock.pint': (data.stock?.pint ?? 0) + amount,
+        'stock.halfGallon': (data.stock?.halfGallon ?? 0) + amount,
+        'stock.gallon': (data.stock?.gallon ?? 0) + amount,
+        updatedAt: serverTimestamp(),
+      });
+      updated++;
+    }
+    return updated;
   }
 
   // ── Firestore Transaction: Stock Validation ────────────────────────────────────
@@ -2107,10 +3501,30 @@ export class InventoryService {
       }
     });
   }
+
+  // ── Restock (e.g. order cancelled) ──────────────────────────────────────────
+  async restockItems(
+    items: { productId: string; size: SizeVariant; quantity: number }[]
+  ): Promise<void> {
+    if (items.length === 0) return;
+    await runTransaction(this.firestore, async (transaction) => {
+      for (const item of items) {
+        const ref = doc(this.firestore, `products/${item.productId}`);
+        const snap = await transaction.get(ref);
+        if (!snap.exists()) continue;
+        const product = { id: snap.id, ...snap.data() } as Product;
+        const current = product.stock?.[item.size] ?? 0;
+        transaction.update(ref, {
+          [`stock.${item.size}`]: current + item.quantity,
+          updatedAt: serverTimestamp(),
+        });
+      }
+    });
+  }
 }
 </file>
 
-<file path="five-orites-scoop/src/app/core/services/notification.service.ts">
+<file path="src/app/core/services/notification.service.ts">
 // src/app/core/services/notification.service.ts
 // Five-orites Scoop — Push Notification Service (Capacitor + PWA fallback)
 // Author: [Developer Placeholder]
@@ -2184,30 +3598,46 @@ export class NotificationService {
         message,
         newStatus === 'cancelled' ? 'danger' : 'success'
       );
+      this.showBrowserNotification('Five-orites Scoop', `${message} (#${orderId.slice(-6).toUpperCase()})`);
+    }
+  }
+
+  private showBrowserNotification(title: string, body: string): void {
+    try {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      // eslint-disable-next-line no-new
+      new Notification(title, { body });
+    } catch {
+      // Notifications unsupported/blocked — toast already shown.
     }
   }
 }
 </file>
 
-<file path="five-orites-scoop/src/app/core/services/order.service.ts">
+<file path="src/app/core/services/order.service.ts">
 // src/app/core/services/order.service.ts
 // Five-orites Scoop — Order Service (Fixed)
 
 import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
+  Timestamp,
   collection,
   doc,
+  getDoc,
   query,
   where,
   orderBy,
+  limit,
   onSnapshot,
   serverTimestamp,
+  arrayUnion,
   addDoc,
   updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { DELIVERY_FEE } from '../models/cart.model';
+import { getDeliveryFee } from '../models/cart.model';
+import { getPricingForSet } from '../config/pricing.config';
 import { Order, OrderItem, OrderStatus } from '../models/order.model';
 import { AuthService } from './auth.service';
 import { CartService } from './cart.service';
@@ -2220,34 +3650,53 @@ export class OrderService {
   private cartService = inject(CartService);
   private inventoryService = inject(InventoryService);
 
-  async placeOrder(deliveryAddress: string, notes?: string): Promise<string> {
+  async placeOrder(
+    deliveryAddress: string,
+    notes?: string,
+    voucher?: { code: string; discount: number }
+  ): Promise<string> {
     const user = this.authService.currentUserSnapshot;
     if (!user) throw new Error('User must be signed in to place an order.');
 
     const cart = this.cartService.currentCart;
     if (cart.items.length === 0) throw new Error('Cart is empty.');
+    if (!deliveryAddress.trim()) throw new Error('Delivery address is required.');
 
     try {
-      // Step 1: Validate and decrement stock
+      // Step 1: Re-price from Firestore (never trust localStorage prices).
+      const authoritativeItems: OrderItem[] = [];
+      for (const item of cart.items) {
+        const snap = await getDoc(doc(this.firestore, `products/${item.productId}`));
+        if (!snap.exists()) throw new Error(`Product ${item.variantName} no longer exists.`);
+        const data = snap.data() as { pricing?: Record<string, number>; setName?: string; variantName?: string; setNumber?: number };
+        const firestorePrice = data.pricing?.[item.size];
+        const matrixPrice = data.setNumber != null
+          ? getPricingForSet(data.setNumber)?.[item.size]
+          : undefined;
+        const unitPrice = firestorePrice ?? matrixPrice ?? item.unitPrice;
+        authoritativeItems.push({
+          productId: item.productId,
+          variantName: item.variantName,
+          setName: item.setName,
+          size: item.size,
+          quantity: item.quantity,
+          unitPrice,
+          subtotal: unitPrice * item.quantity,
+        });
+      }
+      const totalAmount = authoritativeItems.reduce((s, i) => s + i.subtotal, 0);
+      const deliveryFee = getDeliveryFee(totalAmount);
+      const discountAmount = Math.min(Math.max(voucher?.discount ?? 0, 0), totalAmount);
+      const voucherCode = voucher?.code?.toUpperCase() ?? null;
+      const grandTotal = totalAmount - discountAmount + deliveryFee;
+
+      // Step 2: Validate and decrement stock (transactional).
       const stockItems = cart.items.map((i) => ({
         productId: i.productId,
         size: i.size,
         quantity: i.quantity,
       }));
       await this.inventoryService.validateAndDecrementStock(stockItems);
-
-      // Step 2: Build order items
-      const orderItems: OrderItem[] = cart.items.map((item) => ({
-        productId: item.productId,
-        variantName: item.variantName,
-        setName: item.setName,
-        size: item.size,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        subtotal: item.unitPrice * item.quantity,
-      }));
-
-      const grandTotal = cart.totalAmount + DELIVERY_FEE;
 
       // ── FIX: never pass undefined to Firestore ──────────────
       // notes undefined → use null instead
@@ -2256,18 +3705,23 @@ export class OrderService {
       const orderData = {
         customerId: user.uid,
         customerEmail: user.email,
-        items: orderItems,
-        totalAmount: cart.totalAmount,
-        deliveryFee: DELIVERY_FEE,
+        items: authoritativeItems,
+        totalAmount,
+        deliveryFee,
+        discountAmount,
+        voucherCode,
         grandTotal,
         status: 'pending',
         paymentStatus: 'pending',
         deliveryAddress: deliveryAddress.trim(),
         notes: safeNotes,           // ← null instead of undefined
+        cancelReason: null,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
+        // NOTE: serverTimestamp() is banned inside arrays by Firestore,
+        // so history entries use client Timestamp.now().
         statusHistory: [
-          { status: 'pending', timestamp: new Date().toISOString() },
+          { status: 'pending', timestamp: Timestamp.now() },
         ],
       };
 
@@ -2285,13 +3739,14 @@ export class OrderService {
     }
   }
 
-  getCustomerOrders(uid: string): Observable<Order[]> {
+  getCustomerOrders(uid: string, maxResults = 50): Observable<Order[]> {
     return new Observable<Order[]>((observer) => {
       const ordersCol = collection(this.firestore, 'orders');
       const q = query(
         ordersCol,
         where('customerId', '==', uid),
-        orderBy('createdAt', 'desc')
+        orderBy('createdAt', 'desc'),
+        limit(maxResults)
       );
       const unsubscribe = onSnapshot(
         q,
@@ -2329,12 +3784,12 @@ export class OrderService {
     });
   }
 
-  getAllOrders(statusFilter?: OrderStatus): Observable<Order[]> {
+  getAllOrders(statusFilter?: OrderStatus, maxResults = 100): Observable<Order[]> {
     return new Observable<Order[]>((observer) => {
       const ordersCol = collection(this.firestore, 'orders');
       const q = statusFilter
-        ? query(ordersCol, where('status', '==', statusFilter), orderBy('createdAt', 'desc'))
-        : query(ordersCol, orderBy('createdAt', 'desc'));
+        ? query(ordersCol, where('status', '==', statusFilter), orderBy('createdAt', 'desc'), limit(maxResults))
+        : query(ordersCol, orderBy('createdAt', 'desc'), limit(maxResults));
 
       const unsubscribe = onSnapshot(
         q,
@@ -2353,12 +3808,34 @@ export class OrderService {
     await updateDoc(orderRef, {
       status: newStatus,
       updatedAt: serverTimestamp(),
+      statusHistory: arrayUnion({ status: newStatus, timestamp: Timestamp.now() }),
+    });
+  }
+
+  async cancelOrder(orderId: string, reason?: string): Promise<void> {
+    const orderRef = doc(this.firestore, `orders/${orderId}`);
+    const snap = await getDoc(orderRef);
+    if (!snap.exists()) throw new Error(`Order ${orderId} not found.`);
+    const order = { id: snap.id, ...snap.data() } as Order;
+    if (order.status === 'cancelled') return;
+    if (order.status === 'delivered') throw new Error('Delivered orders cannot be cancelled.');
+
+    // Restock before marking cancelled so inventory never leaks.
+    await this.inventoryService.restockItems(
+      order.items.map((i) => ({ productId: i.productId, size: i.size, quantity: i.quantity }))
+    );
+    const safeReason = (reason && reason.trim().length > 0) ? reason.trim().slice(0, 300) : null;
+    await updateDoc(orderRef, {
+      status: 'cancelled',
+      cancelReason: safeReason,
+      updatedAt: serverTimestamp(),
+      statusHistory: arrayUnion({ status: 'cancelled', timestamp: Timestamp.now() }),
     });
   }
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/about/about.page.html">
+<file path="src/app/features/about/about.page.html">
 <!-- src/app/features/about/about.page.html -->
 <!-- Five-orites Scoop — About Page -->
 
@@ -2471,7 +3948,7 @@ export class OrderService {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/about/about.page.scss">
+<file path="src/app/features/about/about.page.scss">
 // src/app/features/about/about.page.scss
 
 :host { display: block; }
@@ -2602,7 +4079,7 @@ export class OrderService {
 .team-cta-btn { --color: var(--color-brand-primary); --border-color: var(--color-brand-primary); --border-radius: 12px; font-weight: 700; }
 </file>
 
-<file path="five-orites-scoop/src/app/features/about/about.page.ts">
+<file path="src/app/features/about/about.page.ts">
 // src/app/features/about/about.page.ts
 // Five-orites Scoop — About the App
 // Author: [Developer Placeholder]
@@ -2672,9 +4149,9 @@ export class AboutPage {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/auth/auth.page.html">
+<file path="src/app/features/auth/auth.page.html">
 <!-- src/app/features/auth/auth.page.html -->
-<!-- Five-orites Scoop — Auth Page (Login / Register / Admin Register) -->
+<!-- Five-orites Scoop — Auth Page (Login / Register) -->
 
 <ion-content class="auth-content" fullscreen>
   <div class="auth-container">
@@ -2707,25 +4184,16 @@ export class AboutPage {
         >
           Sign Up
         </button>
-        <button
-          class="mode-tab mode-tab-admin"
-          [class.active]="mode() === 'register-admin'"
-          (click)="setMode('register-admin')"
-        >
-          🛡️ Admin
-        </button>
       </div>
 
       <!-- Title -->
       <h2 class="auth-title">
         @if (mode() === 'login') { Welcome back }
         @if (mode() === 'register') { Create account }
-        @if (mode() === 'register-admin') { Admin Registration }
       </h2>
       <p class="auth-subtitle">
         @if (mode() === 'login') { Sign in to order your favourite scoops }
         @if (mode() === 'register') { Join us for fresh flavors delivered daily }
-        @if (mode() === 'register-admin') { Enter your details and the admin secret code }
       </p>
 
       <!-- Error Message -->
@@ -2733,19 +4201,11 @@ export class AboutPage {
         <div class="error-banner" role="alert">{{ errorMessage() }}</div>
       }
 
-      <!-- Admin Notice -->
-      @if (mode() === 'register-admin') {
-        <div class="admin-notice">
-          🛡️ Admin accounts have full access to inventory, orders, and analytics.
-          You need the secret admin code to register.
-        </div>
-      }
-
       <!-- Form Fields -->
       <div class="auth-form">
 
-        <!-- Name field (register modes only) -->
-        @if (mode() === 'register' || mode() === 'register-admin') {
+        <!-- Name field (register mode only) -->
+        @if (mode() === 'register') {
           <div class="input-group">
             <ion-icon name="person-outline" class="input-icon"></ion-icon>
             <ion-input
@@ -2784,24 +4244,10 @@ export class AboutPage {
           </button>
         </div>
 
-        <!-- Admin Secret Code (admin register only) -->
-        @if (mode() === 'register-admin') {
-          <div class="input-group admin-code-group">
-            <ion-icon name="shield-checkmark-outline" class="input-icon admin-icon"></ion-icon>
-            <ion-input
-              type="password"
-              placeholder="Admin secret code"
-              [(ngModel)]="adminCode"
-              class="auth-input"
-            ></ion-input>
-          </div>
-        }
-
         <!-- Submit Button -->
         <ion-button
           expand="block"
           class="submit-btn"
-          [class.submit-btn-admin]="mode() === 'register-admin'"
           (click)="submit()"
           [disabled]="isLoading()"
         >
@@ -2810,7 +4256,6 @@ export class AboutPage {
           }
           @if (mode() === 'login') { Sign In }
           @if (mode() === 'register') { Create Account }
-          @if (mode() === 'register-admin') { Register as Admin }
         </ion-button>
 
         <!-- Divider (login only) -->
@@ -2839,7 +4284,7 @@ export class AboutPage {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/auth/auth.page.scss">
+<file path="src/app/features/auth/auth.page.scss">
 // src/app/features/auth/auth.page.scss
 
 :host {
@@ -3095,7 +4540,7 @@ export class AboutPage {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/auth/auth.page.ts">
+<file path="src/app/features/auth/auth.page.ts">
 // src/app/features/auth/auth.page.ts
 // Five-orites Scoop — Login / Register / Admin Register Page
 
@@ -3111,18 +4556,12 @@ import { addIcons } from 'ionicons';
 import {
   logoGoogle, mailOutline, lockClosedOutline,
   personOutline, eyeOutline, eyeOffOutline,
-  shieldCheckmarkOutline,
 } from 'ionicons/icons';
 import { AuthService } from '../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
-import { UserRole } from '../../core/models/user.model';
 
-// ── SECRET ADMIN CODE ──────────────────────────────────────────
-// Change this to any secret phrase your team agrees on
-const ADMIN_SECRET_CODE = 'fiveorites2025admin';
-
-type AuthMode = 'login' | 'register' | 'register-admin';
+type AuthMode = 'login' | 'register';
 
 @Component({
   selector: 'app-auth',
@@ -3143,7 +4582,6 @@ export class AuthPage implements OnInit {
   email = '';
   password = '';
   displayName = '';
-  adminCode = '';
   showPassword = signal(false);
   isLoading = signal(false);
   errorMessage = signal('');
@@ -3152,7 +4590,6 @@ export class AuthPage implements OnInit {
     addIcons({
       logoGoogle, mailOutline, lockClosedOutline,
       personOutline, eyeOutline, eyeOffOutline,
-      shieldCheckmarkOutline,
     });
 
     this.authService.currentUser$
@@ -3165,7 +4602,6 @@ export class AuthPage implements OnInit {
   setMode(mode: AuthMode): void {
     this.mode.set(mode);
     this.errorMessage.set('');
-    this.adminCode = '';
   }
 
   togglePasswordVisibility(): void {
@@ -3180,27 +4616,13 @@ export class AuthPage implements OnInit {
       if (this.mode() === 'login') {
         await this.authService.signInWithEmail(this.email, this.password);
 
-      } else if (this.mode() === 'register') {
+      } else {
         if (!this.displayName.trim()) {
           this.errorMessage.set('Please enter your full name.');
           return;
         }
         await this.authService.registerWithEmail(
-          this.email, this.password, this.displayName, 'customer'
-        );
-
-      } else if (this.mode() === 'register-admin') {
-        // ── Admin Registration ─────────────────────────────
-        if (!this.displayName.trim()) {
-          this.errorMessage.set('Please enter your full name.');
-          return;
-        }
-        if (this.adminCode !== ADMIN_SECRET_CODE) {
-          this.errorMessage.set('Invalid admin code. Please try again.');
-          return;
-        }
-        await this.authService.registerWithEmail(
-          this.email, this.password, this.displayName, 'admin'
+          this.email, this.password, this.displayName
         );
       }
 
@@ -3243,7 +4665,7 @@ export class AuthPage implements OnInit {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/cart/cart.page.html">
+<file path="src/app/features/cart/cart.page.html">
 <!-- src/app/features/cart/cart.page.html -->
 <!-- Five-orites Scoop — Cart & Checkout -->
 
@@ -3280,7 +4702,7 @@ export class AuthPage implements OnInit {
         @for (item of cart().items; track trackItem($index, item)) {
           <div class="cart-item">
             <div class="item-image-wrap">
-              <img [src]="item.imageUrl || ''" [alt]="item.variantName" class="item-image" />
+              <img [src]="item.imageUrl || 'assets/placeholder-scoop.svg'" [alt]="item.variantName" class="item-image" onerror="this.src='assets/placeholder-scoop.svg'" />
             </div>
             <div class="item-info">
               <p class="item-name">{{ item.variantName }}</p>
@@ -3311,10 +4733,21 @@ export class AuthPage implements OnInit {
           <span>Subtotal</span>
           <span>{{ cart().totalAmount | peso }}</span>
         </div>
+        @if (voucherDiscount() > 0) {
+          <div class="summary-row">
+            <span>Voucher {{ appliedVoucher() }}</span>
+            <span>-{{ voucherDiscount() | peso }}</span>
+          </div>
+        }
         <div class="summary-row">
           <span>Delivery Fee</span>
-          <span>{{ deliveryFee | peso }}</span>
+          <span>{{ isFreeDelivery() ? 'FREE' : (deliveryFee() | peso) }}</span>
         </div>
+        @if (!isFreeDelivery()) {
+          <p class="free-delivery-hint">Add {{ amountAwayFromFreeDelivery() | peso }} more for FREE delivery (over {{ freeDeliveryThreshold | peso }}).</p>
+        } @else {
+          <p class="free-delivery-hint">🎉 You've unlocked FREE delivery!</p>
+        }
         <div class="summary-row total-row">
           <span>Total</span>
           <span class="total-amount">{{ grandTotal() | peso }}</span>
@@ -3322,7 +4755,40 @@ export class AuthPage implements OnInit {
       </div>
 
       <div class="checkout-form">
+        <h3 class="form-title">Voucher</h3>
+        @if (!appliedVoucher()) {
+          <div class="input-wrap">
+            <label class="field-label">Promo code (try SCOOP10)</label>
+            <ion-textarea
+              [(ngModel)]="voucherCode"
+              placeholder="Enter code..."
+              rows="1"
+              class="field-input"
+            ></ion-textarea>
+          </div>
+          <ion-button expand="block" fill="outline" (click)="applyVoucher()">Apply Voucher</ion-button>
+        } @else {
+          <p class="review-notes">✅ {{ appliedVoucher() }} applied.</p>
+          <ion-button expand="block" fill="clear" color="medium" (click)="removeVoucher()">Remove Voucher</ion-button>
+        }
+        @if (voucherMessage()) {
+          <p class="review-notes">{{ voucherMessage() }}</p>
+        }
+      </div>
+
+      <div class="checkout-form">
         <h3 class="form-title">Delivery Details</h3>
+
+        @if (savedAddresses().length > 0) {
+          <div class="input-wrap">
+            <label class="field-label">Saved addresses</label>
+            @for (addr of savedAddresses(); track addr) {
+              <ion-button expand="block" fill="outline" size="small" (click)="useSavedAddress(addr)">
+                {{ addr }}
+              </ion-button>
+            }
+          </div>
+        }
 
         @if (errorMessage()) {
           <div class="error-banner" role="alert">{{ errorMessage() }}</div>
@@ -3385,9 +4851,15 @@ export class AuthPage implements OnInit {
           <span>Subtotal</span>
           <span>{{ cart().totalAmount | peso }}</span>
         </div>
+        @if (voucherDiscount() > 0) {
+          <div class="summary-row">
+            <span>Voucher {{ appliedVoucher() }}</span>
+            <span>-{{ voucherDiscount() | peso }}</span>
+          </div>
+        }
         <div class="summary-row">
           <span>Delivery</span>
-          <span>{{ deliveryFee | peso }}</span>
+          <span>{{ isFreeDelivery() ? 'FREE' : (deliveryFee() | peso) }}</span>
         </div>
         <div class="summary-row total-row">
           <span>Total</span>
@@ -3416,13 +4888,21 @@ export class AuthPage implements OnInit {
       <h2 class="confirmed-title">Order Placed!</h2>
       <p class="confirmed-sub">Your scoops are on the way. Redirecting to your order tracker...</p>
       <ion-spinner name="dots"></ion-spinner>
+      <div class="confirmed-actions">
+        <ion-button expand="block" class="place-order-btn" (click)="viewTracker()">
+          View Order Tracker
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="orderMore()" class="back-btn">
+          Order More Flavors
+        </ion-button>
+      </div>
     </div>
   }
 
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/cart/cart.page.scss">
+<file path="src/app/features/cart/cart.page.scss">
 // src/app/features/cart/cart.page.scss
 
 :host { display: block; }
@@ -3534,7 +5014,7 @@ export class AuthPage implements OnInit {
 .confirmed-sub { font-size: 15px; color: var(--ion-color-medium); margin: 0; max-width: 280px; }
 </file>
 
-<file path="five-orites-scoop/src/app/features/cart/cart.page.ts">
+<file path="src/app/features/cart/cart.page.ts">
 // src/app/features/cart/cart.page.ts
 // Five-orites Scoop — Cart & Checkout (Fixed double-decrement bug)
 
@@ -3556,7 +5036,9 @@ import {
 } from 'ionicons/icons';
 import { CartService } from '../../core/services/cart.service';
 import { OrderService } from '../../core/services/order.service';
-import { Cart, CartItem, DELIVERY_FEE } from '../../core/models/cart.model';
+import { AddressService } from '../../core/services/address.service';
+import { VoucherService } from '../../core/services/voucher.service';
+import { Cart, CartItem, getDeliveryFee, FREE_DELIVERY_THRESHOLD } from '../../core/models/cart.model';
 import { PesoPipe } from '../../shared/pipes/peso.pipe';
 import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -3580,6 +5062,8 @@ type CheckoutStep = 1 | 2 | 3;
 export class CartPage implements OnInit {
   private cartService = inject(CartService);
   private orderService = inject(OrderService);
+  private addressService = inject(AddressService);
+  private voucherService = inject(VoucherService);
   private router = inject(Router);
   private alertCtrl = inject(AlertController);
   private toastCtrl = inject(ToastController);
@@ -3590,11 +5074,22 @@ export class CartPage implements OnInit {
   notes = '';
   isPlacingOrder = signal(false);
   errorMessage = signal('');
+  lastOrderId = signal<string | null>(null);
+  savedAddresses = signal<string[]>([]);
+  voucherCode = '';
+  voucherDiscount = signal(0);
+  appliedVoucher = signal<string | null>(null);
+  voucherMessage = signal('');
 
-  readonly deliveryFee = DELIVERY_FEE;
   readonly sizeLabels = SIZE_DISPLAY_LABELS;
+  readonly freeDeliveryThreshold = FREE_DELIVERY_THRESHOLD;
 
-  grandTotal = computed(() => this.cart().totalAmount + this.deliveryFee);
+  deliveryFee = computed(() => getDeliveryFee(this.cart().totalAmount));
+  isFreeDelivery = computed(() => this.deliveryFee() === 0 && this.cart().items.length > 0);
+  amountAwayFromFreeDelivery = computed(() =>
+    Math.max(this.freeDeliveryThreshold - this.cart().totalAmount, 0)
+  );
+  grandTotal = computed(() => this.cart().totalAmount - this.voucherDiscount() + this.deliveryFee());
 
   constructor() {
     addIcons({
@@ -3604,7 +5099,22 @@ export class CartPage implements OnInit {
 
     this.cartService.cart$
       .pipe(takeUntilDestroyed())
-      .subscribe((c) => this.cart.set(c));
+      .subscribe((c) => {
+        this.cart.set(c);
+        // Re-validate voucher when cart changes.
+        if (this.appliedVoucher()) {
+          this.voucherService.validateVoucher(this.appliedVoucher()!, c.totalAmount)
+            .then(({ discount }) => this.voucherDiscount.set(discount))
+            .catch(() => {
+              this.voucherDiscount.set(0);
+              this.appliedVoucher.set(null);
+              this.voucherMessage.set('Voucher no longer valid for this cart total.');
+            });
+        }
+      });
+    this.addressService.addresses$
+      .pipe(takeUntilDestroyed())
+      .subscribe((a) => this.savedAddresses.set(a));
   }
 
   ngOnInit(): void {}
@@ -3640,7 +5150,35 @@ export class CartPage implements OnInit {
       return;
     }
     this.errorMessage.set('');
+    this.addressService.saveAddress(this.deliveryAddress);
     this.checkoutStep.set(2);
+  }
+
+  useSavedAddress(address: string): void {
+    this.deliveryAddress = address;
+  }
+
+  async applyVoucher(): Promise<void> {
+    this.voucherMessage.set('');
+    try {
+      const { voucher, discount } = await this.voucherService.validateVoucher(
+        this.voucherCode, this.cart().totalAmount
+      );
+      this.appliedVoucher.set(voucher.code);
+      this.voucherDiscount.set(discount);
+      this.voucherMessage.set(`✅ ${voucher.code} applied — you save ₱${discount}!`);
+    } catch (err) {
+      this.voucherDiscount.set(0);
+      this.appliedVoucher.set(null);
+      this.voucherMessage.set(err instanceof Error ? err.message : 'Invalid voucher.');
+    }
+  }
+
+  removeVoucher(): void {
+    this.voucherCode = '';
+    this.voucherDiscount.set(0);
+    this.appliedVoucher.set(null);
+    this.voucherMessage.set('');
   }
 
   backToCart(): void {
@@ -3657,14 +5195,21 @@ export class CartPage implements OnInit {
     try {
       // Pass null for empty notes — never undefined
       const notesValue = this.notes.trim().length > 0 ? this.notes.trim() : undefined;
+      const voucher = this.appliedVoucher()
+        ? { code: this.appliedVoucher()!, discount: this.voucherDiscount() }
+        : undefined;
 
       const orderId = await this.orderService.placeOrder(
         this.deliveryAddress.trim(),
         notesValue,
+        voucher,
       );
 
+      this.lastOrderId.set(orderId);
+      this.notes = '';
+      this.removeVoucher();
       this.checkoutStep.set(3);
-      setTimeout(() => this.router.navigate(['/orders', orderId]), 2000);
+      setTimeout(() => this.router.navigate(['/orders', orderId]), 4000);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to place order. Please try again.';
       this.errorMessage.set(message);
@@ -3683,10 +5228,22 @@ export class CartPage implements OnInit {
   trackItem(_: number, item: CartItem): string {
     return `${item.productId}-${item.size}`;
   }
+
+  orderMore(): void {
+    this.checkoutStep.set(1);
+    this.errorMessage.set('');
+    void this.router.navigate(['/products']);
+  }
+
+  viewTracker(): void {
+    const id = this.lastOrderId();
+    if (id) void this.router.navigate(['/orders', id]);
+    else void this.router.navigate(['/orders']);
+  }
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/dashboard/dashboard.page.html">
+<file path="src/app/features/dashboard/dashboard.page.html">
 <!-- src/app/features/dashboard/dashboard.page.html -->
 <!-- Five-orites Scoop — Role-Aware Dashboard -->
 
@@ -3727,7 +5284,7 @@ export class CartPage implements OnInit {
         <p class="welcome-sub">What flavor are you craving today?</p>
       </div>
       <div class="welcome-image-wrap">
-        <img src="" alt="Colorful ice cream scoop illustration" class="welcome-image" />
+        <img src="assets/placeholder-scoop.svg" alt="Colorful ice cream scoop illustration" class="welcome-image" />
       </div>
     </div>
 
@@ -3876,11 +5433,17 @@ export class CartPage implements OnInit {
               <p class="low-stock-set">{{ product.setName }}</p>
             </div>
             <div class="low-stock-levels">
-              @if (product.stock.cup < 10) {
+              @if (product.stock.cup < lowStockThreshold) {
                 <ion-chip color="warning" class="stock-chip-sm">Cup: {{ product.stock.cup }}</ion-chip>
               }
-              @if (product.stock.pint < 10) {
+              @if (product.stock.pint < lowStockThreshold) {
                 <ion-chip color="warning" class="stock-chip-sm">Pint: {{ product.stock.pint }}</ion-chip>
+              }
+              @if (product.stock.halfGallon < lowStockThreshold) {
+                <ion-chip color="warning" class="stock-chip-sm">Half Gal: {{ product.stock.halfGallon }}</ion-chip>
+              }
+              @if (product.stock.gallon < lowStockThreshold) {
+                <ion-chip color="warning" class="stock-chip-sm">Gallon: {{ product.stock.gallon }}</ion-chip>
               }
             </div>
           </div>
@@ -3914,7 +5477,7 @@ export class CartPage implements OnInit {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/dashboard/dashboard.page.scss">
+<file path="src/app/features/dashboard/dashboard.page.scss">
 // src/app/features/dashboard/dashboard.page.scss
 
 :host { display: block; }
@@ -4042,7 +5605,7 @@ export class CartPage implements OnInit {
 .skeleton-card { border-radius: 16px; overflow: hidden; margin: 0; }
 </file>
 
-<file path="five-orites-scoop/src/app/features/dashboard/dashboard.page.ts">
+<file path="src/app/features/dashboard/dashboard.page.ts">
 // src/app/features/dashboard/dashboard.page.ts
 // Five-orites Scoop — Role-Aware Dashboard Hub
 // Author: [Developer Placeholder]
@@ -4070,6 +5633,7 @@ import { InventoryService } from '../../core/services/inventory.service';
 import { OrderService } from '../../core/services/order.service';
 import { CartService } from '../../core/services/cart.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { environment } from '../../../environments/environment';
 import { Product } from '../../core/models/product.model';
 import { Order } from '../../core/models/order.model';
 import { AppUser } from '../../core/models/user.model';
@@ -4120,6 +5684,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   totalOrderCount = signal(0);
   adminRecentOrders = signal<Order[]>([]);
   lowStockProducts = signal<Product[]>([]);
+  readonly lowStockThreshold = environment.lowStockThreshold;
 
   constructor() {
     addIcons({
@@ -4130,7 +5695,16 @@ export class DashboardPage implements OnInit, OnDestroy {
 
     this.authService.currentUser$
       .pipe(takeUntilDestroyed())
-      .subscribe((user) => this.currentUser.set(user));
+      .subscribe((user) => {
+        const wasAdmin = this.isAdmin();
+        this.currentUser.set(user);
+        // Reload when role resolves (fixes admin seeing customer view on refresh).
+        if (user && this.isAdmin() !== wasAdmin) {
+          this.loadDashboard();
+        } else if (user && this.featuredProducts().length === 0 && this.adminRecentOrders().length === 0) {
+          this.loadDashboard();
+        }
+      });
 
     this.cartService.cart$
       .pipe(takeUntilDestroyed())
@@ -4181,7 +5755,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   private loadAdminDashboard(): void {
-    // All orders for KPIs
+    // All orders for KPIs (capped server-side at 100, see OrderService).
     const s1 = this.orderService
       .getAllOrders()
       .pipe(catchError(() => of([])))
@@ -4191,13 +5765,15 @@ export class DashboardPage implements OnInit, OnDestroy {
           orders.filter((o) => o.status === 'pending' || o.status === 'confirmed').length
         );
 
-        // Today's revenue
+        // Today's revenue: delivered orders today (paymentStatus stays
+        // 'pending' until a payment gateway is integrated).
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const todayOrders = orders.filter((o) => {
           try {
-            const ts = o.createdAt as { toDate(): Date };
-            return ts.toDate() >= today && o.paymentStatus === 'paid';
+            const raw = o.createdAt as unknown as { toDate(): Date } | string;
+            const date = typeof raw === 'string' ? new Date(raw) : raw.toDate();
+            return date >= today && (o.status === 'delivered' || o.paymentStatus === 'paid');
           } catch { return false; }
         });
         this.todayRevenue.set(todayOrders.reduce((sum, o) => sum + (o.grandTotal ?? 0), 0));
@@ -4234,8 +5810,10 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   formatDate(timestamp: unknown): string {
     try {
-      const ts = timestamp as { toDate(): Date };
-      return ts.toDate().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      if (timestamp === null || timestamp === undefined) return '—';
+      const ts = timestamp as { toDate(): Date } | string;
+      const date = typeof ts === 'string' ? new Date(ts) : ts.toDate();
+      return date.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch { return '—'; }
   }
 
@@ -4244,7 +5822,7 @@ export class DashboardPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/developers/developers.page.html">
+<file path="src/app/features/developers/developers.page.html">
 <!-- src/app/features/developers/developers.page.html -->
 <!-- Five-orites Scoop — Team Credits Page -->
 
@@ -4310,7 +5888,7 @@ export class DashboardPage implements OnInit, OnDestroy {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/developers/developers.page.scss">
+<file path="src/app/features/developers/developers.page.scss">
 // src/app/features/developers/developers.page.scss
 
 :host { display: block; }
@@ -4407,7 +5985,7 @@ ion-col { padding: 6px; }
 .footer-sub { font-size: 12px; color: var(--ion-color-medium); margin: 0; }
 </file>
 
-<file path="five-orites-scoop/src/app/features/developers/developers.page.ts">
+<file path="src/app/features/developers/developers.page.ts">
 // src/app/features/developers/developers.page.ts
 // Five-orites Scoop — Team Credits Page
 // Author: [Developer Placeholder]
@@ -4495,7 +6073,7 @@ export class DevelopersPage {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/orders/order-tracker/order-tracker.page.html">
+<file path="src/app/features/orders/order-tracker/order-tracker.page.html">
 <!-- src/app/features/orders/order-tracker/order-tracker.page.html -->
 
 <ion-header>
@@ -4546,7 +6124,16 @@ export class DevelopersPage {
         <div class="cancelled-banner">
           <ion-icon name="close-circle-outline"></ion-icon>
           This order has been cancelled.
+          @if (order()!.cancelReason) {
+            <p class="info-notes">Reason: {{ order()!.cancelReason }}</p>
+          }
         </div>
+      }
+
+      @if (canCancel()) {
+        <ion-button expand="block" fill="outline" color="danger" (click)="cancelOrder()" [disabled]="isCancelling()">
+          {{ isCancelling() ? 'Cancelling...' : 'Cancel Order' }}
+        </ion-button>
       }
 
       <!-- Status Timeline (vertical stepper) -->
@@ -4604,9 +6191,15 @@ export class DevelopersPage {
               <span>Subtotal</span>
               <span>{{ order()!.totalAmount | peso }}</span>
             </div>
+            @if ((order()!.discountAmount ?? 0) > 0) {
+              <div class="total-row">
+                <span>Voucher {{ order()!.voucherCode }}</span>
+                <span>-{{ (order()!.discountAmount ?? 0) | peso }}</span>
+              </div>
+            }
             <div class="total-row">
               <span>Delivery</span>
-              <span>{{ order()!.deliveryFee | peso }}</span>
+              <span>{{ order()!.deliveryFee === 0 ? 'FREE' : (order()!.deliveryFee | peso) }}</span>
             </div>
             <div class="total-row grand">
               <span>Total</span>
@@ -4622,7 +6215,7 @@ export class DevelopersPage {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/orders/order-tracker/order-tracker.page.scss">
+<file path="src/app/features/orders/order-tracker/order-tracker.page.scss">
 // src/app/features/orders/order-tracker/order-tracker.page.scss
 
 :host { display: block; }
@@ -4775,7 +6368,7 @@ export class DevelopersPage {
 .grand { font-size: 16px; font-weight: 800; color: var(--color-brand-primary); border-top: 1px solid var(--ion-color-light-shade); padding-top: 8px; margin-top: 4px; }
 </file>
 
-<file path="five-orites-scoop/src/app/features/orders/order-tracker/order-tracker.page.ts">
+<file path="src/app/features/orders/order-tracker/order-tracker.page.ts">
 // src/app/features/orders/order-tracker/order-tracker.page.ts
 // Five-orites Scoop — Real-Time Order Status Tracker
 // Author: [Developer Placeholder]
@@ -4787,6 +6380,7 @@ import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonButtons, IonBackButton, IonIcon, IonText,
   IonSkeletonText, IonChip, IonLabel, IonCard, IonCardContent,
+  IonButton, AlertController, ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -4795,6 +6389,7 @@ import {
 } from 'ionicons/icons';
 import { Subscription, catchError, of } from 'rxjs';
 import { OrderService } from '../../../core/services/order.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { Order, OrderStatus, ORDER_STATUS_META } from '../../../core/models/order.model';
 import { OrderStatusBadgeComponent } from '../../../shared/components/order-status-badge/order-status-badge.component';
 import { PesoPipe } from '../../../shared/pipes/peso.pipe';
@@ -4812,7 +6407,7 @@ const STATUS_SEQUENCE: OrderStatus[] = [
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButtons, IonBackButton,
     IonIcon, IonText, IonSkeletonText,
-    IonChip, IonLabel, IonCard, IonCardContent,
+    IonChip, IonLabel, IonCard, IonCardContent, IonButton,
     OrderStatusBadgeComponent, PesoPipe,
   ],
   templateUrl: './order-tracker.page.html',
@@ -4821,11 +6416,16 @@ const STATUS_SEQUENCE: OrderStatus[] = [
 export class OrderTrackerPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private orderService = inject(OrderService);
+  private notificationService = inject(NotificationService);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
   private sub?: Subscription;
+  private lastStatus: OrderStatus | null = null;
 
   order = signal<Order | null>(null);
   isLoading = signal(true);
   errorMessage = signal('');
+  isCancelling = signal(false);
 
   readonly sizeLabels = SIZE_DISPLAY_LABELS;
   readonly statusSequence = STATUS_SEQUENCE;
@@ -4855,13 +6455,60 @@ export class OrderTrackerPage implements OnInit, OnDestroy {
         return of(null);
       }))
       .subscribe((order) => {
-        if (order) this.order.set(order);
+        if (order) {
+          if (this.lastStatus && this.lastStatus !== order.status) {
+            void this.notificationService.notifyOrderStatusChange(order.id, order.status);
+          }
+          this.lastStatus = order.status;
+          this.order.set(order);
+        }
         this.isLoading.set(false);
       });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+  }
+
+  canCancel(): boolean {
+    return this.order()?.status === 'pending' && !this.isCancelling();
+  }
+
+  async cancelOrder(): Promise<void> {
+    const order = this.order();
+    if (!order || order.status !== 'pending') return;
+    const alert = await this.alertCtrl.create({
+      header: 'Cancel Order',
+      message: 'Cancel this order? Stock will be restored.',
+      inputs: [{ name: 'reason', type: 'text', placeholder: 'Reason (optional)' }],
+      buttons: [
+        { text: 'Back', role: 'cancel' },
+        {
+          text: 'Cancel Order',
+          role: 'destructive',
+          handler: async (data) => {
+            this.isCancelling.set(true);
+            try {
+              await this.orderService.cancelOrder(order.id, data?.reason);
+              const toast = await this.toastCtrl.create({
+                message: 'Order cancelled. Stock restored.',
+                color: 'warning', duration: 2500, position: 'top',
+              });
+              await toast.present();
+            } catch (err) {
+              const toast = await this.toastCtrl.create({
+                message: err instanceof Error ? err.message : 'Failed to cancel order.',
+                color: 'danger', duration: 3000, position: 'top',
+              });
+              await toast.present();
+            } finally {
+              this.isCancelling.set(false);
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   getStepState(step: OrderStatus): 'completed' | 'active' | 'upcoming' {
@@ -4879,8 +6526,9 @@ export class OrderTrackerPage implements OnInit, OnDestroy {
     const entry = history.find((h) => h.status === step);
     if (!entry) return '';
     try {
-      const ts = entry.timestamp as { toDate(): Date };
-      return ts.toDate().toLocaleTimeString('en-PH', {
+      const ts = entry.timestamp as unknown as { toDate(): Date } | string;
+      const date = typeof ts === 'string' ? new Date(ts) : ts.toDate();
+      return date.toLocaleTimeString('en-PH', {
         hour: '2-digit', minute: '2-digit',
       });
     } catch {
@@ -4890,8 +6538,10 @@ export class OrderTrackerPage implements OnInit, OnDestroy {
 
   formatDate(timestamp: unknown): string {
     try {
-      const ts = timestamp as { toDate(): Date };
-      return ts.toDate().toLocaleDateString('en-PH', {
+      if (timestamp === null || timestamp === undefined) return '—';
+      const ts = timestamp as { toDate(): Date } | string;
+      const date = typeof ts === 'string' ? new Date(ts) : ts.toDate();
+      return date.toLocaleDateString('en-PH', {
         weekday: 'short', month: 'short', day: 'numeric',
         hour: '2-digit', minute: '2-digit',
       });
@@ -4902,7 +6552,7 @@ export class OrderTrackerPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/orders/orders.page.html">
+<file path="src/app/features/orders/orders.page.html">
 <!-- src/app/features/orders/orders.page.html -->
 <!-- Five-orites Scoop — Order History -->
 
@@ -4974,8 +6624,20 @@ export class OrderTrackerPage implements OnInit, OnDestroy {
             <p class="order-meta">
               {{ order.items.length }} item{{ order.items.length !== 1 ? 's' : '' }}
               · {{ order.grandTotal | peso }}
+              @if (order.voucherCode) { · {{ order.voucherCode }} }
             </p>
             <p class="order-date">{{ formatDate(order.createdAt) }}</p>
+            @if (canCancel(order)) {
+              <ion-button
+                fill="outline"
+                color="danger"
+                size="small"
+                (click)="cancelOrder(order, $event)"
+                [disabled]="cancellingId() === order.id"
+              >
+                {{ cancellingId() === order.id ? 'Cancelling...' : 'Cancel Order' }}
+              </ion-button>
+            }
           </div>
         </ion-item>
       }
@@ -4985,7 +6647,7 @@ export class OrderTrackerPage implements OnInit, OnDestroy {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/orders/orders.page.scss">
+<file path="src/app/features/orders/orders.page.scss">
 // src/app/features/orders/orders.page.scss
 
 :host { display: block; }
@@ -5055,7 +6717,7 @@ export class OrderTrackerPage implements OnInit, OnDestroy {
 .empty-sub { font-size: 14px; color: var(--ion-color-medium); margin: 0; }
 </file>
 
-<file path="five-orites-scoop/src/app/features/orders/orders.page.ts">
+<file path="src/app/features/orders/orders.page.ts">
 // src/app/features/orders/orders.page.ts
 // Five-orites Scoop — Customer Order History Page
 // Author: [Developer Placeholder]
@@ -5068,7 +6730,8 @@ import {
   IonButtons, IonMenuButton,
   IonList, IonItem, IonLabel, IonIcon, IonText,
   IonSkeletonText, IonRefresher, IonRefresherContent,
-  IonNote, IonBadge,
+  IonNote, IonBadge, IonButton,
+  AlertController, ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { receiptOutline, chevronForwardOutline, sadOutline } from 'ionicons/icons';
@@ -5088,7 +6751,7 @@ import { PesoPipe } from '../../shared/pipes/peso.pipe';
     IonButtons, IonMenuButton,
     IonList, IonItem, IonLabel, IonIcon, IonText,
     IonSkeletonText, IonRefresher, IonRefresherContent,
-    IonNote, IonBadge,
+    IonNote, IonBadge, IonButton,
     OrderStatusBadgeComponent, PesoPipe,
   ],
   templateUrl: './orders.page.html',
@@ -5098,11 +6761,14 @@ export class OrdersPage implements OnInit, OnDestroy {
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
   private sub?: Subscription;
 
   orders = signal<Order[]>([]);
   isLoading = signal(true);
   errorMessage = signal('');
+  cancellingId = signal<string | null>(null);
   skeletonItems = Array(5).fill(0);
 
   constructor() {
@@ -5145,6 +6811,47 @@ export class OrdersPage implements OnInit, OnDestroy {
     setTimeout(() => (event.target as HTMLIonRefresherElement).complete(), 1000);
   }
 
+  canCancel(order: Order): boolean {
+    return order.status === 'pending';
+  }
+
+  async cancelOrder(order: Order, event: Event): Promise<void> {
+    event.stopPropagation();
+    event.preventDefault();
+    const alert = await this.alertCtrl.create({
+      header: 'Cancel Order',
+      message: `Cancel order #${order.id.slice(-6).toUpperCase()}? Stock will be restored.`,
+      inputs: [{ name: 'reason', type: 'text', placeholder: 'Reason (optional)' }],
+      buttons: [
+        { text: 'Back', role: 'cancel' },
+        {
+          text: 'Cancel Order',
+          role: 'destructive',
+          handler: async (data) => {
+            this.cancellingId.set(order.id);
+            try {
+              await this.orderService.cancelOrder(order.id, data?.reason);
+              const toast = await this.toastCtrl.create({
+                message: 'Order cancelled. Stock restored.',
+                color: 'warning', duration: 2500, position: 'top',
+              });
+              await toast.present();
+            } catch (err) {
+              const toast = await this.toastCtrl.create({
+                message: err instanceof Error ? err.message : 'Failed to cancel order.',
+                color: 'danger', duration: 3000, position: 'top',
+              });
+              await toast.present();
+            } finally {
+              this.cancellingId.set(null);
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
   formatDate(timestamp: unknown): string {
     try {
       const ts = timestamp as { toDate(): Date };
@@ -5164,7 +6871,7 @@ export class OrdersPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/products/product-detail/product-detail.page.html">
+<file path="src/app/features/products/product-detail/product-detail.page.html">
 <!-- src/app/features/products/product-detail/product-detail.page.html -->
 
 <ion-header>
@@ -5193,9 +6900,10 @@ export class OrdersPage implements OnInit, OnDestroy {
   @if (!isLoading() && product()) {
     <div class="hero-wrap">
       <img
-        [src]="product()!.imageUrl || ''"
+        [src]="product()!.imageUrl || 'assets/placeholder-scoop.svg'"
         [alt]="product()!.variantName"
         class="hero-image"
+        onerror="this.src='assets/placeholder-scoop.svg'"
       />
       <div class="hero-overlay">
         <ion-badge class="set-badge-hero">
@@ -5206,6 +6914,11 @@ export class OrdersPage implements OnInit, OnDestroy {
 
     <div class="detail-body">
       <h1 class="detail-name">{{ product()!.variantName }}</h1>
+      <app-star-rating [rating]="avgRating()" [showCount]="true" [reviewCount]="reviewCount()"></app-star-rating>
+      <ion-button fill="outline" size="small" (click)="toggleWishlist()">
+        <ion-icon [name]="isWished() ? 'heart' : 'heart-outline'" slot="start"></ion-icon>
+        {{ isWished() ? 'Wishlisted' : 'Wishlist' }}
+      </ion-button>
       <p class="detail-description">{{ product()!.description }}</p>
 
       <h2 class="section-title">Choose Your Size</h2>
@@ -5257,9 +6970,27 @@ export class OrdersPage implements OnInit, OnDestroy {
 
       <div class="reviews-section">
         <h2 class="section-title">Customer Reviews</h2>
-        <div class="reviews-empty">
-          <app-star-rating [rating]="0" [showCount]="true" [reviewCount]="0"></app-star-rating>
-          <p class="no-reviews">No reviews yet — be the first!</p>
+        @if (reviews().length === 0) {
+          <div class="reviews-empty">
+            <app-star-rating [rating]="0" [showCount]="true" [reviewCount]="0"></app-star-rating>
+            <p class="no-reviews">No reviews yet — be the first!</p>
+          </div>
+        } @else {
+          @for (r of reviews(); track r.id) {
+            <div class="review-item">
+              <app-star-rating [rating]="r.rating"></app-star-rating>
+              <p class="review-author">{{ r.displayName }}</p>
+              <p class="review-comment">{{ r.comment }}</p>
+            </div>
+          }
+        }
+        <div class="review-form">
+          <h3 class="section-title">Write a review</h3>
+          <app-star-rating [rating]="newRating()" [interactive]="true" (ratingChange)="newRating.set($event)"></app-star-rating>
+          <ion-textarea [(ngModel)]="newComment" placeholder="What did you love?" rows="2"></ion-textarea>
+          <ion-button expand="block" (click)="submitReview()" [disabled]="isSubmittingReview()">
+            {{ isSubmittingReview() ? 'Submitting...' : 'Submit Review' }}
+          </ion-button>
         </div>
       </div>
     </div>
@@ -5268,7 +6999,7 @@ export class OrdersPage implements OnInit, OnDestroy {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/products/product-detail/product-detail.page.scss">
+<file path="src/app/features/products/product-detail/product-detail.page.scss">
 // src/app/features/products/product-detail/product-detail.page.scss
 
 :host { display: block; }
@@ -5476,7 +7207,7 @@ export class OrdersPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/products/product-detail/product-detail.page.ts">
+<file path="src/app/features/products/product-detail/product-detail.page.ts">
 // src/app/features/products/product-detail/product-detail.page.ts
 // Five-orites Scoop — Product Detail Page
 // Author: [Developer Placeholder]
@@ -5484,6 +7215,7 @@ export class OrdersPage implements OnInit, OnDestroy {
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import {
   IonHeader,
   IonToolbar,
@@ -5500,13 +7232,16 @@ import {
   IonText,
   IonItem,
   IonNote,
+  IonTextarea,
   ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { cartOutline, addOutline, removeOutline } from 'ionicons/icons';
+import { cartOutline, addOutline, removeOutline, heartOutline, heart } from 'ionicons/icons';
 import { Subscription, catchError, of } from 'rxjs';
 import { InventoryService } from '../../../core/services/inventory.service';
 import { CartService } from '../../../core/services/cart.service';
+import { ReviewService } from '../../../core/services/review.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 import { Product, SizeVariant } from '../../../core/models/product.model';
 import { PesoPipe } from '../../../shared/pipes/peso.pipe';
 import { StockStatusPipe } from '../../../shared/pipes/stock-status.pipe';
@@ -5522,11 +7257,11 @@ interface SizeOption {
   selector: 'app-product-detail',
   standalone: true,
   imports: [
-    CommonModule,
+    CommonModule, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButtons, IonBackButton,
     IonButton, IonIcon, IonSkeletonText, IonBadge,
-    IonChip, IonLabel, IonText, IonItem, IonNote,
+    IonChip, IonLabel, IonText, IonItem, IonNote, IonTextarea,
     PesoPipe, StockStatusPipe, StarRatingComponent,
   ],
   templateUrl: './product-detail.page.html',
@@ -5536,8 +7271,11 @@ export class ProductDetailPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private inventoryService = inject(InventoryService);
   private cartService = inject(CartService);
+  private reviewService = inject(ReviewService);
+  private wishlistService = inject(WishlistService);
   private toastCtrl = inject(ToastController);
   private sub?: Subscription;
+  private reviewSub?: Subscription;
 
   product = signal<Product | null>(null);
   isLoading = signal(true);
@@ -5545,6 +7283,13 @@ export class ProductDetailPage implements OnInit, OnDestroy {
   selectedSize = signal<SizeVariant>('cup');
   quantity = signal(1);
   isAdding = signal(false);
+  isWished = signal(false);
+  reviews = signal<import('../../../core/models/review.model').Review[]>([]);
+  avgRating = signal(0);
+  reviewCount = signal(0);
+  newRating = signal(5);
+  newComment = '';
+  isSubmittingReview = signal(false);
 
   readonly sizeOptions: SizeOption[] = [
     { key: 'cup', label: SIZE_DISPLAY_LABELS.cup },
@@ -5559,7 +7304,7 @@ export class ProductDetailPage implements OnInit, OnDestroy {
   lineTotal = computed(() => this.currentPrice() * this.quantity());
 
   constructor() {
-    addIcons({ cartOutline, addOutline, removeOutline });
+    addIcons({ cartOutline, addOutline, removeOutline, heartOutline, heart });
   }
 
   ngOnInit(): void {
@@ -5577,13 +7322,69 @@ export class ProductDetailPage implements OnInit, OnDestroy {
         return of(null);
       }))
       .subscribe((product) => {
-        if (product) this.product.set(product);
+        if (product) {
+          this.product.set(product);
+          this.isWished.set(this.wishlistService.isWished(product.id));
+          this.loadReviews(product.id);
+        }
         this.isLoading.set(false);
       });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.reviewSub?.unsubscribe();
+  }
+
+  loadReviews(productId: string): void {
+    this.reviewSub?.unsubscribe();
+    this.reviewSub = this.reviewService.getProductReviews(productId).subscribe({
+      next: (reviews) => {
+        this.reviews.set(reviews);
+        this.reviewCount.set(reviews.length);
+        this.avgRating.set(
+          reviews.length ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10 : 0
+        );
+      },
+      error: () => this.reviews.set([]),
+    });
+  }
+
+  async toggleWishlist(): Promise<void> {
+    const product = this.product();
+    if (!product) return;
+    try {
+      this.isWished.set(this.wishlistService.toggle(product.id));
+    } catch (err) {
+      const toast = await this.toastCtrl.create({
+        message: err instanceof Error ? err.message : 'Sign in to use wishlist.',
+        duration: 2500, color: 'warning', position: 'bottom',
+      });
+      await toast.present();
+    }
+  }
+
+  async submitReview(): Promise<void> {
+    const product = this.product();
+    if (!product || this.isSubmittingReview()) return;
+    this.isSubmittingReview.set(true);
+    try {
+      await this.reviewService.addReview(product.id, this.newRating(), this.newComment);
+      this.newComment = '';
+      this.newRating.set(5);
+      const toast = await this.toastCtrl.create({
+        message: 'Thanks for your review! 💖', duration: 2000, color: 'success', position: 'bottom',
+      });
+      await toast.present();
+    } catch (err) {
+      const toast = await this.toastCtrl.create({
+        message: err instanceof Error ? err.message : 'Could not submit review.',
+        duration: 3000, color: 'warning', position: 'bottom',
+      });
+      await toast.present();
+    } finally {
+      this.isSubmittingReview.set(false);
+    }
   }
 
   selectSize(size: SizeVariant): void {
@@ -5616,6 +7417,13 @@ export class ProductDetailPage implements OnInit, OnDestroy {
       await toast.present();
     } catch (err) {
       console.error('Add to cart error:', err);
+      const toast = await this.toastCtrl.create({
+        message: err instanceof Error ? err.message : 'Could not add to cart.',
+        duration: 3000,
+        color: 'warning',
+        position: 'bottom',
+      });
+      await toast.present();
     } finally {
       setTimeout(() => this.isAdding.set(false), 500);
     }
@@ -5623,7 +7431,7 @@ export class ProductDetailPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/products/products.page.html">
+<file path="src/app/features/products/products.page.html">
 <!-- src/app/features/products/products.page.html -->
 <!-- Five-orites Scoop — Product Catalog Template -->
 
@@ -5675,6 +7483,14 @@ export class ProductDetailPage implements OnInit, OnDestroy {
           slot="end"
           (ionChange)="onInStockToggle($event)"
           aria-label="Show in-stock products only"
+        ></ion-toggle>
+      </ion-item>
+      <ion-item lines="none" class="stock-filter-item">
+        <ion-label class="filter-label">💖 Wishlist Only</ion-label>
+        <ion-toggle
+          slot="end"
+          (ionChange)="onWishlistToggle($event)"
+          aria-label="Show wishlisted products only"
         ></ion-toggle>
       </ion-item>
     </div>
@@ -5750,7 +7566,7 @@ export class ProductDetailPage implements OnInit, OnDestroy {
 </ion-content>
 </file>
 
-<file path="five-orites-scoop/src/app/features/products/products.page.scss">
+<file path="src/app/features/products/products.page.scss">
 // src/app/features/products/products.page.scss
 
 :host {
@@ -5853,7 +7669,7 @@ ion-col {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/features/products/products.page.ts">
+<file path="src/app/features/products/products.page.ts">
 // src/app/features/products/products.page.ts
 
 import {
@@ -5874,6 +7690,7 @@ import { sadOutline, iceCreamOutline, filterOutline } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { catchError, of } from 'rxjs';
 import { InventoryService } from '../../core/services/inventory.service';
+import { WishlistService } from '../../core/services/wishlist.service';
 import { Product, FlavorSet } from '../../core/models/product.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { SET_NAMES } from '../../core/config/pricing.config';
@@ -5898,7 +7715,9 @@ interface SetChip { label: string; value: FlavorSet | null; }
 })
 export class ProductsPage implements OnInit, OnDestroy {
   private inventoryService = inject(InventoryService);
+  private wishlistService = inject(WishlistService);
   private sub?: Subscription;
+  private wishlistSub?: Subscription;
 
   allProducts = signal<Product[]>([]);
   isLoading = signal(true);
@@ -5906,6 +7725,8 @@ export class ProductsPage implements OnInit, OnDestroy {
   searchQuery = signal('');
   selectedSet = signal<FlavorSet | null>(null);
   inStockOnly = signal(false);
+  wishlistOnly = signal(false);
+  wishlistIds = signal<string[]>([]);
   PAGE_SIZE = 20;
   displayedCount = signal(this.PAGE_SIZE);
 
@@ -5927,6 +7748,10 @@ export class ProductsPage implements OnInit, OnDestroy {
     if (this.inStockOnly()) products = products.filter(
       (p) => p.stock.cup > 0 || p.stock.pint > 0 || p.stock.halfGallon > 0 || p.stock.gallon > 0
     );
+    if (this.wishlistOnly()) {
+      const ids = new Set(this.wishlistIds());
+      products = products.filter((p) => ids.has(p.id));
+    }
     return products;
   });
 
@@ -5940,8 +7765,8 @@ export class ProductsPage implements OnInit, OnDestroy {
     addIcons({ sadOutline, iceCreamOutline, filterOutline });
   }
 
-  ngOnInit(): void { this.loadProducts(); }
-  ngOnDestroy(): void { this.sub?.unsubscribe(); }
+  ngOnInit(): void { this.loadProducts(); this.wishlistSub = this.wishlistService.wishlist$.subscribe((ids) => this.wishlistIds.set(ids)); }
+  ngOnDestroy(): void { this.sub?.unsubscribe(); this.wishlistSub?.unsubscribe(); }
 
   loadProducts(): void {
     this.isLoading.set(true);
@@ -5972,6 +7797,11 @@ export class ProductsPage implements OnInit, OnDestroy {
     this.inStockOnly.set(event.detail.checked);
   }
 
+  onWishlistToggle(event: CustomEvent): void {
+    this.wishlistOnly.set(event.detail.checked);
+    this.displayedCount.set(this.PAGE_SIZE);
+  }
+
   handleRefresh(event: CustomEvent): void {
     this.loadProducts();
     setTimeout(() => (event.target as HTMLIonRefresherElement).complete(), 1000);
@@ -5988,7 +7818,7 @@ export class ProductsPage implements OnInit, OnDestroy {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/shared/components/order-status-badge/order-status-badge.component.ts">
+<file path="src/app/shared/components/order-status-badge/order-status-badge.component.ts">
 // src/app/shared/components/order-status-badge/order-status-badge.component.ts
 // Five-orites Scoop — Order Status Badge Component
 // Author: [Developer Placeholder]
@@ -6054,7 +7884,7 @@ export class OrderStatusBadgeComponent {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/shared/components/product-card/product-card.component.html">
+<file path="src/app/shared/components/product-card/product-card.component.html">
 <!-- src/app/shared/components/product-card/product-card.component.html -->
 
 <ion-card class="product-card" [routerLink]="['/products', product.id]">
@@ -6064,13 +7894,17 @@ export class OrderStatusBadgeComponent {
       <ion-skeleton-text animated class="image-skeleton"></ion-skeleton-text>
     }
     <img
-      [src]="product.imageUrl || ''"
+      [src]="product.imageUrl || 'assets/placeholder-scoop.svg'"
       [alt]="product.variantName"
       class="card-image"
       [class.image-visible]="imageLoaded()"
       (load)="onImageLoad()"
+      (error)="onImageError($event)"
     />
     <div class="set-badge">Set {{ product.setNumber }} · {{ product.setName }}</div>
+    <button class="wishlist-btn" (click)="toggleWishlist($event)" [attr.aria-label]="isWished() ? 'Remove from wishlist' : 'Save to wishlist'">
+      <ion-icon [name]="isWished() ? 'heart' : 'heart-outline'" [color]="isWished() ? 'danger' : 'medium'"></ion-icon>
+    </button>
   </div>
 
   <ion-card-content class="card-body" (click)="$event.stopPropagation()">
@@ -6116,7 +7950,7 @@ export class OrderStatusBadgeComponent {
 </ion-card>
 </file>
 
-<file path="five-orites-scoop/src/app/shared/components/product-card/product-card.component.scss">
+<file path="src/app/shared/components/product-card/product-card.component.scss">
 // src/app/shared/components/product-card/product-card.component.scss
 
 :host {
@@ -6178,6 +8012,22 @@ export class OrderStatusBadgeComponent {
   padding: 3px 10px;
   border-radius: 20px;
   letter-spacing: 0.2px;
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
 }
 
 // ── Card Body ──────────────────────────────────────────
@@ -6244,7 +8094,7 @@ export class OrderStatusBadgeComponent {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/shared/components/product-card/product-card.component.ts">
+<file path="src/app/shared/components/product-card/product-card.component.ts">
 // src/app/shared/components/product-card/product-card.component.ts
 // Fixed double-add bug with isAdding lock
 
@@ -6260,9 +8110,10 @@ import {
   ToastController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { cartOutline, addOutline } from 'ionicons/icons';
+import { cartOutline, addOutline, heartOutline, heart } from 'ionicons/icons';
 import { Product, SizeVariant } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 import { PesoPipe } from '../../pipes/peso.pipe';
 import { SIZE_DISPLAY_LABELS } from '../../../core/config/pricing.config';
 
@@ -6283,11 +8134,13 @@ export class ProductCardComponent implements OnInit {
   @Output() addedToCart = new EventEmitter<void>();
 
   private cartService = inject(CartService);
+  private wishlistService = inject(WishlistService);
   private toastCtrl = inject(ToastController);
 
   selectedSize = signal<SizeVariant>('cup');
   imageLoaded = signal(false);
   isAdding = signal(false); // ← lock prevents double-add
+  isWished = signal(false);
 
   sizeLabels = SIZE_DISPLAY_LABELS;
   sizes: SizeVariant[] = ['cup', 'pint', 'halfGallon', 'gallon'];
@@ -6297,10 +8150,12 @@ export class ProductCardComponent implements OnInit {
   isOutOfStock = computed(() => this.currentStock() === 0);
 
   constructor() {
-    addIcons({ cartOutline, addOutline });
+    addIcons({ cartOutline, addOutline, heartOutline, heart });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isWished.set(this.wishlistService.isWished(this.product.id));
+  }
 
   onSizeChange(event: CustomEvent): void {
     this.selectedSize.set(event.detail.value as SizeVariant);
@@ -6310,8 +8165,15 @@ export class ProductCardComponent implements OnInit {
     this.imageLoaded.set(true);
   }
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img && !img.src.endsWith('placeholder-scoop.svg')) {
+      img.src = 'assets/placeholder-scoop.svg';
+    }
+    this.imageLoaded.set(true);
+  }
+
   async addToCart(): Promise<void> {
-    // Guard: if already adding, do nothing (prevents double-tap)
     if (this.isOutOfStock() || this.isAdding()) return;
 
     this.isAdding.set(true);
@@ -6328,15 +8190,46 @@ export class ProductCardComponent implements OnInit {
       await toast.present();
     } catch (err) {
       console.error('Add to cart error:', err);
+      const toast = await this.toastCtrl.create({
+        message: err instanceof Error ? err.message : 'Could not add to cart.',
+        duration: 3000,
+        color: 'warning',
+        position: 'bottom',
+      });
+      await toast.present();
     } finally {
       // Reset lock after 800ms to prevent rapid double-tap
       setTimeout(() => this.isAdding.set(false), 800);
     }
   }
+
+  async toggleWishlist(event: Event): Promise<void> {
+    event.stopPropagation();
+    event.preventDefault();
+    try {
+      const added = this.wishlistService.toggle(this.product.id);
+      this.isWished.set(added);
+      const toast = await this.toastCtrl.create({
+        message: added ? 'Saved to wishlist! 💖' : 'Removed from wishlist.',
+        duration: 1500,
+        color: 'primary',
+        position: 'bottom',
+      });
+      await toast.present();
+    } catch (err) {
+      const toast = await this.toastCtrl.create({
+        message: err instanceof Error ? err.message : 'Sign in to use wishlist.',
+        duration: 2500,
+        color: 'warning',
+        position: 'bottom',
+      });
+      await toast.present();
+    }
+  }
 }
 </file>
 
-<file path="five-orites-scoop/src/app/shared/components/star-rating/star-rating.component.ts">
+<file path="src/app/shared/components/star-rating/star-rating.component.ts">
 // src/app/shared/components/star-rating/star-rating.component.ts
 // Five-orites Scoop — Interactive Star Rating Component
 // Author: [Developer Placeholder]
@@ -6402,7 +8295,7 @@ export class StarRatingComponent {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/shared/pipes/peso.pipe.ts">
+<file path="src/app/shared/pipes/peso.pipe.ts">
 // src/app/shared/pipes/peso.pipe.ts
 // Five-orites Scoop — Philippine Peso Currency Formatter
 // Author: [Developer Placeholder]
@@ -6414,17 +8307,25 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class PesoPipe implements PipeTransform {
+  private formatter = new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
   transform(value: number | null | undefined): string {
-    if (value === null || value === undefined || isNaN(value)) return '₱0';
-    return `₱${value.toLocaleString('en-PH', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    })}`;
+    if (value === null || value === undefined || !Number.isFinite(Number(value))) return '₱0';
+    try {
+      return this.formatter.format(Number(value)).replace('PHP', '₱');
+    } catch {
+      return `₱${Number(value).toLocaleString('en-PH', { maximumFractionDigits: 0 })}`;
+    }
   }
 }
 </file>
 
-<file path="five-orites-scoop/src/app/shared/pipes/stock-status.pipe.ts">
+<file path="src/app/shared/pipes/stock-status.pipe.ts">
 // src/app/shared/pipes/stock-status.pipe.ts
 // Five-orites Scoop — Stock Status Display Pipe
 // Author: [Developer Placeholder]
@@ -6456,7 +8357,7 @@ export class StockStatusPipe implements PipeTransform {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/app.component.html">
+<file path="src/app/app.component.html">
 <!-- src/app/app.component.html -->
 <!-- Five-orites Scoop — Split-Pane Shell + Side Menu -->
 
@@ -6577,7 +8478,7 @@ export class StockStatusPipe implements PipeTransform {
 </ion-app>
 </file>
 
-<file path="five-orites-scoop/src/app/app.component.scss">
+<file path="src/app/app.component.scss">
 // src/app/app.component.scss
 // Five-orites Scoop — App Shell Styles
 
@@ -6792,7 +8693,7 @@ export class StockStatusPipe implements PipeTransform {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/app.component.ts">
+<file path="src/app/app.component.ts">
 // src/app/app.component.ts
 // Five-orites Scoop — Root App Shell with ion-split-pane + ion-menu
 // Author: [Developer Placeholder]
@@ -6950,7 +8851,7 @@ export class AppComponent implements OnInit {
 }
 </file>
 
-<file path="five-orites-scoop/src/app/app.config.ts">
+<file path="src/app/app.config.ts">
 // src/app/app.config.ts
 // Five-orites Scoop — Angular Application Configuration
 
@@ -6980,7 +8881,7 @@ export const appConfig: ApplicationConfig = {
 };
 </file>
 
-<file path="five-orites-scoop/src/app/app.routes.ts">
+<file path="src/app/app.routes.ts">
 // src/app/app.routes.ts
 // Five-orites Scoop — Root Route Definitions
 // Author: [Developer Placeholder]
@@ -7086,11 +8987,11 @@ export const routes: Routes = [
 ];
 </file>
 
-<file path="five-orites-scoop/src/assets/.gitkeep">
+<file path="src/assets/.gitkeep">
 
 </file>
 
-<file path="five-orites-scoop/src/environments/environment.prod.ts">
+<file path="src/environments/environment.prod.ts">
 export const environment = {
   production: true,
   firebase: {
@@ -7105,10 +9006,15 @@ export const environment = {
   deliveryFeePhp: 50,
   freeDeliveryThresholdPhp: 500,
   lowStockThreshold: 10,
+  // Same values as environment.ts (unsigned preset — safe for client use).
+  cloudinary: {
+    cloudName: '',
+    uploadPreset: '',
+  },
 };
 </file>
 
-<file path="five-orites-scoop/src/environments/environment.ts">
+<file path="src/environments/environment.ts">
 export const environment = {
   production: false,
   firebase: {
@@ -7123,10 +9029,16 @@ export const environment = {
   deliveryFeePhp: 50,
   freeDeliveryThresholdPhp: 500,
   lowStockThreshold: 10,
+  // Cloudinary unsigned upload for product images.
+  // Cloudinary Console > Settings > Upload > Upload presets > Add (Signing Mode: Unsigned).
+  cloudinary: {
+    cloudName: '',
+    uploadPreset: '',
+  },
 };
 </file>
 
-<file path="five-orites-scoop/src/theme/variables.scss">
+<file path="src/theme/variables.scss">
 // src/theme/variables.scss
 // Five-orites Scoop — Global CSS Variables & Design Tokens
 // Author: [Developer Placeholder]
@@ -7212,7 +9124,7 @@ ion-back-button {
 }
 </file>
 
-<file path="five-orites-scoop/src/global.scss">
+<file path="src/global.scss">
 /* Five-orites Scoop — Global Styles */
 @import "@ionic/angular/css/core.css";
 @import "@ionic/angular/css/normalize.css";
@@ -7224,9 +9136,17 @@ ion-back-button {
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+/* Large centered card modals (admin forms) — bigger and more presentable
+   than the default small alert dialogs. */
+.large-sheet-modal {
+  --width: min(680px, 94vw);
+  --height: min(720px, 92vh);
+  --border-radius: 18px;
+}
 </file>
 
-<file path="five-orites-scoop/src/index.html">
+<file path="src/index.html">
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7248,7 +9168,7 @@ ion-back-button {
 </html>
 </file>
 
-<file path="five-orites-scoop/src/main.ts">
+<file path="src/main.ts">
 // src/main.ts
 // Five-orites Scoop — Angular Application Bootstrap
 // Author: [Developer Placeholder]
@@ -7262,7 +9182,7 @@ bootstrapApplication(AppComponent, appConfig).catch((err) =>
 );
 </file>
 
-<file path="five-orites-scoop/.gitignore">
+<file path=".gitignore">
 # Five-orites Scoop — .gitignore
 
 # ── Sensitive / Credentials ─────────────────────────────────────────────────────
@@ -7294,7 +9214,7 @@ ios/
 Thumbs.db
 </file>
 
-<file path="five-orites-scoop/angular.json">
+<file path="angular.json">
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
@@ -7369,7 +9289,7 @@ Thumbs.db
 }
 </file>
 
-<file path="five-orites-scoop/capacitor.config.ts">
+<file path="capacitor.config.ts">
 // capacitor.config.ts
 // Five-orites Scoop — Capacitor Configuration
 // Author: [Developer Placeholder]
@@ -7404,7 +9324,7 @@ const config: CapacitorConfig = {
 export default config;
 </file>
 
-<file path="five-orites-scoop/firebase.json">
+<file path="firebase.json">
 {
   "//": "Five-orites Scoop — Firebase Deployment Configuration",
   "hosting": {
@@ -7443,7 +9363,7 @@ export default config;
 }
 </file>
 
-<file path="five-orites-scoop/firestore.indexes.json">
+<file path="firestore.indexes.json">
 {
   "//": "Five-orites Scoop — Firestore Composite Indexes",
   "indexes": [
@@ -7479,47 +9399,138 @@ export default config;
         { "fieldPath": "isActive", "order": "ASCENDING" },
         { "fieldPath": "setNumber", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "reviews",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "productId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "vouchers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "code", "order": "ASCENDING" },
+        { "fieldPath": "isActive", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []
 }
 </file>
 
-<file path="five-orites-scoop/firestore.rules">
+<file path="firestore.rules">
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Admin = users/{uid}.role == 'admin'.
+    // Bootstrap the first admin manually in the Firebase console,
+    // then that admin can promote others.
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
     // ── Products ──────────────────────────────────────────────
-    // Anyone authenticated can read
-    // Anyone authenticated can write (for now — tighten later)
+    // Read: any signed-in user. Write: admin only, with basic validation.
     match /products/{productId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
+      allow read: if isSignedIn();
+      allow create, update: if isAdmin()
+        && request.resource.data.setNumber is int
+        && request.resource.data.setNumber >= 1
+        && request.resource.data.pricing.cup is int
+        && request.resource.data.pricing.pint is int
+        && request.resource.data.pricing.halfGallon is int
+        && request.resource.data.pricing.gallon is int
+        && request.resource.data.stock.cup is int
+        && request.resource.data.stock.pint is int
+        && request.resource.data.stock.halfGallon is int
+        && request.resource.data.stock.gallon is int
+        && request.resource.data.stock.cup >= 0
+        && request.resource.data.stock.pint >= 0
+        && request.resource.data.stock.halfGallon >= 0
+        && request.resource.data.stock.gallon >= 0
+        && request.resource.data.isActive is bool;
+      allow delete: if false;
     }
 
     // ── Orders ────────────────────────────────────────────────
     match /orders/{orderId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update: if request.auth != null;
+      // Owner or admin can read (covers get + where(customerId == uid) lists).
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      // Owner creates their own pending order only.
+      allow create: if isSignedIn()
+        && request.resource.data.customerId == request.auth.uid
+        && request.resource.data.items.size() > 0
+        && request.resource.data.totalAmount >= 0
+        && request.resource.data.grandTotal >= 0
+        && request.resource.data.deliveryAddress is string
+        && request.resource.data.status == 'pending'
+        && request.resource.data.paymentStatus == 'pending';
+      // Only admin advances status / edits. Customers cannot update.
+      allow update: if isAdmin();
       allow delete: if false;
     }
 
     // ── Users ─────────────────────────────────────────────────
     match /users/{uid} {
-      allow read, write: if request.auth != null;
+      // Owner or admin can read.
+      allow read: if isOwner(uid) || isAdmin();
+      // Owner can create only their own doc, always as customer.
+      allow create: if isOwner(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'customer';
+      // Owner can edit profile but never change role.
+      // Admin can edit anything (promotion path).
+      allow update: if isAdmin()
+        || (isOwner(uid)
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.uid == resource.data.uid);
+      allow delete: if false;
     }
 
     // ── Analytics ─────────────────────────────────────────────
+    // Client must not write analytics; aggregate via backend later.
     match /analytics/{document=**} {
-      allow read, write: if request.auth != null;
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ── Reviews ───────────────────────────────────────────────
+    // Any signed-in user can read; signed-in users can post their own review.
+    match /reviews/{reviewId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+      allow update, delete: if isAdmin();
+    }
+
+    // ── Vouchers ──────────────────────────────────────────────
+    // Readable by customers for validation; writable by admin only.
+    match /vouchers/{voucherId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
     }
   }
 }
 </file>
 
-<file path="five-orites-scoop/ionic.config.json">
+<file path="ionic.config.json">
 {
   "name": "Five-orites Scoop",
   "integrations": {
@@ -7529,7 +9540,7 @@ service cloud.firestore {
 }
 </file>
 
-<file path="five-orites-scoop/package.json">
+<file path="package.json">
 {
   "name": "five-orites-scoop",
   "version": "1.0.0",
@@ -7540,7 +9551,9 @@ service cloud.firestore {
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:logic": "node --test tests/",
     "lint": "ng lint",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "build:android": "ng build && npx cap sync android && npx cap open android",
     "build:ios": "ng build && npx cap sync ios && npx cap open ios",
     "seed": "npx ts-node --project scripts/tsconfig.json scripts/seed-products.ts",
@@ -7585,7 +9598,7 @@ service cloud.firestore {
 }
 </file>
 
-<file path="five-orites-scoop/README.md">
+<file path="README.md">
 # 🍦 Five-orites Scoop
 
 **Premium Ice Cream E-Commerce + Real-Time Inventory Management System**
@@ -7773,7 +9786,7 @@ npm run build:ios
 *Five-orites Scoop © 2025 — Built with Ionic · Angular · Firebase*
 </file>
 
-<file path="five-orites-scoop/SETUP_GUIDE.txt">
+<file path="SETUP_GUIDE.txt">
 ╔══════════════════════════════════════════════════════════════╗
 ║           FIVE-ORITES SCOOP — SETUP GUIDE                   ║
 ║           Read this before doing anything!                   ║
@@ -7808,6 +9821,18 @@ THING 2 — Add your Service Account Key
   Rename it to: serviceAccountKey.json
   Place it in:  the scripts/ folder
 
+THING 3 — Connect Cloudinary (for Add Product images)
+  File to edit: src/environments/environment.ts (and environment.prod.ts)
+
+  1. Sign up at cloudinary.com (free plan is enough)
+  2. Copy your Cloud Name from the Dashboard top
+  3. Go to: Settings (gear) → Upload → Upload presets → Add upload preset
+     - Signing Mode: Unsigned → Save
+     - Copy the Preset name
+  4. Paste both into the cloudinary block:
+       cloudinary: { cloudName: 'your-name', uploadPreset: 'your-preset' }
+  Until then, image upload shows a warning and you can paste Image URLs instead.
+
 STEPS TO RUN THE APP
 ──────────────────────
 1. Open this folder in VS Code
@@ -7837,7 +9862,7 @@ TEAM MEMBERS
 - Antonio Miguel Villanueva (Full Stack, UI/UX, QA, Documentation)
 </file>
 
-<file path="five-orites-scoop/tsconfig.app.json">
+<file path="tsconfig.app.json">
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
@@ -7854,11 +9879,10 @@ TEAM MEMBERS
 }
 </file>
 
-<file path="five-orites-scoop/tsconfig.json">
+<file path="tsconfig.json">
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -7868,7 +9892,6 @@ TEAM MEMBERS
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,

@@ -12,4 +12,9 @@ export const environment = {
   deliveryFeePhp: 50,
   freeDeliveryThresholdPhp: 500,
   lowStockThreshold: 10,
+  // Same values as environment.ts (unsigned preset — safe for client use).
+  cloudinary: {
+    cloudName: '',
+    uploadPreset: '',
+  },
 };

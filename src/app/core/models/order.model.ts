@@ -30,12 +30,15 @@ export interface Order {
   items: OrderItem[];
   totalAmount: number;
   deliveryFee: number;
+  discountAmount?: number;
+  voucherCode?: string | null;
   grandTotal: number;
   status: OrderStatus;
   paymentReference?: string;
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   deliveryAddress: string;
-  notes?: string;
+  notes?: string | null;
+  cancelReason?: string | null;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   statusHistory: { status: OrderStatus; timestamp: Timestamp }[];

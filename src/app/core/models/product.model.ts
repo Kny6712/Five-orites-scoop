@@ -5,7 +5,8 @@
 import { Timestamp } from '@angular/fire/firestore';
 
 export type SizeVariant = 'cup' | 'pint' | 'halfGallon' | 'gallon';
-export type FlavorSet = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+// Flavor set number: 1–8 built-in, extensible (admin can add new sets).
+export type FlavorSet = number;
 
 export interface SizePricing {
   cup: number;
@@ -23,7 +24,7 @@ export interface StockLevel {
 
 export interface Product {
   id: string;                 // Firestore document ID
-  setNumber: FlavorSet;       // 1–8
+  setNumber: FlavorSet;       // >= 1 (1–8 built-in, extensible via admin)
   setName: string;            // e.g. "Chocolates"
   variantName: string;        // e.g. "Rocky Road"
   description: string;
