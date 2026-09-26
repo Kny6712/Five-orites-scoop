@@ -8,7 +8,7 @@ import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonButtons, IonMenuButton,
   IonSearchbar, IonLabel, IonInput,
-  IonButton, IonIcon, IonToggle,
+  IonButton, IonIcon,
   IonSkeletonText, IonRefresher, IonRefresherContent,
   IonCard, IonCardContent, IonCardHeader, IonCardTitle,
   IonChip, AlertController, ToastController, ModalController,
@@ -24,6 +24,7 @@ import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
 import { LOW_STOCK_THRESHOLD } from '../../core/config/stock.config';
 import { AddProductModalComponent } from './add-product-modal.component';
 import { EditProductModalComponent } from './edit-product-modal.component';
+import { CartButtonComponent } from '../../shared/components/cart-button/cart-button.component';
 
 interface EditableStock { cup: number; pint: number; halfGallon: number; gallon: number; }
 
@@ -35,10 +36,10 @@ interface EditableStock { cup: number; pint: number; halfGallon: number; gallon:
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButtons, IonMenuButton,
     IonSearchbar, IonLabel, IonInput,
-    IonButton, IonIcon, IonToggle,
+    IonButton, IonIcon,
     IonSkeletonText, IonRefresher, IonRefresherContent,
     IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-    IonChip,
+    IonChip, CartButtonComponent,
   ],
   templateUrl: './inventory.page.html',
   styleUrls: ['./inventory.page.scss'],
@@ -72,7 +73,9 @@ export class InventoryPage implements OnInit, OnDestroy {
   loadProducts(): void {
     this.isLoading.set(true);
     this.sub?.unsubscribe();
-    this.sub = this.inventoryService.getProducts()
+    // getAllProducts, not getProducts: the admin must see deactivated products,
+    // otherwise there is no card to edit their stock or flip them back on.
+    this.sub = this.inventoryService.getAllProducts()
       .pipe(catchError((err) => {
         console.error('Load products error:', err);
         return of([]);
@@ -115,6 +118,22 @@ export class InventoryPage implements OnInit, OnDestroy {
     } else {
       this.editStock[productId][size] = Math.floor(val);
     }
+  }
+
+  /**
+   * Live sum of the four inputs for the row being edited.
+   *
+   * Clamped the same way saveStock() clamps on the way out, so the number on
+   * screen is always what a save would actually persist. validateStock() only
+   * runs on blur, so a half-typed negative would otherwise drag the total down.
+   */
+  totalStock(productId: string): number {
+    const stock = this.editStock[productId];
+    if (!stock) return 0;
+    return this.sizes.reduce(
+      (sum, size) => sum + Math.max(Math.floor(Number(stock[size])) || 0, 0),
+      0
+    );
   }
 
   async saveStock(product: Product): Promise<void> {
@@ -222,10 +241,14 @@ export class InventoryPage implements OnInit, OnDestroy {
       component: AddProductModalComponent,
       componentProps: {
         maxSetNumber: loaded.length > 0 ? Math.max(...loaded.map((p) => p.setNumber)) : 8,
+        // isActive travels with each variant so the modal can list deactivated
+        // flavors as unavailable rather than silently omitting them — otherwise
+        // the only way to bring one back is to create a duplicate.
         variants: loaded.map((p) => ({
           setNumber: p.setNumber,
           setName: p.setName,
           variantName: p.variantName,
+          isActive: p.isActive,
         })),
       },
     });

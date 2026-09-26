@@ -21,6 +21,7 @@ import { OrderService } from '../../../core/services/order.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { Order, OrderStatus, ORDER_STATUS_META } from '../../../core/models/order.model';
 import { OrderStatusBadgeComponent } from '../../../shared/components/order-status-badge/order-status-badge.component';
+import { CartButtonComponent } from '../../../shared/components/cart-button/cart-button.component';
 import { PesoPipe } from '../../../shared/pipes/peso.pipe';
 import { SIZE_DISPLAY_LABELS } from '../../../core/config/pricing.config';
 
@@ -37,7 +38,7 @@ const STATUS_SEQUENCE: OrderStatus[] = [
     IonButtons, IonBackButton,
     IonIcon, IonText, IonSkeletonText,
     IonChip, IonLabel, IonCard, IonCardContent, IonButton,
-    OrderStatusBadgeComponent, PesoPipe,
+    OrderStatusBadgeComponent, PesoPipe, CartButtonComponent,
   ],
   templateUrl: './order-tracker.page.html',
   styleUrls: ['./order-tracker.page.scss'],

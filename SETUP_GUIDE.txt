@@ -53,7 +53,23 @@ THING 3 — Connect Cloudinary (for Add Product images)
      - Copy the Preset name
   4. Paste both into the cloudinary block:
        cloudinary: { cloudName: 'your-name', uploadPreset: 'your-preset' }
-  Until then, image upload shows a warning and you can paste Image URLs instead.
+  Until then, image upload shows a warning and products save without an image.
+
+  Tightening the preset (optional but recommended — an unsigned preset is a
+  public drop box, so anyone who learns its name can upload):
+     - Max file size: ~4 MB
+     - Allowed formats: jpg, png, webp
+     - Folder: five-orites-scoop/products
+     - Leave "Incoming moderation" OFF. Turning it on sends every product
+       photo into a manual approval queue and Add Product will show broken
+       images until each one is approved.
+
+  IMAGE SIZING IS AUTOMATIC
+  Uploaded files are downscaled to 1024px before upload, and the CloudinaryPipe
+  (`src/app/shared/pipes/cloudinary.pipe.ts`) resizes on delivery per screen:
+  grid 400px, product page 1000px, cart 200px — with f_auto/q_auto, so modern
+  browsers get WebP automatically. One stored file serves every screen size, so
+  there is nothing to configure and no need to re-upload existing images.
 
 STEPS TO RUN THE APP
 ──────────────────────

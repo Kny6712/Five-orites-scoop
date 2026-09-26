@@ -12,7 +12,8 @@
     "build:android": "ng build && npx cap sync android && npx cap open android",
     "build:ios": "ng build && npx cap sync ios && npx cap open ios",
     "seed": "npx ts-node --project scripts/tsconfig.json scripts/seed-products.ts",
-    "seed:preserve-stock": "cross-env PRESERVE_STOCK=true npx ts-node --project scripts/tsconfig.json scripts/seed-products.ts"
+    "seed:preserve-stock": "cross-env PRESERVE_STOCK=true npx ts-node --project scripts/tsconfig.json scripts/seed-products.ts",
+    "upload:images": "tsx scripts/upload-product-images.ts"
   },
   "private": true,
   "dependencies": {

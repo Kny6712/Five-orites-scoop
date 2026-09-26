@@ -7,16 +7,9 @@
       <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
     </ion-buttons>
     <ion-title>Dashboard</ion-title>
-    @if (!isAdmin()) {
-      <ion-buttons slot="end">
-        <ion-button [routerLink]="'/cart'" aria-label="View cart">
-          <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
-          @if (cartItemCount() > 0) {
-            <ion-badge color="danger" class="cart-badge-header">{{ cartItemCount() }}</ion-badge>
-          }
-        </ion-button>
-      </ion-buttons>
-    }
+    <ion-buttons slot="end">
+      <app-cart-button></app-cart-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

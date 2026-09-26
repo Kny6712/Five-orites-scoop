@@ -12,8 +12,9 @@ export const environment = {
   lowStockThreshold: 10,
   // Cloudinary unsigned upload for product images.
   // Cloudinary Console > Settings > Upload > Upload presets > Add (Signing Mode: Unsigned).
+  // Delivery-side resizing happens in the CloudinaryPipe, not here.
   cloudinary: {
-    cloudName: '',
-    uploadPreset: '',
+    cloudName: 'fhtucp4v',
+    uploadPreset: 'htyab6bs',
   },
 };

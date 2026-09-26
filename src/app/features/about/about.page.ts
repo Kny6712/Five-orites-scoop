@@ -16,6 +16,7 @@ import {
   shieldCheckmarkOutline, cartOutline, layersOutline,
   logoFirebase, logoAngular, phonePortraitSharp,
 } from 'ionicons/icons';
+import { CartButtonComponent } from '../../shared/components/cart-button/cart-button.component';
 
 interface Feature { icon: string; title: string; description: string; }
 interface Step { number: string; title: string; description: string; }
@@ -27,7 +28,7 @@ interface Step { number: string; title: string; description: string; }
     CommonModule, RouterLink,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButtons, IonMenuButton,
-    IonIcon, IonButton, IonChip, IonLabel,
+    IonIcon, IonButton, IonChip, IonLabel, CartButtonComponent,
   ],
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],

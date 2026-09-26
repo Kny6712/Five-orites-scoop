@@ -18,6 +18,7 @@ import {
 import { calculateDiscount, MAX_PERCENT_DISCOUNT } from '../src/app/core/logic/voucher';
 import { summarizeRatings } from '../src/app/core/logic/rating';
 import { assertCanAddToCart, clampToStock } from '../src/app/core/logic/stock';
+import { buildCloudinaryUrl } from '../src/app/core/logic/image-url';
 import { BUILT_IN_VOUCHERS } from '../src/app/core/models/voucher.model';
 
 describe('delivery fee', () => {
@@ -133,3 +134,52 @@ describe('order cancel policy', () => {
     assert.equal(customerCanCancel('delivered'), false);
   });
 });
+
+describe('cloudinary delivery url', () => {
+  const STORED =
+    'https://res.cloudinary.com/fhtucp4v/image/upload/v1756200000/five-orites-scoop/products/a.jpg';
+
+  it('injects sizing and auto-format before the version segment', () => {
+    assert.equal(
+      buildCloudinaryUrl(STORED, 400),
+      'https://res.cloudinary.com/fhtucp4v/image/upload/f_auto,q_auto,w_400/v1756200000/five-orites-scoop/products/a.jpg',
+    );
+  });
+
+  it('rounds the requested width', () => {
+    assert.ok(buildCloudinaryUrl(STORED, 399.6).includes('w_400'));
+  });
+
+  it('keeps the public id and folder intact', () => {
+    assert.ok(buildCloudinaryUrl(STORED, 1000).endsWith('v1756200000/five-orites-scoop/products/a.jpg'));
+  });
+
+  it('does not stack transforms when applied twice', () => {
+    const once = buildCloudinaryUrl(STORED, 400);
+    const twice = buildCloudinaryUrl(once, 200);
+    assert.equal(
+      twice,
+      'https://res.cloudinary.com/fhtucp4v/image/upload/f_auto,q_auto,w_200/v1756200000/five-orites-scoop/products/a.jpg',
+    );
+    assert.equal(times2Count(twice, 'f_auto'), 1);
+  });
+
+  it('omits the width when none is given', () => {
+    assert.ok(buildCloudinaryUrl(STORED, 0).includes('f_auto,q_auto/'));
+    assert.ok(!buildCloudinaryUrl(STORED, 0).includes('w_'));
+    assert.ok(!buildCloudinaryUrl(STORED, Number.NaN).includes('w_'));
+  });
+
+  it('passes through anything that is not a cloudinary url', () => {
+    assert.equal(buildCloudinaryUrl('assets/placeholder-scoop.svg', 400), 'assets/placeholder-scoop.svg');
+    assert.equal(buildCloudinaryUrl('https://example.com/x.jpg', 400), 'https://example.com/x.jpg');
+    assert.equal(buildCloudinaryUrl('', 400), '');
+    assert.equal(buildCloudinaryUrl(null, 400), '');
+    assert.equal(buildCloudinaryUrl(undefined, 400), '');
+  });
+});
+
+/** Counts non-overlapping occurrences, for the no-stacking assertion. */
+function times2Count(haystack: string, needle: string): number {
+  return haystack.split(needle).length - 1;
+}

@@ -57,6 +57,21 @@
   --ion-color-tertiary-shade: #00796c;
   --ion-color-tertiary-tint: #1a9385;
 
+  // ── Neutral Palette ──────────────────────────────────────────
+  // Referenced ~137 times across the app but never defined. Ionic only carries
+  // these as fallbacks inside its own component CSS, never on :root, so every
+  // bare var(--ion-color-light) here resolved to nothing. Because background
+  // and border-* are not inherited properties, an invalid var() makes them fall
+  // back to `transparent` / drop the declaration entirely — which is why grey
+  // panels rendered invisible and hairline dividers never appeared. (color is
+  // inherited, so the text usages happened to look fine and hid the problem.)
+  // Values are Ionic 7's own defaults.
+  --ion-color-light: #f4f5f8;
+  --ion-color-medium: #989aa2;
+  --ion-color-dark: #222428;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-dark-shade: #1e2023;
+
   --ion-font-family: -apple-system, 'Helvetica Neue', sans-serif;
   --ion-background-color: #f8f8f8;
   --ion-toolbar-background: var(--color-brand-primary);
@@ -90,4 +105,19 @@ ion-menu-button {
 
 ion-back-button {
   --color: #ffffff;
+}
+
+/* A bare <ion-button> (no `fill`) picks up Ionic's `.button-clear` treatment,
+   which sets `--color: var(--ion-color-primary)`. Because this app overrides
+   `--ion-color-primary` with the brand purple, that resolves to the exact same
+   value a `color="primary"` toolbar uses for its background — so the button
+   paints purple on purple. It still occupies its box and stays clickable, which
+   is what makes it so confusing: an invisible button rather than a missing one.
+
+   `ion-title` never hit this because it takes the toolbar's contrast colour
+   rather than the base colour, which is why the page title rendered fine while
+   the button next to it did not. Toolbar buttons need the contrast colour
+   spelled out, same as ion-menu-button and ion-back-button above. */
+ion-toolbar ion-button {
+  --color: var(--ion-color-primary-contrast, #ffffff);
 }

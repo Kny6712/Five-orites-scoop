@@ -7,6 +7,9 @@
       <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
     </ion-buttons>
     <ion-title>Our Flavors</ion-title>
+    <ion-buttons slot="end">
+      <app-cart-button></app-cart-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -27,12 +30,15 @@
       aria-label="Search ice cream flavors"
     ></ion-searchbar>
 
-    <!-- Set Filter Chips (horizontal scroll) -->
+    <!-- Set Filter Chips (horizontal scroll).
+         Tracked by set number rather than label text: the number is the real
+         identity, so renaming a set cannot break the row and two sets can never
+         collide on a duplicate name. -->
     <div class="set-chips-scroll">
-      @for (chip of setChips; track chip.label) {
+      @for (chip of setChips(); track chip.value) {
         <ion-chip
-          [color]="selectedSet() === chip.value ? 'primary' : 'medium'"
-          [outline]="selectedSet() !== chip.value"
+          [color]="effectiveSet() === chip.value ? 'primary' : 'medium'"
+          [outline]="effectiveSet() !== chip.value"
           (click)="selectSet(chip.value)"
           class="set-chip"
         >

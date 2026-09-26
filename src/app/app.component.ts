@@ -16,7 +16,6 @@ import {
   IonIcon,
   IonLabel,
   IonMenuToggle,
-  IonBadge,
   IonAvatar,
   IonButton,
   IonRouterOutlet,
@@ -64,7 +63,6 @@ interface NavItem {
     IonIcon,
     IonLabel,
     IonMenuToggle,
-    IonBadge,
     IonAvatar,
     IonButton,
     IonRouterOutlet,
@@ -103,12 +101,20 @@ export class AppComponent implements OnInit {
    *
    * `role` used to be declared on NavItem but never read, so signed-out guests
    * were shown "My Cart" / "My Orders" and got redirected to /auth on tap.
+   *
+   * Admins also get the customer items. They are signed in, the cart and orders
+   * routes are behind authGuard only, and an admin has to be able to walk the
+   * buying flow to check a price or photo edit they just made. Guests still see
+   * neither, which is the case that bug was actually about.
    */
   visibleCustomerNavItems = computed(() => {
     const user = this.currentUser();
     const role = user?.role ?? 'guest';
     return this.customerNavItems.filter(
-      (item) => item.role === 'all' || item.role === role
+      (item) =>
+        item.role === 'all' ||
+        item.role === role ||
+        (role === 'admin' && item.role === 'customer')
     );
   });
 
@@ -136,6 +142,20 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  /**
+   * Accessible name for a nav row.
+   *
+   * The count bubble is `aria-hidden` decoration now that it overlaps the icon
+   * instead of sitting in the end slot, so the item count would otherwise drop
+   * out of the accessible name entirely. Folding it in here keeps "My Cart, 2
+   * items" as one announcement rather than a bare "My Cart".
+   */
+  navItemLabel(item: NavItem): string {
+    const n = this.cartItemCount();
+    if (!item.badge || n <= 0) return item.title;
+    return `${item.title}, ${n} item${n === 1 ? '' : 's'}`;
+  }
 
   getUserInitials(): string {
     const name = this.currentUser()?.displayName ?? '';

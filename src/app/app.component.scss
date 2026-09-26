@@ -86,6 +86,9 @@
   --padding-end: 14px;
   --min-height: 48px;
   --color: var(--ion-color-dark);
+  /* Ring colour for .cart-badge — swapped on the active row so the bubble keeps
+     a clean edge against the tinted background instead of showing a white halo. */
+  --cart-badge-ring: var(--ion-item-background, var(--ion-background-color, #fff));
   border-radius: 12px;
   margin-bottom: 2px;
   transition: background 0.15s ease;
@@ -93,12 +96,31 @@
   &.active-nav-item {
     --background: var(--color-brand-light);
     --color: var(--color-brand-primary);
+    --cart-badge-ring: var(--color-brand-light);
     font-weight: 600;
 
     .nav-icon {
       color: var(--color-brand-primary);
     }
   }
+}
+
+/* Positioning context for the count bubble. The wrapper rather than the ion-icon
+   itself because the bubble has to be able to hang outside the glyph box, and
+   ion-icon is sized 1em — a box exactly the size of the glyph, leaving nothing
+   to overhang into.
+
+   ion-item's ::slotted([slot=start]) rules (margin-inline-end: 32px) still apply
+   to this element, so the gap between icon and label is unchanged. The rules
+   that targeted a bare ::slotted(ion-icon) no longer match — 12px block margins
+   and 1.5em — but at 20px in a 48px row neither was doing any work: the row's
+   min-height already wins, and .nav-icon restates the font size. */
+.nav-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .nav-icon {
@@ -112,14 +134,43 @@
   opacity: 0.7;
 }
 
+/* A plain span, deliberately not <ion-badge> — same reasoning as the toolbar
+   cart button: ion-badge's :host pins its own display/font-size/padding and
+   carries contain:content, so a bubble that has to overlap a glyph is far
+   easier to control with a span.
+
+   Offsets are relative to the 20px icon box and put the bubble's own centre
+   almost exactly on the cart's top-right corner, with a couple of pixels of
+   overhang so it reads as *on* the icon rather than tucked beside it. Both
+   values stay inside ion-item's overflow:hidden — the row is 48px tall and
+   vertically centres the icon, which leaves ~14px of headroom above it. */
 .cart-badge {
-  --background: var(--color-brand-accent);
-  --color: #ffffff;
+  position: absolute;
+  top: -7px;
+  right: -6px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
   font-size: 11px;
   font-weight: 700;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 10px;
+  line-height: 1;
+  /* ion-item applies letter-spacing: 0.033em to slotted content. That trailing
+     track lands after the glyph, so the flex-centred text sits a couple of
+     pixels left of the bubble's true middle — zeroing it is what centres it. */
+  letter-spacing: 0;
+  color: var(--ion-color-danger-contrast, #fff);
+  background: var(--ion-color-danger, #c62828);
+  border-radius: 999px;
+  /* Ring in the row's own background so the bubble reads as sitting on top of
+     the cart stroke instead of merging into it. */
+  box-shadow: 0 0 0 2px var(--cart-badge-ring);
+  /* Decoration on top of the row — the whole item stays one tap target. */
+  pointer-events: none;
 }
 
 // ── Spacer ─────────────────────────────────────────────

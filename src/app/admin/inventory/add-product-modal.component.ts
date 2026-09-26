@@ -81,7 +81,9 @@ import { SET_NAMES, getPricingForSet } from '../../core/config/pricing.config';
               [(ngModel)]="selectedVariant"
             >
               @for (v of availableVariants; track v) {
-                <ion-select-option [value]="v">{{ v }}</ion-select-option>
+                <ion-select-option [value]="v" [disabled]="!isVariantActive(v)">
+                  {{ v }}{{ isVariantActive(v) ? '' : ' — inactive' }}
+                </ion-select-option>
               }
               <ion-select-option value="new">✨ New variant…</ion-select-option>
             </ion-select>
@@ -175,7 +177,7 @@ export class AddProductModalComponent {
   readonly uploadService = inject(ImageUploadService);
 
   @Input() maxSetNumber: number = 8;
-  @Input() variants: { setNumber: number; setName: string; variantName: string }[] = [];
+  @Input() variants: { setNumber: number; setName: string; variantName: string; isActive: boolean }[] = [];
 
   /**
    * Built-in sets merged with any admin-created set present in the catalog.
@@ -233,6 +235,17 @@ export class AddProductModalComponent {
       .filter((v) => v.setNumber === set)
       .map((v) => v.variantName);
     return [...new Set(names)].sort((a, b) => a.localeCompare(b));
+  }
+
+  /**
+   * A variant with no active row is deactivated, not deleted. It stays in the
+   * list so the admin can see it exists, and is told to switch it back on from
+   * the inventory list rather than creating a second product with the same name
+   * and orphaning the original.
+   */
+  isVariantActive(name: string): boolean {
+    const set = Number(this.selectedSet) || 0;
+    return this.variants.some((v) => v.setNumber === set && v.variantName === name && v.isActive);
   }
 
   onSetChange(): void {
@@ -300,6 +313,15 @@ export class AddProductModalComponent {
         variant = this.selectedVariant;
         if (!variant) {
           await this.toast('Choose a variant, or pick New variant…', 'danger');
+          return;
+        }
+        // Defence in depth: the option is disabled in the list, but a popover can
+        // still be driven by keyboard/assistive tech, so re-check on submit.
+        if (!this.isVariantActive(variant)) {
+          await this.toast(
+            `"${variant}" is deactivated. Switch it back on from the inventory list instead of creating a duplicate.`,
+            'danger'
+          );
           return;
         }
       }

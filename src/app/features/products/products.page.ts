@@ -21,6 +21,7 @@ import { InventoryService } from '../../core/services/inventory.service';
 import { WishlistService } from '../../core/services/wishlist.service';
 import { Product, FlavorSet } from '../../core/models/product.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
+import { CartButtonComponent } from '../../shared/components/cart-button/cart-button.component';
 import { SET_NAMES } from '../../core/config/pricing.config';
 
 interface SetChip { label: string; value: FlavorSet | null; }
@@ -36,7 +37,7 @@ interface SetChip { label: string; value: FlavorSet | null; }
     IonRefresher, IonRefresherContent,
     IonButtons, IonMenuButton, IonToggle, IonItem,
     IonInfiniteScroll, IonInfiniteScrollContent,
-    ProductCardComponent,
+    ProductCardComponent, CartButtonComponent,
   ],
   templateUrl: './products.page.html',
   styleUrls: ['./products.page.scss'],
@@ -58,17 +59,54 @@ export class ProductsPage implements OnInit, OnDestroy {
   PAGE_SIZE = 20;
   displayedCount = signal(this.PAGE_SIZE);
 
-  readonly setChips: SetChip[] = [
-    { label: 'All', value: null },
-    ...Object.entries(SET_NAMES).map(([k, v]) => ({
-      label: v, value: Number(k) as FlavorSet,
-    })),
-  ];
+  /**
+   * Set filter chips, derived from the catalog this page actually loaded.
+   *
+   * This used to be a hand-written list built from SET_NAMES, which only ever
+   * held the 8 seeded sets. A set created later saved to Firestore correctly
+   * and appeared under "All", but had no chip to filter to — the row could only
+   * grow by editing source and redeploying. Deriving it from allProducts() means
+   * the chips can never drift from what is on screen.
+   *
+   * SET_NAMES survives only as a fallback label for a product with a blank
+   * setName; the set list itself is no longer taken from it.
+   */
+  readonly setChips = computed<SetChip[]>(() => {
+    const labelByNumber = new Map<number, string>();
+    for (const p of this.allProducts()) {
+      if (labelByNumber.has(p.setNumber)) continue;
+      labelByNumber.set(
+        p.setNumber,
+        p.setName?.trim() || SET_NAMES[p.setNumber] || `Set ${p.setNumber}`
+      );
+    }
+    return [
+      { label: 'All', value: null },
+      ...[...labelByNumber.entries()]
+        .sort((a, b) => a[0] - b[0])
+        .map(([value, label]) => ({ label, value: value as FlavorSet })),
+    ];
+  });
+
+  /**
+   * The set actually being filtered by, or null for "All".
+   *
+   * Now that the chips are derived, a set can stop existing while it is
+   * selected — deactivating its last product removes its chip. Falling back to
+   * "All" keeps the grid populated instead of stranding the user on a blank page
+   * with no button highlighted and no obvious way back. Both the grid and the
+   * chip highlight read this, so the two can never disagree.
+   */
+  readonly effectiveSet = computed<FlavorSet | null>(() => {
+    const set = this.selectedSet();
+    if (set === null) return null;
+    return this.setChips().some((c) => c.value === set) ? set : null;
+  });
 
   filteredProducts = computed(() => {
     let products = this.allProducts();
     const q = this.searchQuery().toLowerCase();
-    const set = this.selectedSet();
+    const set = this.effectiveSet();
     if (set !== null) products = products.filter((p) => p.setNumber === set);
     if (q) products = products.filter(
       (p) => p.variantName.toLowerCase().includes(q) || p.setName.toLowerCase().includes(q)

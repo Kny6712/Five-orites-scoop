@@ -26,6 +26,7 @@ import { InventoryService } from '../../core/services/inventory.service';
 import { Cart, CartItem, getDeliveryFee, FREE_DELIVERY_THRESHOLD } from '../../core/models/cart.model';
 import { SizeVariant } from '../../core/models/product.model';
 import { PesoPipe } from '../../shared/pipes/peso.pipe';
+import { CloudinaryPipe } from '../../shared/pipes/cloudinary.pipe';
 import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -40,7 +41,7 @@ type CheckoutStep = 1 | 2 | 3;
     IonButtons, IonMenuButton,
     IonButton, IonIcon, IonText,
     IonTextarea, IonSpinner,
-    PesoPipe,
+    PesoPipe, CloudinaryPipe,
   ],
   templateUrl: './cart.page.html',
   styleUrls: ['./cart.page.scss'],

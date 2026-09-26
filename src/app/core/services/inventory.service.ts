@@ -14,6 +14,7 @@ import {
   updateDoc,
   serverTimestamp,
   runTransaction,
+  QueryConstraint,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Product, FlavorSet, SizeVariant, StockLevel, ProductFilter } from '../models/product.model';
@@ -24,12 +25,21 @@ export class InventoryService {
   private firestore = inject(Firestore);
 
   // ── Real-time product stream ──────────────────────────────────────────────────
-  getProducts(filters?: ProductFilter, maxResults = 200): Observable<Product[]> {
+  /**
+   * @param includeInactive Return deactivated products too. Defaults to false,
+   *   which is what the storefront wants. The admin inventory page must pass
+   *   true — see getAllProducts().
+   */
+  getProducts(filters?: ProductFilter, maxResults = 200, includeInactive = false): Observable<Product[]> {
     return new Observable<Product[]>((observer) => {
       const productsCol = collection(this.firestore, 'products');
 
-      // Simple query — no composite index needed
-      const q = query(productsCol, where('isActive', '==', true), limit(maxResults));
+      // Simple query — no composite index needed.
+      // The isActive filter is applied here rather than client-side on purpose:
+      // a storefront query must never even fetch deactivated products.
+      const constraints: QueryConstraint[] = [limit(maxResults)];
+      if (!includeInactive) constraints.unshift(where('isActive', '==', true));
+      const q = query(productsCol, ...constraints);
 
       const unsubscribe = onSnapshot(
         q,
@@ -71,6 +81,20 @@ export class InventoryService {
 
       return () => unsubscribe();
     });
+  }
+
+  /**
+   * Every product, deactivated ones included.
+   *
+   * The admin inventory page needs this. getProducts() filters to
+   * `isActive == true` in the query, so a deactivated product vanished from the
+   * admin list along with its card — which made deactivation a one-way door:
+   * no card meant no way to edit that flavor's stock, no Details modal, and no
+   * pill to switch it back on. The Add Product modal then inherited the same
+   * gap, because its variant dropdown is built from this same stream.
+   */
+  getAllProducts(maxResults = 200): Observable<Product[]> {
+    return this.getProducts(undefined, maxResults, true);
   }
 
   getProductById(productId: string): Observable<Product> {

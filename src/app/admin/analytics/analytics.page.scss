@@ -25,6 +25,19 @@
 .section-title { font-size: 18px; font-weight: 700; margin: 4px 0 8px; color: var(--ion-color-dark); }
 .no-data { font-size: 14px; color: var(--ion-color-medium); }
 
+// Discloses that the admin's own orders are filtered out of the KPIs, so the
+// figures are never quietly wrong.
+.analytics-note {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--ion-color-light);
+  border-left: 3px solid var(--color-brand-primary);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ion-color-dark);
+}
+
 .flavor-row {
   display: flex;
   align-items: center;

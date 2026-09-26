@@ -34,7 +34,9 @@ import { ReviewService } from '../../../core/services/review.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { Product, SizeVariant } from '../../../core/models/product.model';
 import { PesoPipe } from '../../../shared/pipes/peso.pipe';
+import { CloudinaryPipe } from '../../../shared/pipes/cloudinary.pipe';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
+import { CartButtonComponent } from '../../../shared/components/cart-button/cart-button.component';
 import { SIZE_DISPLAY_LABELS } from '../../../core/config/pricing.config';
 import { LOW_STOCK_THRESHOLD } from '../../../core/config/stock.config';
 
@@ -52,7 +54,7 @@ interface SizeOption {
     IonButtons, IonBackButton,
     IonButton, IonIcon, IonSkeletonText, IonBadge,
     IonChip, IonLabel, IonText, IonItem, IonNote, IonTextarea,
-    PesoPipe, StarRatingComponent,
+    PesoPipe, StarRatingComponent, CloudinaryPipe, CartButtonComponent,
   ],
   templateUrl: './product-detail.page.html',
   styleUrls: ['./product-detail.page.scss'],

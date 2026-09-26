@@ -20,6 +20,7 @@ import { OrderService } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Order } from '../../core/models/order.model';
 import { OrderStatusBadgeComponent } from '../../shared/components/order-status-badge/order-status-badge.component';
+import { CartButtonComponent } from '../../shared/components/cart-button/cart-button.component';
 import { PesoPipe } from '../../shared/pipes/peso.pipe';
 
 @Component({
@@ -32,7 +33,7 @@ import { PesoPipe } from '../../shared/pipes/peso.pipe';
     IonList, IonItem, IonLabel, IonIcon, IonText,
     IonSkeletonText, IonRefresher, IonRefresherContent,
     IonNote, IonBadge, IonButton,
-    OrderStatusBadgeComponent, PesoPipe,
+    OrderStatusBadgeComponent, PesoPipe, CartButtonComponent,
   ],
   templateUrl: './orders.page.html',
   styleUrls: ['./orders.page.scss'],

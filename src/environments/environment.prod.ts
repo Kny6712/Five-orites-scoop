@@ -12,7 +12,7 @@ export const environment = {
   lowStockThreshold: 10,
   // Same values as environment.ts (unsigned preset — safe for client use).
   cloudinary: {
-    cloudName: '',
-    uploadPreset: '',
+    cloudName: 'fhtucp4v',
+    uploadPreset: 'htyab6bs',
   },
 };

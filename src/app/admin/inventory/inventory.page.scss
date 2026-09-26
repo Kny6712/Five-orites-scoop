@@ -28,6 +28,46 @@
 .inv-set-name { font-size: 12px; color: var(--ion-color-medium); margin: 0; }
 .inv-variant-name { font-size: 16px; font-weight: 700; color: var(--ion-color-dark); }
 
+// ── Status Pill (Active / Inactive) ─────────────────────────
+// Same visual language as app-order-status-badge so both admin screens share
+// one status idiom, but tinted rather than solid: a filled green pill would
+// again out-weigh the stock figures on the card. Off is a muted grey pill, on
+// is the same pill in a low-alpha success tint.
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 6px;
+  margin: 0;
+  padding: 5px 12px 5px 10px;
+  border: 1px solid rgba(107, 63, 160, 0.18);
+  border-radius: 999px;
+  background: var(--ion-color-light);
+  color: var(--ion-color-medium);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+
+  &:hover { background: #e9ebee; }
+  // :focus-visible rather than :focus so a mouse click does not leave a ring.
+  &:focus-visible { outline: 2px solid var(--color-brand-primary); outline-offset: 2px; }
+}
+.status-pill--on {
+  background: rgba(46, 125, 50, 0.10);
+  border-color: rgba(46, 125, 50, 0.32);
+  color: var(--color-success);
+}
+.status-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
 .inv-card-content { padding: 12px 14px 14px; }
 
 // ── Stock View Grid ────────────────────────────────────────
@@ -46,11 +86,19 @@
 .stock-alert-icon { font-size: 14px; position: absolute; top: 4px; right: 4px; }
 
 // ── Stock Edit Grid ────────────────────────────────────────
+// .stock-edit-grid is only a positioning frame; the 2x2 of size inputs lives in
+// .stock-edit-sizes. On phones the frame is a single column, so the inputs sit
+// on top and the total panel drops underneath as a full-width bar.
 .stock-edit-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   margin-bottom: 12px;
+}
+.stock-edit-sizes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 .stock-edit-cell { display: flex; flex-direction: column; gap: 4px; }
 .stock-edit-label { font-size: 12px; font-weight: 600; color: var(--ion-color-dark); }
@@ -58,10 +106,61 @@
   --background: var(--ion-color-light);
   --border-radius: 10px;
   --padding-start: 12px;
-  font-weight: 700;
-  font-size: 16px;
+  // ion-input's .native-input sets font-size/font-weight to inherit, so these
+  // reach the real <input> instead of stopping at the host. Bumped from
+  // 16px/700: the stock numbers are the point of this row and were getting
+  // visually lost next to the total panel.
+  font-weight: 800;
+  font-size: 20px;
   &.low-input { --background: #fff7e6; }
   &.out-input { --background: #fde8e8; }
+}
+
+// Live sum of the four inputs. Full-width bar under the 2x2 on phones; on wide
+// screens it is placed in the last track of .stock-edit-grid, hard right.
+.stock-edit-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--color-brand-light);
+  border: 1px solid rgba(107, 63, 160, 0.15);
+}
+.stock-total-label { font-size: 13px; font-weight: 700; color: var(--ion-color-dark); }
+.stock-total-value { font-size: 22px; font-weight: 800; color: var(--color-brand-primary); }
+
+// 1024px, not 768px: the wide layout has a hard minimum width of roughly
+// 70 + 470 + 320 + gaps = ~890px (gutter + the 2x2 + the total panel). At a
+// 768px viewport the card content is only ~716px, so a 768px breakpoint
+// overflowed the card. Below 1024px the stacked single-column layout is used
+// instead, which fits any phone.
+@media (min-width: 1024px) {
+  .stock-edit-grid {
+    // Four tracks: [left gutter][the 2x2 of inputs][gap][total panel].
+    // Both groups are placed explicitly because auto-placement always starts
+    // in track 1 and would drop the inputs into the empty gutter.
+    grid-template-columns: minmax(0, 70px) auto minmax(0, 1fr) auto;
+  }
+  .stock-edit-sizes {
+    grid-column: 2;
+    // The gutter and this gap are two halves of one adjustment. Taking 60px
+    // out of the gutter walks the Cup / Half Gallon column left, and giving
+    // the same 60px back here holds the Pint / Gallon column exactly where it
+    // was. Changing one without the other moves both pairs.
+    column-gap: 70px;
+  }
+  .stock-edit-total {
+    grid-column: 4;
+    width: 320px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-align: center;
+  }
+  .stock-total-value { font-size: 30px; }
 }
 
 .edit-actions { display: flex; flex-direction: column; gap: 6px; }

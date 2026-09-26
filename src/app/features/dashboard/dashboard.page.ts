@@ -11,25 +11,25 @@ import {
   IonGrid, IonRow, IonCol,
   IonCard, IonCardContent, IonCardHeader, IonCardTitle,
   IonButton, IonIcon, IonText, IonSkeletonText,
-  IonChip, IonLabel, IonBadge, IonRefresher, IonRefresherContent,
+  IonChip, IonLabel, IonRefresher, IonRefresherContent,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   cashOutline, timeOutline, alertCircleOutline, receiptOutline,
-  iceCreamOutline, cartOutline, layersOutline, clipboardOutline,
+  iceCreamOutline, layersOutline, clipboardOutline,
   refreshOutline, notificationsOutline,
 } from 'ionicons/icons';
 import { Subscription, combineLatest, catchError, of } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { InventoryService } from '../../core/services/inventory.service';
 import { OrderService } from '../../core/services/order.service';
-import { CartService } from '../../core/services/cart.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { LOW_STOCK_THRESHOLD } from '../../core/config/stock.config';
 import { Product } from '../../core/models/product.model';
 import { Order } from '../../core/models/order.model';
 import { AppUser } from '../../core/models/user.model';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
+import { CartButtonComponent } from '../../shared/components/cart-button/cart-button.component';
 import { OrderStatusBadgeComponent } from '../../shared/components/order-status-badge/order-status-badge.component';
 import { PesoPipe } from '../../shared/pipes/peso.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -44,9 +44,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     IonGrid, IonRow, IonCol,
     IonCard, IonCardContent, IonCardHeader, IonCardTitle,
     IonButton, IonIcon, IonText, IonSkeletonText,
-    IonChip, IonLabel, IonBadge,
+    IonChip, IonLabel,
     IonRefresher, IonRefresherContent,
-    ProductCardComponent, OrderStatusBadgeComponent, PesoPipe,
+    ProductCardComponent, OrderStatusBadgeComponent, PesoPipe, CartButtonComponent,
   ],
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
@@ -55,7 +55,6 @@ export class DashboardPage implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private inventoryService = inject(InventoryService);
   private orderService = inject(OrderService);
-  private cartService = inject(CartService);
   private notifService = inject(NotificationService);
   private router = inject(Router);
   private subs: Subscription[] = [];
@@ -67,7 +66,6 @@ export class DashboardPage implements OnInit, OnDestroy {
   // Customer data
   featuredProducts = signal<Product[]>([]);
   recentOrders = signal<Order[]>([]);
-  cartItemCount = signal(0);
 
   // Admin KPIs
   todayRevenue = signal(0);
@@ -81,7 +79,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   constructor() {
     addIcons({
       cashOutline, timeOutline, alertCircleOutline, receiptOutline,
-      iceCreamOutline, cartOutline, layersOutline, clipboardOutline,
+      iceCreamOutline, layersOutline, clipboardOutline,
       refreshOutline, notificationsOutline,
     });
 
@@ -97,10 +95,6 @@ export class DashboardPage implements OnInit, OnDestroy {
           this.loadDashboard();
         }
       });
-
-    this.cartService.cart$
-      .pipe(takeUntilDestroyed())
-      .subscribe((c) => this.cartItemCount.set(c.itemCount));
   }
 
   ngOnInit(): void {

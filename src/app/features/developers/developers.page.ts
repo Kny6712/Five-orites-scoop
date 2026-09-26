@@ -13,6 +13,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { codeSlashOutline, peopleOutline } from 'ionicons/icons';
+import { CartButtonComponent } from '../../shared/components/cart-button/cart-button.component';
 
 interface Developer {
   name: string;
@@ -30,7 +31,7 @@ interface Developer {
     IonButtons, IonMenuButton,
     IonGrid, IonRow, IonCol,
     IonCard, IonCardContent, IonAvatar,
-    IonChip, IonLabel, IonIcon,
+    IonChip, IonLabel, IonIcon, CartButtonComponent,
   ],
   templateUrl: './developers.page.html',
   styleUrls: ['./developers.page.scss'],

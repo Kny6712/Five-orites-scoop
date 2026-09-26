@@ -7,6 +7,9 @@
       <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
     </ion-buttons>
     <ion-title>Inventory Manager</ion-title>
+    <ion-buttons slot="end">
+      <app-cart-button></app-cart-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -54,11 +57,22 @@
                 <ion-chip color="primary" class="set-chip-sm">Set {{ product.setNumber }}</ion-chip>
                 <p class="inv-set-name">{{ product.setName }}</p>
               </div>
-              <ion-toggle
-                [checked]="product.isActive"
-                (ionChange)="toggleActive(product)"
-                color="success"
-              ></ion-toggle>
+              <!-- Status pill. Deliberately a real <button>, not a chip styled to
+                   look clickable: it gives native keyboard support, an accessible
+                   name, and aria-pressed for free. The bare ion-toggle it replaces
+                   had none of those, and its saturated green out-shouted the stock
+                   numbers, which are the actual data on this card. -->
+              <button
+                type="button"
+                class="status-pill"
+                [class.status-pill--on]="product.isActive"
+                [attr.aria-pressed]="product.isActive"
+                [attr.aria-label]="(product.isActive ? 'Deactivate ' : 'Activate ') + product.variantName"
+                (click)="toggleActive(product)"
+              >
+                <span class="status-dot" aria-hidden="true"></span>
+                {{ product.isActive ? 'Active' : 'Inactive' }}
+              </button>
             </div>
             <ion-card-title class="inv-variant-name">{{ product.variantName }}</ion-card-title>
           </ion-card-header>
@@ -68,18 +82,28 @@
             @if (editingId() === product.id) {
               <!-- Edit Mode -->
               <div class="stock-edit-grid">
-                @for (size of sizes; track size) {
-                  <div class="stock-edit-cell">
-                    <label class="stock-edit-label">{{ sizeLabels[size] }}</label>
-                    <ion-input
-                      type="number"
-                      [(ngModel)]="editStock[product.id][size]"
-                      [min]="0"
-                      (ionBlur)="validateStock(product.id, size)"
-                      class="stock-edit-input"
-                    ></ion-input>
-                  </div>
-                }
+                <!-- The four size inputs live in their own grid so the 2x2 pair can be
+                     positioned as one block on wide screens, without per-iteration
+                     grid-column maths inside the @for. -->
+                <div class="stock-edit-sizes">
+                  @for (size of sizes; track size) {
+                    <div class="stock-edit-cell">
+                      <label class="stock-edit-label">{{ sizeLabels[size] }}</label>
+                      <ion-input
+                        type="number"
+                        [(ngModel)]="editStock[product.id][size]"
+                        [min]="0"
+                        (ionBlur)="validateStock(product.id, size)"
+                        class="stock-edit-input"
+                      ></ion-input>
+                    </div>
+                  }
+                </div>
+                <!-- Live sum of the four inputs; mirrors exactly what saveStock writes. -->
+                <div class="stock-edit-total">
+                  <span class="stock-total-label">Total quantity</span>
+                  <span class="stock-total-value">{{ totalStock(product.id) }}</span>
+                </div>
               </div>
               <div class="edit-actions">
                 <ion-button

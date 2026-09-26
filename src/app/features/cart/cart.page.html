@@ -34,7 +34,7 @@
         @for (item of cart().items; track trackItem($index, item)) {
           <div class="cart-item">
             <div class="item-image-wrap">
-              <img [src]="item.imageUrl || 'assets/placeholder-scoop.svg'" [alt]="item.variantName" class="item-image" onerror="this.src='assets/placeholder-scoop.svg'" />
+              <img [src]="(item.imageUrl | cloudinary: 200) || 'assets/placeholder-scoop.svg'" [alt]="item.variantName" class="item-image" onerror="this.src='assets/placeholder-scoop.svg'" />
             </div>
             <div class="item-info">
               <p class="item-name">{{ item.variantName }}</p>

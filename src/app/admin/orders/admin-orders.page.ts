@@ -22,6 +22,7 @@ import { OrderService } from '../../core/services/order.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Order, OrderStatus, ORDER_STATUS_META } from '../../core/models/order.model';
 import { OrderStatusBadgeComponent } from '../../shared/components/order-status-badge/order-status-badge.component';
+import { CartButtonComponent } from '../../shared/components/cart-button/cart-button.component';
 import { PesoPipe } from '../../shared/pipes/peso.pipe';
 import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
 
@@ -43,7 +44,7 @@ const NEXT_STATUS: Partial<Record<OrderStatus, OrderStatus>> = {
     IonCard, IonCardContent, IonIcon, IonButton, IonText,
     IonSkeletonText, IonRefresher, IonRefresherContent,
     IonChip, IonBadge,
-    OrderStatusBadgeComponent, PesoPipe,
+    OrderStatusBadgeComponent, PesoPipe, CartButtonComponent,
   ],
   templateUrl: './admin-orders.page.html',
   styleUrls: ['./admin-orders.page.scss'],

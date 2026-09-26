@@ -18,6 +18,7 @@ import { Product, SizeVariant } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { PesoPipe } from '../../pipes/peso.pipe';
+import { CloudinaryPipe } from '../../pipes/cloudinary.pipe';
 import { SIZE_DISPLAY_LABELS } from '../../../core/config/pricing.config';
 import { LOW_STOCK_THRESHOLD } from '../../../core/config/stock.config';
 
@@ -28,7 +29,7 @@ import { LOW_STOCK_THRESHOLD } from '../../../core/config/stock.config';
     CommonModule, RouterLink,
     IonCard, IonCardContent, IonButton, IonIcon,
     IonSkeletonText, IonChip, IonLabel, IonSegment, IonSegmentButton,
-    PesoPipe,
+    PesoPipe, CloudinaryPipe,
   ],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss'],

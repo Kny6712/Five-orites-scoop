@@ -6,6 +6,9 @@
       <ion-menu-button aria-label="Open navigation menu"></ion-menu-button>
     </ion-buttons>
     <ion-title>Sales Analytics</ion-title>
+    <ion-buttons slot="end">
+      <app-cart-button></app-cart-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -55,6 +58,16 @@
           <p class="kpi-val">{{ avgOrderValue() | peso }}</p>
         </div>
       </div>
+
+      <!-- Say so out loud rather than quietly filtering: if the admin ever
+           wonders why revenue looks lower than Fulfillment's order count, the
+           answer is here instead of being a mystery. -->
+      @if (myOrderCount() > 0) {
+        <p class="analytics-note">
+          Excludes your {{ myOrderCount() }} own order{{ myOrderCount() === 1 ? '' : 's' }} —
+          an owner purchase isn't revenue. They still appear in Fulfillment.
+        </p>
+      }
 
       <h3 class="section-title">Top Flavors by Units Sold (Delivered)</h3>
       @if (topFlavors().length === 0) {

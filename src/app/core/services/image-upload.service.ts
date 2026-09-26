@@ -5,7 +5,11 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 // Uploads are downscaled client-side first to keep them fast and small.
+// This is also the ceiling for delivery: the CloudinaryPipe never asks for
+// more than this, so no request is ever upscaled from a smaller source.
 const MAX_SIDE_PX = 1024;
+
+const FOLDER = 'five-orites-scoop/products';
 
 function readAsImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -42,6 +46,28 @@ function downscale(img: HTMLImageElement): Promise<Blob> {
   });
 }
 
+/**
+ * Cloudinary returns a specific, actionable message for bad presets, so pass
+ * it through rather than hiding it behind a generic failure. The preset is
+ * the most common misconfiguration (wrong name, or left set to Signed).
+ */
+function describeUploadError(message: string): string {
+  const m = message.toLowerCase();
+  if (m.includes('unsigned') || m.includes('preset')) {
+    return `Upload preset rejected the file (${message}). Check the preset name and that Signing Mode is Unsigned.`;
+  }
+  if (m.includes('unauthorized') || m.includes('not allowed')) {
+    return `Cloudinary refused the upload (${message}).`;
+  }
+  if (m.includes('file size') || m.includes('too large')) {
+    return `That image is too large (${message}). Try a smaller photo.`;
+  }
+  if (m.includes('format')) {
+    return `That file type is not allowed by the upload preset (${message}).`;
+  }
+  return `Image upload failed: ${message}`;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ImageUploadService {
   get isConfigured(): boolean {
@@ -49,11 +75,18 @@ export class ImageUploadService {
     return !!c && !!c.cloudName && !!c.uploadPreset;
   }
 
-  /** Uploads a device image to Cloudinary and returns its HTTPS URL. */
+  /**
+   * Uploads a device image to Cloudinary and returns its HTTPS URL.
+   *
+   * The returned URL is stored untransformed. Sizing is applied at render time
+   * by the CloudinaryPipe, so one stored file serves every screen size.
+   */
   async uploadProductImage(file: File): Promise<string> {
     const c = environment.cloudinary;
-    if (!c || !c.cloudName || !c.uploadPreset) {
-      throw new Error('Cloudinary is not configured. Ask your admin to add the cloud name + upload preset.');
+    if (!this.isConfigured) {
+      throw new Error(
+        'Cloudinary is not configured. Ask your admin to add the cloud name + upload preset.'
+      );
     }
     if (!file.type.startsWith('image/')) {
       throw new Error('Please choose an image file.');
@@ -63,7 +96,7 @@ export class ImageUploadService {
     const form = new FormData();
     form.append('file', blob, 'product.jpg');
     form.append('upload_preset', c.uploadPreset);
-    form.append('folder', 'five-orites-scoop/products');
+    form.append('folder', FOLDER);
 
     let res: Response;
     try {
@@ -74,9 +107,10 @@ export class ImageUploadService {
     } catch {
       throw new Error('Upload failed. Check your internet connection and try again.');
     }
+
     const json = (await res.json()) as { secure_url?: string; error?: { message?: string } };
     if (!res.ok || !json.secure_url) {
-      throw new Error(json.error?.message ?? 'Image upload failed. Check your upload preset.');
+      throw new Error(describeUploadError(json.error?.message ?? `HTTP ${res.status}`));
     }
     return json.secure_url;
   }

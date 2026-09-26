@@ -32,13 +32,20 @@
                 [routerLinkActiveOptions]="{ exact: item.url === '/dashboard' }"
                 detail="false"
                 class="nav-item"
-                [attr.aria-label]="item.title"
+                [attr.aria-label]="navItemLabel(item)"
               >
-                <ion-icon [name]="item.icon" slot="start" class="nav-icon"></ion-icon>
+                <!-- The icon is wrapped so the count has something local to
+                     anchor to. Slotting the count itself would put it at the far
+                     end of the row, detached from the cart it belongs to, and
+                     positioning it against the item instead would mean hard-coding
+                     the icon's offset from --padding-start and the row height. -->
+                <span slot="start" class="nav-icon-wrap">
+                  <ion-icon [name]="item.icon" class="nav-icon"></ion-icon>
+                  @if (item.badge && cartItemCount() > 0) {
+                    <span class="cart-badge" aria-hidden="true">{{ cartItemCount() }}</span>
+                  }
+                </span>
                 <ion-label>{{ item.title }}</ion-label>
-                @if (item.badge && cartItemCount() > 0) {
-                  <ion-badge slot="end" class="cart-badge">{{ cartItemCount() }}</ion-badge>
-                }
               </ion-item>
             </ion-menu-toggle>
           }
