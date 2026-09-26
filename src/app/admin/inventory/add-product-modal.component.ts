@@ -175,9 +175,35 @@ export class AddProductModalComponent {
   readonly uploadService = inject(ImageUploadService);
 
   @Input() maxSetNumber: number = 8;
-  @Input() variants: { setNumber: number; variantName: string }[] = [];
+  @Input() variants: { setNumber: number; setName: string; variantName: string }[] = [];
 
-  sets = Object.entries(SET_NAMES).map(([k, v]) => ({ value: k, label: v }));
+  /**
+   * Built-in sets merged with any admin-created set present in the catalog.
+   *
+   * This used to list only SET_NAMES (1-8), yet a new set is assigned
+   * `maxSetNumber + 1`. Custom sets were therefore unselectable, and creating
+   * two of them collided on the same set number.
+   */
+  get sets(): { value: string; label: string }[] {
+    const byNumber = new Map<number, string>();
+    for (const [k, v] of Object.entries(SET_NAMES)) byNumber.set(Number(k), v);
+    for (const v of this.variants) {
+      if (!byNumber.has(v.setNumber)) {
+        byNumber.set(v.setNumber, v.setName || `Set ${v.setNumber}`);
+      }
+    }
+    return [...byNumber.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([n, name]) => ({ value: String(n), label: name }));
+  }
+
+  /** Display name for a set number, including admin-created sets. */
+  setNameFor(setNumber: number): string {
+    return this.sets.find((s) => s.value === String(setNumber))?.label
+      ?? SET_NAMES[setNumber]
+      ?? `Set ${setNumber}`;
+  }
+
   selectedSet: string = '1';
   selectedVariant: string = '';
   customVariant = '';
@@ -263,7 +289,7 @@ export class AddProductModalComponent {
       setName = name;
     } else {
       setNumber = Number(this.selectedSet) || 1;
-      setName = SET_NAMES[setNumber] ?? `Set ${setNumber}`;
+      setName = this.setNameFor(setNumber);
       if (this.isNewVariant) {
         variant = this.customVariant.trim();
         if (!variant) {

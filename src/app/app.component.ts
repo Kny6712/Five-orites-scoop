@@ -20,10 +20,6 @@ import {
   IonAvatar,
   IonButton,
   IonRouterOutlet,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonNote,
   MenuController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -38,7 +34,6 @@ import {
   informationCircleOutline,
   peopleOutline,
   logOutOutline,
-  personCircleOutline,
 } from 'ionicons/icons';
 import { AuthService } from './core/services/auth.service';
 import { CartService } from './core/services/cart.service';
@@ -73,10 +68,6 @@ interface NavItem {
     IonAvatar,
     IonButton,
     IonRouterOutlet,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonNote,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -107,6 +98,20 @@ export class AppComponent implements OnInit {
 
   isAdmin = computed(() => this.currentUser()?.role === 'admin');
 
+  /**
+   * Nav items the current user may actually see.
+   *
+   * `role` used to be declared on NavItem but never read, so signed-out guests
+   * were shown "My Cart" / "My Orders" and got redirected to /auth on tap.
+   */
+  visibleCustomerNavItems = computed(() => {
+    const user = this.currentUser();
+    const role = user?.role ?? 'guest';
+    return this.customerNavItems.filter(
+      (item) => item.role === 'all' || item.role === role
+    );
+  });
+
   constructor() {
     addIcons({
       homeOutline,
@@ -119,7 +124,6 @@ export class AppComponent implements OnInit {
       informationCircleOutline,
       peopleOutline,
       logOutOutline,
-      personCircleOutline,
     });
 
     this.authService.currentUser$

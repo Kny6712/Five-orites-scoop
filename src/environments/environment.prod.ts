@@ -9,8 +9,6 @@ export const environment = {
     appId: '1:347528161750:web:5003d2913414f993fc9c77',
     measurementId: '',
   },
-  deliveryFeePhp: 50,
-  freeDeliveryThresholdPhp: 500,
   lowStockThreshold: 10,
   // Same values as environment.ts (unsigned preset — safe for client use).
   cloudinary: {

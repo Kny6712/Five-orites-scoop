@@ -49,9 +49,8 @@ export function getSetName(setNumber: number): string {
 /**
  * Single source of truth for "this SKU is running low".
  *
- * Previously the number 10 was written literally in four templates plus
- * StockStatusPipe while `environment.lowStockThreshold` sat unused by those
- * files — changing the environment value silently did nothing. Import this
- * everywhere instead.
+ * The number 10 used to be written literally in several templates while
+ * `environment.lowStockThreshold` was ignored by them, so changing the
+ * environment value silently did nothing. Import this everywhere instead.
  */
 export { LOW_STOCK_THRESHOLD } from './stock.config';

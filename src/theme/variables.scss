@@ -47,6 +47,16 @@
   --ion-color-danger-shade: #ae2323;
   --ion-color-danger-tint: #cc3e3e;
 
+  // Tertiary — used by the "Out for Delivery" status badge and the team role
+  // chips on the Developers page. It was referenced but never defined, so those
+  // elements rendered with no colour at all.
+  --ion-color-tertiary: #00897B;
+  --ion-color-tertiary-rgb: 0, 137, 123;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #00796c;
+  --ion-color-tertiary-tint: #1a9385;
+
   --ion-font-family: -apple-system, 'Helvetica Neue', sans-serif;
   --ion-background-color: #f8f8f8;
   --ion-toolbar-background: var(--color-brand-primary);

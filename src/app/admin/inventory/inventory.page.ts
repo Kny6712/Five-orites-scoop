@@ -19,7 +19,7 @@ import {
 } from 'ionicons/icons';
 import { Subscription, catchError, of } from 'rxjs';
 import { InventoryService } from '../../core/services/inventory.service';
-import { Product, SizeVariant } from '../../core/models/product.model';
+import { Product, SizeVariant, StockLevel } from '../../core/models/product.model';
 import { SIZE_DISPLAY_LABELS } from '../../core/config/pricing.config';
 import { LOW_STOCK_THRESHOLD } from '../../core/config/stock.config';
 import { AddProductModalComponent } from './add-product-modal.component';
@@ -123,11 +123,16 @@ export class InventoryPage implements OnInit, OnDestroy {
 
     this.savingId.set(product.id);
     try {
-      // Save ALL sizes at once — don't skip unchanged ones
-      for (const size of this.sizes) {
-        const qty = Number(newStock[size]);
-        await this.inventoryService.updateStock(product.id, size, isNaN(qty) ? 0 : qty);
-      }
+      // One atomic write for all four sizes. This used to fire four separate
+      // updateStock() transactions in a loop, so a failure halfway through
+      // left the product with a half-applied edit.
+      const stock: StockLevel = {
+        cup: Math.max(Math.floor(Number(newStock.cup)) || 0, 0),
+        pint: Math.max(Math.floor(Number(newStock.pint)) || 0, 0),
+        halfGallon: Math.max(Math.floor(Number(newStock.halfGallon)) || 0, 0),
+        gallon: Math.max(Math.floor(Number(newStock.gallon)) || 0, 0),
+      };
+      await this.inventoryService.updateStocks(product.id, stock);
 
       const toast = await this.toastCtrl.create({
         message: `✅ Stock updated for ${product.variantName}!`,
@@ -182,9 +187,6 @@ export class InventoryPage implements OnInit, OnDestroy {
     setTimeout(() => (event.target as HTMLIonRefresherElement).complete(), 1000);
   }
 
-  isLowStock(stock: number): boolean { return stock > 0 && stock < this.lowStockThreshold; }
-  isOutOfStock(stock: number): boolean { return stock === 0; }
-
   async bulkRestock(): Promise<void> {
     const alert = await this.alertCtrl.create({
       header: 'Bulk Restock',
@@ -220,7 +222,11 @@ export class InventoryPage implements OnInit, OnDestroy {
       component: AddProductModalComponent,
       componentProps: {
         maxSetNumber: loaded.length > 0 ? Math.max(...loaded.map((p) => p.setNumber)) : 8,
-        variants: loaded.map((p) => ({ setNumber: p.setNumber, variantName: p.variantName })),
+        variants: loaded.map((p) => ({
+          setNumber: p.setNumber,
+          setName: p.setName,
+          variantName: p.variantName,
+        })),
       },
     });
     await modal.present();

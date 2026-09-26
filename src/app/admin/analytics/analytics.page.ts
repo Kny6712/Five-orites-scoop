@@ -59,10 +59,6 @@ export class AnalyticsPage implements OnInit, OnDestroy {
     });
   });
 
-  activeOrders = computed(() =>
-    this.rangedOrders().filter((o) => o.status !== 'cancelled')
-  );
-
   deliveredOnly = computed(() =>
     this.rangedOrders().filter((o) => o.status === 'delivered')
   );
@@ -73,21 +69,8 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 
   totalOrders = computed(() => this.orders().length);
 
-  cancelledOrders = computed(() =>
-    this.orders().filter((o) => o.status === 'cancelled').length
-  );
-
   deliveredOrders = computed(() =>
     this.orders().filter((o) => o.status === 'delivered').length
-  );
-
-  pendingOrders = computed(() =>
-    this.orders().filter((o) =>
-      o.status === 'pending' ||
-      o.status === 'confirmed' ||
-      o.status === 'preparing' ||
-      o.status === 'out_for_delivery'
-    ).length
   );
 
   avgOrderValue = computed(() =>

@@ -9,8 +9,6 @@ export const environment = {
     appId: '1:347528161750:web:5003d2913414f993fc9c77',
     measurementId: '',
   },
-  deliveryFeePhp: 50,
-  freeDeliveryThresholdPhp: 500,
   lowStockThreshold: 10,
   // Cloudinary unsigned upload for product images.
   // Cloudinary Console > Settings > Upload > Upload presets > Add (Signing Mode: Unsigned).

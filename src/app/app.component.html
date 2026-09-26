@@ -12,7 +12,7 @@
       <!-- Menu Header / Branding -->
       <div class="menu-header">
         <div class="menu-logo-wrap">
-          <img src="" alt="Five-orites Scoop logo — colorful ice cream bowl with three scoops" class="menu-logo" />
+          <img src="assets/placeholder-scoop.svg" alt="Five-orites Scoop logo — colorful ice cream bowl with three scoops" class="menu-logo" />
         </div>
         <h1 class="menu-brand">Five-orites Scoop</h1>
         <p class="menu-tagline">Premium ice cream, scooped to your door</p>
@@ -24,7 +24,7 @@
         <ion-list lines="none" class="nav-list">
           <ion-list-header class="nav-section-label">Menu</ion-list-header>
 
-          @for (item of customerNavItems; track item.url) {
+          @for (item of visibleCustomerNavItems(); track item.url) {
             <ion-menu-toggle auto-hide="false">
               <ion-item
                 [routerLink]="item.url"

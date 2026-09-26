@@ -73,10 +73,6 @@ export class InventoryService {
     });
   }
 
-  getProductsBySet(setNumber: FlavorSet): Observable<Product[]> {
-    return this.getProducts({ setNumber });
-  }
-
   getProductById(productId: string): Observable<Product> {
     return new Observable<Product>((observer) => {
       const productDocRef = doc(this.firestore, `products/${productId}`);

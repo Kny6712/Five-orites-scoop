@@ -2,7 +2,7 @@
 // Five-orites Scoop — Admin Order Fulfillment Dashboard
 // Author: [Developer Placeholder]
 
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
@@ -74,11 +74,11 @@ export class AdminOrdersPage implements OnInit, OnDestroy {
     { label: 'Done', value: 'delivered' },
   ];
 
-  filteredOrders = () => {
+  filteredOrders = computed(() => {
     const filter = this.selectedFilter();
     if (filter === 'all') return this.allOrders();
     return this.allOrders().filter((o) => o.status === filter);
-  };
+  });
 
   skeletonItems = Array(5).fill(0);
 

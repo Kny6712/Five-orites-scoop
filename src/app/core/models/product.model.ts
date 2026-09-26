@@ -39,18 +39,6 @@ export interface Product {
 export interface ProductFilter {
   setNumber?: FlavorSet;
   searchQuery?: string;
-  minPrice?: number;
-  maxPrice?: number;
   inStockOnly?: boolean;
   size?: SizeVariant;
-}
-
-export interface StockHistoryEntry {
-  productId: string;
-  size: SizeVariant;
-  previousStock: number;
-  newStock: number;
-  changedBy: string;
-  timestamp: Timestamp;
-  reason?: string;
 }

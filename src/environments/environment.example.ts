@@ -12,8 +12,6 @@ export const environment = {
     appId: 'PASTE_YOUR_APP_ID',
     measurementId: '',
   },
-  deliveryFeePhp: 50,
-  freeDeliveryThresholdPhp: 500,
   lowStockThreshold: 10,
   // Cloudinary Console > Settings > Upload > Upload presets > Add (Signing Mode: Unsigned).
   cloudinary: {

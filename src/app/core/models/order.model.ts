@@ -34,8 +34,9 @@ export interface Order {
   voucherCode?: string | null;
   grandTotal: number;
   status: OrderStatus;
-  paymentReference?: string;
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+  // There is deliberately no paymentReference field: no payment gateway is
+  // integrated yet (see README "Out of Scope"). Add it back when one is.
   deliveryAddress: string;
   notes?: string | null;
   cancelReason?: string | null;
